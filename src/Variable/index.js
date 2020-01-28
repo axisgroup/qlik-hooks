@@ -1,12 +1,6 @@
-const SetNxProperties = "SetNxProperties";
-const GetNxProperties = "GetNxProperties";
-const ForceContent = "ForceContent";
-const SetContent = "SetContent";
-const GetRawContent = "GetRawContent";
-const GetContent = "GetContent";
-export { GetContent };
-export { GetRawContent };
-export { SetContent };
-export { ForceContent };
-export { GetNxProperties };
-export { SetNxProperties };
+export { default as useGetContent } from "./useGetContent";
+export { default as useGetRawContent } from "./useGetRawContent";
+export { default as useSetContent } from "./useSetContent";
+export { default as useForceContent } from "./useForceContent";
+export { default as useGetNxProperties } from "./useGetNxProperties";
+export { default as useSetNxProperties } from "./useSetNxProperties";

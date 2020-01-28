@@ -1,9 +1,9 @@
-import React, { useEffect } from "react"
-import { useConnectEngine, Global, Doc, GenericObject } from "qlik-hooks"
-
-const { useEngineVersion, useOpenDoc } = Global
-const { useCreateSessionObject } = Doc
-const { useSelectListObjectValues, useGetLayout } = GenericObject
+import React, { useEffect, useState } from "react"
+import { useConnectEngine } from "qlik-hooks"
+import { useEngineVersion, useOpenDoc } from "qlik-hooks/dist/Global"
+import { useCreateSessionObject, useClearAll } from "qlik-hooks/dist/Doc"
+import { useSelectListObjectValues, useGetLayout } from "qlik-hooks/dist/GenericObject"
+import "./App.css"
 
 const qlikConfig = {
   host: "localhost",
@@ -32,20 +32,45 @@ const App = () => {
 
   const selectListObjectValues = useSelectListObjectValues(listObject)
 
-  const listObjectLayout = useGetLayout(listObject, { params: [] })
+  const listObjectLayout = useGetLayout(listObject, { invalidations: true, params: [] })
+
+  const clearApp = useClearAll(doc)
 
   useEffect(() => {
+    console.log(clearApp)
+  }, [clearApp])
+
+  const [list, setList] = useState([])
+  useEffect(() => {
     if (listObjectLayout.qResponse !== null) {
-      console.log(listObjectLayout.qResponse.qListObject.qDataPages[0].qMatrix)
+      const qMatrix = listObjectLayout.qResponse.qListObject.qDataPages[0].qMatrix
+
+      setList(
+        qMatrix.map(row => ({
+          label: row[0].qText,
+          value: row[0].qElemNumber,
+          state: row[0].qState,
+        }))
+      )
     }
   }, [listObjectLayout])
 
   return (
     <>
-      <button onClick={() => selectListObjectValues.call("/qListObjectDef", [1], false)}>Select</button>
-      <button onClick={() => listObjectLayout.call()}>Get Layout</button>
-      {/* {engineVersion.qResponse === null ? <div>loading</div> : <div>{engineVersion.qResponse.qComponentVersion}</div>} */}
-      {/* {engineVersion.qResponse === null ? <div>loading</div> : <div>{engineVersion.response.qComponentVersion}</div>} */}
+      {engineVersion.qResponse === null ? <div>loading</div> : <div>{engineVersion.qResponse.qComponentVersion}</div>}
+      <button onClick={() => clearApp.call()}>Clear All</button>
+      <ul>
+        {list.map(listValue => (
+          <li
+            key={listValue.value}
+            className={listValue.state}
+            value={listValue.value}
+            onClick={() => selectListObjectValues.call("/qListObjectDef", [listValue.value], true)}
+          >
+            {listValue.label}
+          </li>
+        ))}
+      </ul>
     </>
   )
 }

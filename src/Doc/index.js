@@ -1,123 +1,123 @@
-// export { default as useGetField } from "./useGetField"
-// export { default as useGetFieldDescription } from "./useGetFieldDescription"
-// export { default as useGetVariable } from "./useGetVariable"
-// export { default as useGetLooselyCoupledVector } from "./useGetLooselyCoupledVector"
-// export { default as useSetLooselyCoupledVector } from "./useSetLooselyCoupledVector"
-// export { default as useEvaluate } from "./useEvaluate"
-// export { default as useEvaluateEx } from "./useEvaluateEx"
-// export { default as useClearAll } from "./useClearAll"
-// export { default as useLockAll } from "./useLockAll"
-// export { default as useUnlockAll } from "./useUnlockAll"
-// export { default as useBack } from "./useBack"
-// export { default as useForward } from "./useForward"
-// export { default as useCreateVariable } from "./useCreateVariable"
-// export { default as useRemoveVariable } from "./useRemoveVariable"
-// export { default as useGetLocaleInfo } from "./useGetLocaleInfo"
-// export { default as useGetTablesAndKeys } from "./useGetTablesAndKeys"
-// export { default as useGetViewDlgSaveInfo } from "./useGetViewDlgSaveInfo"
-// export { default as useSetViewDlgSaveInfo } from "./useSetViewDlgSaveInfo"
-// export { default as useGetEmptyScript } from "./useGetEmptyScript"
-// export { default as useDoReload } from "./useDoReload"
-// export { default as useGetScriptBreakpoints } from "./useGetScriptBreakpoints"
-// export { default as useSetScriptBreakpoints } from "./useSetScriptBreakpoints"
-// export { default as useGetScript } from "./useGetScript"
-// export { default as useGetTextMacros } from "./useGetTextMacros"
-// export { default as useSetFetchLimit } from "./useSetFetchLimit"
-// export { default as useDoSave } from "./useDoSave"
-// export { default as useGetTableData } from "./useGetTableData"
-// export { default as useGetAppLayout } from "./useGetAppLayout"
-// export { default as useSetAppProperties } from "./useSetAppProperties"
-// export { default as useGetAppProperties } from "./useGetAppProperties"
-// export { default as useGetLineage } from "./useGetLineage"
-export { default as useCreateSessionObject } from "./useCreateSessionObject"
-// export { default as useDestroySessionObject } from "./useDestroySessionObject"
-// export { default as useCreateObject } from "./useCreateObject"
-// export { default as useDestroyObject } from "./useDestroyObject"
-// export { default as useGetObject } from "./useGetObject"
-// export { default as useGetObjects } from "./useGetObjects"
-// export { default as useGetBookmarks } from "./useGetBookmarks"
-// export { default as useCloneObject } from "./useCloneObject"
-// export { default as useCreateDraft } from "./useCreateDraft"
-// export { default as useCommitDraft } from "./useCommitDraft"
-// export { default as useDestroyDraft } from "./useDestroyDraft"
-// export { default as useUndo } from "./useUndo"
-// export { default as useRedo } from "./useRedo"
-// export { default as useClearUndoBuffer } from "./useClearUndoBuffer"
-// export { default as useCreateDimension } from "./useCreateDimension"
-// export { default as useDestroyDimension } from "./useDestroyDimension"
-// export { default as useGetDimension } from "./useGetDimension"
-// export { default as useCloneDimension } from "./useCloneDimension"
-// export { default as useCreateMeasure } from "./useCreateMeasure"
-// export { default as useDestroyMeasure } from "./useDestroyMeasure"
-// export { default as useGetMeasure } from "./useGetMeasure"
-// export { default as useCloneMeasure } from "./useCloneMeasure"
-// export { default as useCreateSessionVariable } from "./useCreateSessionVariable"
-// export { default as useDestroySessionVariable } from "./useDestroySessionVariable"
-// export { default as useCreateVariableEx } from "./useCreateVariableEx"
-// export { default as useDestroyVariableById } from "./useDestroyVariableById"
-// export { default as useDestroyVariableByName } from "./useDestroyVariableByName"
-// export { default as useGetVariableById } from "./useGetVariableById"
-// export { default as useGetVariableByName } from "./useGetVariableByName"
-// export { default as useCheckExpression } from "./useCheckExpression"
-// export { default as useCheckNumberOrExpression } from "./useCheckNumberOrExpression"
-// export { default as useAddAlternateState } from "./useAddAlternateState"
-// export { default as useRemoveAlternateState } from "./useRemoveAlternateState"
-// export { default as useCreateBookmark } from "./useCreateBookmark"
-// export { default as useDestroyBookmark } from "./useDestroyBookmark"
-// export { default as useGetBookmark } from "./useGetBookmark"
-// export { default as useApplyBookmark } from "./useApplyBookmark"
-// export { default as useCloneBookmark } from "./useCloneBookmark"
-// export { default as useAddFieldFromExpression } from "./useAddFieldFromExpression"
-// export { default as useGetFieldOnTheFlyByName } from "./useGetFieldOnTheFlyByName"
-// export { default as useGetAllInfos } from "./useGetAllInfos"
-// export { default as useResume } from "./useResume"
-// export { default as useAbortModal } from "./useAbortModal"
-// export { default as usePublish } from "./usePublish"
-// export { default as useGetMatchingFields } from "./useGetMatchingFields"
-// export { default as useFindMatchingFields } from "./useFindMatchingFields"
-// export { default as useScramble } from "./useScramble"
-// export { default as useSaveObjects } from "./useSaveObjects"
-// export { default as useGetAssociationScores } from "./useGetAssociationScores"
-// export { default as useGetMediaList } from "./useGetMediaList"
-// export { default as useGetContentLibraries } from "./useGetContentLibraries"
-// export { default as useGetLibraryContent } from "./useGetLibraryContent"
-// export { default as useDoReloadEx } from "./useDoReloadEx"
-// export { default as useBackCount } from "./useBackCount"
-// export { default as useForwardCount } from "./useForwardCount"
-// export { default as useExportReducedData } from "./useExportReducedData"
-// export { default as useGetSetAnalysis } from "./useGetSetAnalysis"
-// export { default as useSetScript } from "./useSetScript"
-// export { default as useCheckScriptSyntax } from "./useCheckScriptSyntax"
-// export { default as useGetFavoriteVariables } from "./useGetFavoriteVariables"
-// export { default as useSetFavoriteVariables } from "./useSetFavoriteVariables"
-// export { default as useGetIncludeFileContent } from "./useGetIncludeFileContent"
-// export { default as useCreateConnection } from "./useCreateConnection"
-// export { default as useModifyConnection } from "./useModifyConnection"
-// export { default as useDeleteConnection } from "./useDeleteConnection"
-// export { default as useGetConnection } from "./useGetConnection"
-// export { default as useGetConnections } from "./useGetConnections"
-// export { default as useGetDatabaseInfo } from "./useGetDatabaseInfo"
-// export { default as useGetDatabases } from "./useGetDatabases"
-// export { default as useGetDatabaseOwners } from "./useGetDatabaseOwners"
-// export { default as useGetDatabaseTables } from "./useGetDatabaseTables"
-// export { default as useGetDatabaseTableFields } from "./useGetDatabaseTableFields"
-// export { default as useGetDatabaseTablePreview } from "./useGetDatabaseTablePreview"
-// export { default as useGetFolderItemsForConnection } from "./useGetFolderItemsForConnection"
-// export { default as useGuessFileType } from "./useGuessFileType"
-// export { default as useGetFileTables } from "./useGetFileTables"
-// export { default as useGetFileTableFields } from "./useGetFileTableFields"
-// export { default as useGetFileTablePreview } from "./useGetFileTablePreview"
-// export { default as useGetFileTablesEx } from "./useGetFileTablesEx"
-// export { default as useSendGenericCommandToCustomConnector } from "./useSendGenericCommandToCustomConnector"
-// export { default as useSearchSuggest } from "./useSearchSuggest"
-// export { default as useSearchAssociations } from "./useSearchAssociations"
-// export { default as useSelectAssociations } from "./useSelectAssociations"
-// export { default as useSearchResults } from "./useSearchResults"
-// export { default as useSearchObjects } from "./useSearchObjects"
-// export { default as useGetFieldAndColumnSamples } from "./useGetFieldAndColumnSamples"
-// export { default as useGetScriptEx } from "./useGetScriptEx"
-// export { default as useGetVariables } from "./useGetVariables"
-// export { default as useExpandExpression } from "./useExpandExpression"
-// export { default as useDestroySessionVariableById } from "./useDestroySessionVariableById"
-// export { default as useDestroySessionVariableByName } from "./useDestroySessionVariableByName"
-// export { default as useCreateBookmarkEx } from "./useCreateBookmarkEx"
+export { default as useGetField } from "./useGetField";
+export { default as useGetFieldDescription } from "./useGetFieldDescription";
+export { default as useGetVariable } from "./useGetVariable";
+export { default as useGetLooselyCoupledVector } from "./useGetLooselyCoupledVector";
+export { default as useSetLooselyCoupledVector } from "./useSetLooselyCoupledVector";
+export { default as useEvaluate } from "./useEvaluate";
+export { default as useEvaluateEx } from "./useEvaluateEx";
+export { default as useClearAll } from "./useClearAll";
+export { default as useLockAll } from "./useLockAll";
+export { default as useUnlockAll } from "./useUnlockAll";
+export { default as useBack } from "./useBack";
+export { default as useForward } from "./useForward";
+export { default as useCreateVariable } from "./useCreateVariable";
+export { default as useRemoveVariable } from "./useRemoveVariable";
+export { default as useGetLocaleInfo } from "./useGetLocaleInfo";
+export { default as useGetTablesAndKeys } from "./useGetTablesAndKeys";
+export { default as useGetViewDlgSaveInfo } from "./useGetViewDlgSaveInfo";
+export { default as useSetViewDlgSaveInfo } from "./useSetViewDlgSaveInfo";
+export { default as useGetEmptyScript } from "./useGetEmptyScript";
+export { default as useDoReload } from "./useDoReload";
+export { default as useGetScriptBreakpoints } from "./useGetScriptBreakpoints";
+export { default as useSetScriptBreakpoints } from "./useSetScriptBreakpoints";
+export { default as useGetScript } from "./useGetScript";
+export { default as useGetTextMacros } from "./useGetTextMacros";
+export { default as useSetFetchLimit } from "./useSetFetchLimit";
+export { default as useDoSave } from "./useDoSave";
+export { default as useGetTableData } from "./useGetTableData";
+export { default as useGetAppLayout } from "./useGetAppLayout";
+export { default as useSetAppProperties } from "./useSetAppProperties";
+export { default as useGetAppProperties } from "./useGetAppProperties";
+export { default as useGetLineage } from "./useGetLineage";
+export { default as useCreateSessionObject } from "./useCreateSessionObject";
+export { default as useDestroySessionObject } from "./useDestroySessionObject";
+export { default as useCreateObject } from "./useCreateObject";
+export { default as useDestroyObject } from "./useDestroyObject";
+export { default as useGetObject } from "./useGetObject";
+export { default as useGetObjects } from "./useGetObjects";
+export { default as useGetBookmarks } from "./useGetBookmarks";
+export { default as useCloneObject } from "./useCloneObject";
+export { default as useCreateDraft } from "./useCreateDraft";
+export { default as useCommitDraft } from "./useCommitDraft";
+export { default as useDestroyDraft } from "./useDestroyDraft";
+export { default as useUndo } from "./useUndo";
+export { default as useRedo } from "./useRedo";
+export { default as useClearUndoBuffer } from "./useClearUndoBuffer";
+export { default as useCreateDimension } from "./useCreateDimension";
+export { default as useDestroyDimension } from "./useDestroyDimension";
+export { default as useGetDimension } from "./useGetDimension";
+export { default as useCloneDimension } from "./useCloneDimension";
+export { default as useCreateMeasure } from "./useCreateMeasure";
+export { default as useDestroyMeasure } from "./useDestroyMeasure";
+export { default as useGetMeasure } from "./useGetMeasure";
+export { default as useCloneMeasure } from "./useCloneMeasure";
+export { default as useCreateSessionVariable } from "./useCreateSessionVariable";
+export { default as useDestroySessionVariable } from "./useDestroySessionVariable";
+export { default as useCreateVariableEx } from "./useCreateVariableEx";
+export { default as useDestroyVariableById } from "./useDestroyVariableById";
+export { default as useDestroyVariableByName } from "./useDestroyVariableByName";
+export { default as useGetVariableById } from "./useGetVariableById";
+export { default as useGetVariableByName } from "./useGetVariableByName";
+export { default as useCheckExpression } from "./useCheckExpression";
+export { default as useCheckNumberOrExpression } from "./useCheckNumberOrExpression";
+export { default as useAddAlternateState } from "./useAddAlternateState";
+export { default as useRemoveAlternateState } from "./useRemoveAlternateState";
+export { default as useCreateBookmark } from "./useCreateBookmark";
+export { default as useDestroyBookmark } from "./useDestroyBookmark";
+export { default as useGetBookmark } from "./useGetBookmark";
+export { default as useApplyBookmark } from "./useApplyBookmark";
+export { default as useCloneBookmark } from "./useCloneBookmark";
+export { default as useAddFieldFromExpression } from "./useAddFieldFromExpression";
+export { default as useGetFieldOnTheFlyByName } from "./useGetFieldOnTheFlyByName";
+export { default as useGetAllInfos } from "./useGetAllInfos";
+export { default as useResume } from "./useResume";
+export { default as useAbortModal } from "./useAbortModal";
+export { default as usePublish } from "./usePublish";
+export { default as useGetMatchingFields } from "./useGetMatchingFields";
+export { default as useFindMatchingFields } from "./useFindMatchingFields";
+export { default as useScramble } from "./useScramble";
+export { default as useSaveObjects } from "./useSaveObjects";
+export { default as useGetAssociationScores } from "./useGetAssociationScores";
+export { default as useGetMediaList } from "./useGetMediaList";
+export { default as useGetContentLibraries } from "./useGetContentLibraries";
+export { default as useGetLibraryContent } from "./useGetLibraryContent";
+export { default as useDoReloadEx } from "./useDoReloadEx";
+export { default as useBackCount } from "./useBackCount";
+export { default as useForwardCount } from "./useForwardCount";
+export { default as useExportReducedData } from "./useExportReducedData";
+export { default as useGetSetAnalysis } from "./useGetSetAnalysis";
+export { default as useSetScript } from "./useSetScript";
+export { default as useCheckScriptSyntax } from "./useCheckScriptSyntax";
+export { default as useGetFavoriteVariables } from "./useGetFavoriteVariables";
+export { default as useSetFavoriteVariables } from "./useSetFavoriteVariables";
+export { default as useGetIncludeFileContent } from "./useGetIncludeFileContent";
+export { default as useCreateConnection } from "./useCreateConnection";
+export { default as useModifyConnection } from "./useModifyConnection";
+export { default as useDeleteConnection } from "./useDeleteConnection";
+export { default as useGetConnection } from "./useGetConnection";
+export { default as useGetConnections } from "./useGetConnections";
+export { default as useGetDatabaseInfo } from "./useGetDatabaseInfo";
+export { default as useGetDatabases } from "./useGetDatabases";
+export { default as useGetDatabaseOwners } from "./useGetDatabaseOwners";
+export { default as useGetDatabaseTables } from "./useGetDatabaseTables";
+export { default as useGetDatabaseTableFields } from "./useGetDatabaseTableFields";
+export { default as useGetDatabaseTablePreview } from "./useGetDatabaseTablePreview";
+export { default as useGetFolderItemsForConnection } from "./useGetFolderItemsForConnection";
+export { default as useGuessFileType } from "./useGuessFileType";
+export { default as useGetFileTables } from "./useGetFileTables";
+export { default as useGetFileTableFields } from "./useGetFileTableFields";
+export { default as useGetFileTablePreview } from "./useGetFileTablePreview";
+export { default as useGetFileTablesEx } from "./useGetFileTablesEx";
+export { default as useSendGenericCommandToCustomConnector } from "./useSendGenericCommandToCustomConnector";
+export { default as useSearchSuggest } from "./useSearchSuggest";
+export { default as useSearchAssociations } from "./useSearchAssociations";
+export { default as useSelectAssociations } from "./useSelectAssociations";
+export { default as useSearchResults } from "./useSearchResults";
+export { default as useSearchObjects } from "./useSearchObjects";
+export { default as useGetFieldAndColumnSamples } from "./useGetFieldAndColumnSamples";
+export { default as useGetScriptEx } from "./useGetScriptEx";
+export { default as useGetVariables } from "./useGetVariables";
+export { default as useExpandExpression } from "./useExpandExpression";
+export { default as useDestroySessionVariableById } from "./useDestroySessionVariableById";
+export { default as useDestroySessionVariableByName } from "./useDestroySessionVariableByName";
+export { default as useCreateBookmarkEx } from "./useCreateBookmarkEx";

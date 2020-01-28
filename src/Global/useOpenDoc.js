@@ -1,26 +1,16 @@
-import { useState, useEffect } from "react"
-import { take } from "rxjs/operators"
+import { useState, useEffect } from "react";
+import { take } from "rxjs/operators";
 
 export default ({ handle }, { params }) => {
-  const [qResponse, setQResponse] = useState({
-    loading: true,
-    handle: null,
-  })
+  const [qObject, setQObject] = useState({ loading: true, handle: null });
 
   useEffect(() => {
-    if (handle !== null) {
-      handle
-        .ask("OpenDoc", ...params)
-        .pipe(take(1))
-        .subscribe(response =>
-          setQResponse({
-            ...qResponse,
-            loading: false,
-            handle: response,
-          })
-        )
+    if(handle !== null) {
+      handle.ask("OpenDoc", ...params)
+      .pipe(take(1))
+      .subscribe(response => setQObject({ ...qObject, loading: false, handle: response }))
     }
-  }, [handle])
+  }, [handle]);
 
-  return qResponse
+  return qObject;
 }

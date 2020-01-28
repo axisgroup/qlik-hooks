@@ -8,15 +8,28 @@ import json from "@rollup/plugin-json"
 import pkg from "./package.json"
 
 export default {
-  input: "src/index.js",
+  input: {
+    index: "src/index.js",
+    "Field/index": "src/Field/index.js",
+    "Variable/index": "src/Variable/index.js",
+    "GenericObject/index": "src/GenericObject/index.js",
+    "GenericDimension/index": "src/GenericDimension/index.js",
+    "GenericBookmark/index": "src/GenericBookmark/index.js",
+    "GenericVariable/index": "src/GenericVariable/index.js",
+    "GenericMeasure/index": "src/GenericMeasure/index.js",
+    "Doc/index": "src/Doc/index.js",
+    "Global/index": "src/Global/index.js",
+  },
   output: [
     {
-      file: pkg.main,
+      // file: pkg.main,
+      dir: "dist",
       format: "cjs",
       sourcemap: true,
     },
     {
-      file: pkg.module,
+      // file: pkg.module,
+      dir: "dist",
       format: "es",
       sourcemap: true,
     },
@@ -24,9 +37,7 @@ export default {
   plugins: [
     external(),
     url({ exclude: ["**/*.svg"] }),
-    babel({
-      exclude: "node_modules/**",
-    }),
+    babel({ exclude: "node_modules/**" }),
     resolve(),
     commonjs(),
     json(),

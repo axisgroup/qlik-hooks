@@ -48,6 +48,7 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@rollup/plugin-json": "^4.0.1",
+    "@rollup/plugin-multi-entry": "^3.0.0",
     "@testing-library/react-hooks": "^3.2.1",
     "babel-eslint": "^10.0.1",
     "cross-env": "^5.2.0",

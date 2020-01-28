@@ -41,31 +41,108 @@ const schema$ = container$.pipe(
   )
 )
 
+const apiObjectCreatorTemplate = MethodName => `import { useState, useEffect } from "react";
+import { take } from "rxjs/operators";
+
+export default ({ handle }, { params }) => {
+  const [qObject, setQObject] = useState({ loading: true, handle: null });
+
+  useEffect(() => {
+    if(handle !== null) {
+      handle.ask("${MethodName}", ...params)
+      .pipe(take(1))
+      .subscribe(response => setQObject({ ...qObject, loading: false, handle: response }))
+    }
+  }, [handle]);
+
+  return qObject;
+}`
+
+const apiActionTemplate = MethodName => `import { useState, useEffect, useRef, useCallback } from "react";
+import { Subject, merge } from "rxjs";
+import { startWith, switchMap, skip, mapTo, filter } from "rxjs/operators";
+
+export default ({ handle }, { params, invalidations = false } = {}) => {
+  const call$ = useRef(new Subject()).current;
+  const call = useCallback((...args) => {
+    call$.next(args)
+  }, []);
+
+  const [qAction, setQAction] = useState({ loading: false, qResponse: null, call });
+
+  useEffect(() => {
+    let sub$;
+
+    if(handle !== null) {
+      const invalidation$ = handle.invalidated$.pipe(
+        filter(() => invalidations && params),
+        mapTo(params)
+      );
+
+      const externalCall$ = call$.pipe(
+        startWith(params),
+        skip(params ? 0 : 1)
+      );
+
+      sub$ = merge(externalCall$, invalidation$)
+        .pipe(
+          switchMap(args => {
+            setQAction({ ...qAction, loading: true, qResponse: null });
+            return handle.ask("${MethodName}", ...args)
+          })
+        )
+        .subscribe(response => setQAction({ ...qAction, loading: false, qResponse: response }));
+    }
+
+    return () => {
+      if(sub$) sub$.unsubscribe();
+    }
+  }, [handle]);
+
+  return qAction;
+}`
+
 schema$.subscribe(schema => {
   let schemaDir = path.join(__dirname, "../src/schema")
   fs.emptyDirSync(schemaDir)
   fs.writeFile(path.join(schemaDir, `schema-${version}.json`), JSON.stringify(schema), "utf-8")
-  // let qClasses = Object.keys(schema.services)
+
+  let qClasses = Object.entries(schema.services)
 
   // let classImports = []
   // let classExports = []
 
-  // qClasses.forEach(qClass => {
-  //   let methods = schema.services[qClass].methods
+  qClasses.forEach(([qClass, { methods }]) => {
+    let absClassDir = path.join(__dirname, `../src/${qClass}`)
+    fs.emptyDirSync(absClassDir)
 
-  //   let classDir = `../src/${qClass}`
-  //   let absClassDir = path.join(__dirname, classDir)
-  //   fs.emptyDirSync(absClassDir)
+    Object.entries(methods).forEach(([MethodName, { responses }]) => {
+      let isObjectCreator = responses
+        ? responses.map(response => response["x-qlik-service"]).filter(xQlikService => xQlikService !== undefined)
+            .length > 0
+        : false
 
-  //   const eNumScript = Object.keys(methods)
-  //     .reduce((acc, methodName) => [`const ${methodName} = "${methodName}";`, ...acc, `export { ${methodName} };`], [])
-  //     .join("\n")
+      fs.writeFile(
+        path.join(absClassDir, `use${MethodName}.js`),
+        isObjectCreator ? apiObjectCreatorTemplate(MethodName) : apiActionTemplate(MethodName)
+      )
+    })
 
-  //   fs.writeFile(path.join(absClassDir, `index.js`), eNumScript)
+    //   const eNumScript = Object.keys(methods)
+    //     .reduce((acc, methodName) => [`const ${methodName} = "${methodName}";`, ...acc, `export { ${methodName} };`], [])
+    //     .join("\n")
 
-  //   classImports.push(`import * as ${qClass} from "./${qClass}";`)
-  //   classExports.push(`export { ${qClass} }`)
-  // })
+    //   fs.writeFile(path.join(absClassDir, `index.js`), eNumScript)
+
+    //   classImports.push(`import * as ${qClass} from "./${qClass}";`)
+    //   classExports.push(`export { ${qClass} }`)
+
+    const eNumScript = Object.keys(methods)
+      .reduce((acc, methodName) => [...acc, `export { default as use${methodName} } from "./use${methodName}";`], [])
+      .join("\n")
+
+    fs.writeFile(path.join(absClassDir, `index.js`), eNumScript)
+  })
 })
 
 function createContainer(image, port) {
