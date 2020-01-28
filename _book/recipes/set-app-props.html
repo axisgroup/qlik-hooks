@@ -1,0 +1,783 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>06. Set App Properties and Listen for Changes · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="gen-obj-value.html" />
+    
+    
+    <link rel="prev" href="read-app-props.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Qlik Hooks v0.1.0
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    Introduction
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../introduction/why-rx.html">
+            
+                <a href="../introduction/why-rx.html">
+            
+                    
+                    Why Rx?
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../introduction/rxq-vs-enigma.html">
+            
+                <a href="../introduction/rxq-vs-enigma.html">
+            
+                    
+                    RxQ vs. Enigma
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../introduction/core-concepts.html">
+            
+                <a href="../introduction/core-concepts.html">
+            
+                    
+                    Core Concepts
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    Basics
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../basics/connecting.html">
+            
+                <a href="../basics/connecting.html">
+            
+                    
+                    Connecting
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../basics/making-api-calls.html">
+            
+                <a href="../basics/making-api-calls.html">
+            
+                    
+                    Making API Calls
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../basics/reusing-handles.html">
+            
+                <a href="../basics/reusing-handles.html">
+            
+                    
+                    Reusing Handles
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../basics/handle-invalidations.html">
+            
+                <a href="../basics/handle-invalidations.html">
+            
+                    
+                    Handle Invalidations
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="../basics/suspending-invalidations.html">
+            
+                <a href="../basics/suspending-invalidations.html">
+            
+                    
+                    Suspending Invalidations
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.6" data-path="../basics/closing-a-session.html">
+            
+                <a href="../basics/closing-a-session.html">
+            
+                    
+                    Closing a Session
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.7" data-path="../basics/notifications.html">
+            
+                <a href="../basics/notifications.html">
+            
+                    
+                    Notifications
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.8" data-path="../basics/delta.html">
+            
+                <a href="../basics/delta.html">
+            
+                    
+                    Delta Mode
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.9" data-path="../basics/shortcut-operators.html">
+            
+                <a href="../basics/shortcut-operators.html">
+            
+                    
+                    Shortcut Operators
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    Recipes
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="connect.html">
+            
+                <a href="connect.html">
+            
+                    
+                    01. Connect to an Engine
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="engine-version.html">
+            
+                <a href="engine-version.html">
+            
+                    
+                    02. Get the Engine Version
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="multiple-global-calls.html">
+            
+                <a href="multiple-global-calls.html">
+            
+                    
+                    03. Make Multiple Global Calls
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="open-an-app.html">
+            
+                <a href="open-an-app.html">
+            
+                    
+                    04. Open an App
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="read-app-props.html">
+            
+                <a href="read-app-props.html">
+            
+                    
+                    05. Get App Properties
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4.6" data-path="set-app-props.html">
+            
+                <a href="set-app-props.html">
+            
+                    
+                    06. Set App Properties and Listen for Changes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="gen-obj-value.html">
+            
+                <a href="gen-obj-value.html">
+            
+                    
+                    07. Calculate a Value with a GenericObject
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="current-selections.html">
+            
+                <a href="current-selections.html">
+            
+                    
+                    08. Get a stream of Current Selections
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.9" data-path="make-a-selection.html">
+            
+                <a href="make-a-selection.html">
+            
+                    
+                    09. Make a Selection in a Field
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.10" data-path="loop-selections.html">
+            
+                <a href="loop-selections.html">
+            
+                    
+                    10. Loop through Selections in a Field
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.11" data-path="make-lb-selections.html">
+            
+                <a href="make-lb-selections.html">
+            
+                    
+                    11. Make Selections in a Listbox
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.12" data-path="search-lb.html">
+            
+                <a href="search-lb.html">
+            
+                    
+                    12. Search in a Listbox
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.13" data-path="apply-patches.html">
+            
+                <a href="apply-patches.html">
+            
+                    
+                    13. Apply Patches to an Object
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.14" data-path="get-data-page-on-invalid.html">
+            
+                <a href="get-data-page-on-invalid.html">
+            
+                    
+                    14. Get a page of data in a HyperCube on invalidation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.15" data-path="get-pages-in-parallel.html">
+            
+                <a href="get-pages-in-parallel.html">
+            
+                    
+                    15. Get pages of data in parallel
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.16" data-path="get-pages-in-sequence.html">
+            
+                <a href="get-pages-in-sequence.html">
+            
+                    
+                    16. Get pages of data sequentially
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.17" data-path="make-selections-on-app-open.html">
+            
+                <a href="make-selections-on-app-open.html">
+            
+                    
+                    17. Make selections on app open
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.18" data-path="calc-time.html">
+            
+                <a href="calc-time.html">
+            
+                    
+                    18. Calculate the duration of an API call and response
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.19" data-path="batch-invalidations.html">
+            
+                <a href="batch-invalidations.html">
+            
+                    
+                    19. Batch Invalidations with Suspend
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.20" data-path="toggle-sessions.html">
+            
+                <a href="toggle-sessions.html">
+            
+                    
+                    20. Toggle Calculations Between Multiple Apps
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.21" data-path="offline.html">
+            
+                <a href="offline.html">
+            
+                    
+                    21. Auto-reconnect Generic Objects after a network drop
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.22" data-path="shortcut-operators.html">
+            
+                <a href="shortcut-operators.html">
+            
+                    
+                    22. Using shortcut operators to get a layout stream
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >06. Set App Properties and Listen for Changes</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="set-app-properties-and-listen-for-changes">Set App Properties and Listen for Changes</h1>
+<p><a href="https://codesandbox.io/embed/n4v0p3m4n4" target="_blank">Code Sandbox</a></p>
+<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { connectSession } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq&quot;</span>;
+<span class="hljs-keyword">import</span> { OpenDoc } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Global&quot;</span>;
+<span class="hljs-keyword">import</span> { GetAppProperties, SetAppProperties } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Doc&quot;</span>;
+<span class="hljs-keyword">import</span> { publish, shareReplay, startWith, 
+  switchMap, withLatestFrom } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxjs/operators&quot;</span>;
+<span class="hljs-keyword">import</span> { fromEvent } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxjs&quot;</span>;
+
+<span class="hljs-keyword">const</span> appname = <span class="hljs-string">&quot;aae16724-dfd9-478b-b401-0d8038793adf&quot;</span>
+
+<span class="hljs-comment">// Define the configuration for your session</span>
+<span class="hljs-keyword">const</span> config = {
+  host: <span class="hljs-string">&quot;sense.axisgroup.com&quot;</span>,
+  isSecure: <span class="hljs-literal">true</span>,
+  appname
+};
+
+<span class="hljs-comment">// Connect the session and share the Global handle</span>
+<span class="hljs-keyword">const</span> session = connectSession(config);
+<span class="hljs-keyword">const</span> global$ = session.global$;
+
+<span class="hljs-comment">// Open an app and share the app handle</span>
+<span class="hljs-keyword">const</span> app$ = global$.pipe(
+  switchMap(h =&gt; h.ask(OpenDoc, appname)),
+  shareReplay(<span class="hljs-number">1</span>)
+);
+
+<span class="hljs-comment">// Get the app properties any time the app invalidates</span>
+<span class="hljs-keyword">const</span> appProps$ = app$.pipe(
+  switchMap(h =&gt; h.invalidated$.pipe(startWith(h))),
+  switchMap(h =&gt; h.ask(GetAppProperties))
+);
+
+<span class="hljs-comment">// Write the app title and modified date to the DOM</span>
+appProps$.subscribe(props =&gt; {
+  <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&quot;#content&quot;</span>).innerHTML = <span class="hljs-string">`The app&apos;s prop &quot;random&quot; is <span class="hljs-subst">${props.random}</span>`</span>;
+});
+
+<span class="hljs-comment">// Whenever a user clicks the button, update the app props with a random prop</span>
+<span class="hljs-keyword">const</span> updateAppProps$ = fromEvent(<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&quot;#set-random&quot;</span>), <span class="hljs-string">&quot;click&quot;</span>).pipe(
+  withLatestFrom(app$),
+  switchMap(([evt, h]) =&gt; h.ask(SetAppProperties, {
+    <span class="hljs-string">&quot;random&quot;</span>: <span class="hljs-built_in">Math</span>.random()
+  })),
+  publish()
+);
+
+<span class="hljs-comment">// Connect the app update mechanism</span>
+updateAppProps$.connect();
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="read-app-props.html" class="navigation navigation-prev " aria-label="Previous page: 05. Get App Properties">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="gen-obj-value.html" class="navigation navigation-next " aria-label="Next page: 07. Calculate a Value with a GenericObject">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"06. Set App Properties and Listen for Changes","level":"1.4.6","depth":2,"next":{"title":"07. Calculate a Value with a GenericObject","level":"1.4.7","depth":2,"path":"recipes/gen-obj-value.md","ref":"recipes/gen-obj-value.md","articles":[]},"previous":{"title":"05. Get App Properties","level":"1.4.5","depth":2,"path":"recipes/read-app-props.md","ref":"recipes/read-app-props.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"recipes/set-app-props.md","mtime":"2020-01-28T23:28:35.052Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-28T23:32:55.448Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

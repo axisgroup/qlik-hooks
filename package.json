@@ -1,6 +1,6 @@
 {
   "name": "qlik-hooks",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "qlik-hooks",
   "author": "jbellizzi",
   "license": "MIT",
@@ -19,9 +19,11 @@
     "test:watch": "react-scripts test --env=jsdom",
     "build": "rollup -c",
     "start": "rollup -c -w",
-    "prepare": "npm run build",
     "predeploy": "cd example && npm install && npm run build",
-    "deploy": "gh-pages -d example/build"
+    "deploy": "gh-pages -d example/build",
+    "docs-build": "gitbook build",
+    "docs-serve": "gitbook serve",
+    "prepare-package": "node scripts/prepare-package"
   },
   "peerDependencies": {
     "react": "^16.9.0"
@@ -64,6 +66,7 @@
     "eslint-plugin-react-hooks": "^2.3.0",
     "eslint-plugin-standard": "^3.1.0",
     "gh-pages": "^2.0.1",
+    "gitbook-cli": "^2.3.2",
     "react": "^16.9.0",
     "react-scripts": "^3.0.1",
     "react-test-renderer": "^16.9.0",
@@ -74,5 +77,8 @@
     "rollup-plugin-peer-deps-external": "^2.2.0",
     "rollup-plugin-url": "^2.1.0",
     "rxjs": "^6.5.4"
+  },
+  "dependencies": {
+    "rxq": "^2.0.4"
   }
 }
