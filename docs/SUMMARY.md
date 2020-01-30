@@ -2,7 +2,7 @@
 
 - [Qlik Hooks v0.1.0](README.md)
 - [Introduction]()
-  - [Why Rx?](/introduction/why-rx.md)
+  - [Why Hooks?](/introduction/why-hooks.md)
   - [RxQ vs. Enigma](introduction/rxq-vs-enigma.md)
   - [Core Concepts](introduction/core-concepts.md)
 - [Basics]()

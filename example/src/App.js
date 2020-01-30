@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react"
-import { useConnectEngine } from "qlik-hooks"
-import { useEngineVersion, useOpenDoc } from "qlik-hooks/dist/Global"
+import { useConnectEngine, QlikProvider } from "qlik-hooks"
+import { useEngineVersion, useOpenDoc, useGetDocList } from "qlik-hooks/dist/Global"
 import { useCreateSessionObject, useClearAll } from "qlik-hooks/dist/Doc"
 import { useSelectListObjectValues, useGetLayout } from "qlik-hooks/dist/GenericObject"
+import { AppSelector } from "./components"
 import "./App.css"
 
 const qlikConfig = {
   host: "localhost",
   port: 19076,
-  appname: "Executive Dashboard.qvf",
+  // appname: "Executive Dashboard.qvf",
 }
 
 const qDef = {
@@ -22,56 +23,57 @@ const qDef = {
 }
 
 const App = () => {
-  const engine = useConnectEngine(qlikConfig)
+  // const engine = useConnectEngine(qlikConfig)
 
-  const engineVersion = useEngineVersion(engine, { params: [] })
+  // const engineVersion = useEngineVersion(engine, { params: [] })
 
-  const doc = useOpenDoc(engine, { params: ["Executive Dashboard.qvf"] })
+  // const doc = useOpenDoc(engine, { params: ["Executive Dashboard.qvf"] })
 
-  const listObject = useCreateSessionObject(doc, { params: [qDef] })
+  // const listObject = useCreateSessionObject(doc, { params: [qDef] })
 
-  const selectListObjectValues = useSelectListObjectValues(listObject)
+  // const listObjectLayout = useGetLayout(listObject, { invalidations: true, params: [] })
 
-  const listObjectLayout = useGetLayout(listObject, { invalidations: true, params: [] })
+  // const [list, setList] = useState([])
 
-  const clearApp = useClearAll(doc)
+  // useEffect(() => {
+  //   if (listObjectLayout.qResponse !== null) {
+  //     const qMatrix = listObjectLayout.qResponse.qListObject.qDataPages[0].qMatrix
 
-  useEffect(() => {
-    console.log(clearApp)
-  }, [clearApp])
+  //     setList(
+  //       qMatrix.map(row => ({
+  //         label: row[0].qText,
+  //         value: row[0].qElemNumber,
+  //         state: row[0].qState,
+  //       }))
+  //     )
+  //   }
+  // }, [listObjectLayout])
 
-  const [list, setList] = useState([])
-  useEffect(() => {
-    if (listObjectLayout.qResponse !== null) {
-      const qMatrix = listObjectLayout.qResponse.qListObject.qDataPages[0].qMatrix
+  // const selectListObjectValues = useSelectListObjectValues(listObject)
 
-      setList(
-        qMatrix.map(row => ({
-          label: row[0].qText,
-          value: row[0].qElemNumber,
-          state: row[0].qState,
-        }))
-      )
-    }
-  }, [listObjectLayout])
+  // const handleSelect = value => {
+  //   selectListObjectValues.call("/qListObjectDef", [value], true)
+  // }
 
   return (
-    <>
-      {engineVersion.qResponse === null ? <div>loading</div> : <div>{engineVersion.qResponse.qComponentVersion}</div>}
-      <button onClick={() => clearApp.call()}>Clear All</button>
-      <ul>
-        {list.map(listValue => (
-          <li
-            key={listValue.value}
-            className={listValue.state}
-            value={listValue.value}
-            onClick={() => selectListObjectValues.call("/qListObjectDef", [listValue.value], true)}
-          >
-            {listValue.label}
-          </li>
-        ))}
-      </ul>
-    </>
+    <QlikProvider config={qlikConfig}>
+      <AppSelector />
+    </QlikProvider>
+    // <>
+    //   <button onClick={() => listObjectLayout.call()}>Get Layout</button>
+    //   <ul>
+    //     {list.map(listValue => (
+    //       <li
+    //         key={listValue.value}
+    //         className={listValue.state}
+    //         value={listValue.value}
+    //         onClick={() => handleSelect(listValue.value)}
+    //       >
+    //         {listValue.label}
+    //       </li>
+    //     ))}
+    //   </ul>
+    // </>
   )
 }
 export default App

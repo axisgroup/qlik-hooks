@@ -41,17 +41,36 @@ const schema$ = container$.pipe(
   )
 )
 
-const apiObjectCreatorTemplate = MethodName => `import { useState, useEffect } from "react";
-import { take } from "rxjs/operators";
+const apiObjectCreatorTemplate = MethodName => `import { useState, useEffect, useRef, useCallback } from "react";
+import { Subject } from "rxjs";
+import { startWith, switchMap, skip } from "rxjs/operators";
 
-export default ({ handle }, { params }) => {
-  const [qObject, setQObject] = useState({ loading: true, handle: null });
+export default ({ handle }, { params } = {}) => {
+  const call$ = useRef(new Subject()).current;
+  const call = useCallback((...args) => {
+    call$.next(args);
+  }, []);
+
+  const [qObject, setQObject] = useState({ loading: false, handle: null, call });
 
   useEffect(() => {
+    let sub$;
+
     if(handle !== null) {
-      handle.ask("${MethodName}", ...params)
-      .pipe(take(1))
-      .subscribe(response => setQObject({ ...qObject, loading: false, handle: response }))
+      sub$ = call$
+        .pipe(
+          startWith(params),
+          skip(params ? 0 : 1),
+          switchMap(args => {
+            setQObject({ ...qObject, loading: true, handle: null });
+            return handle.ask("${MethodName}", ...args);
+          })
+        )
+        .subscribe(response => setQObject({ ...qObject, loading: false, handle: response }));
+    }
+
+    return () => {
+      if(sub$) sub$.unsubscribe();
     }
   }, [handle]);
 
@@ -65,7 +84,7 @@ import { startWith, switchMap, skip, mapTo, filter } from "rxjs/operators";
 export default ({ handle }, { params, invalidations = false } = {}) => {
   const call$ = useRef(new Subject()).current;
   const call = useCallback((...args) => {
-    call$.next(args)
+    call$.next(args);
   }, []);
 
   const [qAction, setQAction] = useState({ loading: false, qResponse: null, call });
@@ -88,7 +107,7 @@ export default ({ handle }, { params, invalidations = false } = {}) => {
         .pipe(
           switchMap(args => {
             setQAction({ ...qAction, loading: true, qResponse: null });
-            return handle.ask("${MethodName}", ...args)
+            return handle.ask("${MethodName}", ...args);
           })
         )
         .subscribe(response => setQAction({ ...qAction, loading: false, qResponse: response }));

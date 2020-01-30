@@ -5,7 +5,7 @@ import { startWith, switchMap, skip, mapTo, filter } from "rxjs/operators";
 export default ({ handle }, { params, invalidations = false } = {}) => {
   const call$ = useRef(new Subject()).current;
   const call = useCallback((...args) => {
-    call$.next(args)
+    call$.next(args);
   }, []);
 
   const [qAction, setQAction] = useState({ loading: false, qResponse: null, call });
@@ -28,7 +28,7 @@ export default ({ handle }, { params, invalidations = false } = {}) => {
         .pipe(
           switchMap(args => {
             setQAction({ ...qAction, loading: true, qResponse: null });
-            return handle.ask("AcceptListObjectSearch", ...args)
+            return handle.ask("AcceptListObjectSearch", ...args);
           })
         )
         .subscribe(response => setQAction({ ...qAction, loading: false, qResponse: response }));
