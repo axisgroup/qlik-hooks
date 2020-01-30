@@ -3,7 +3,6 @@ import { useConnectEngine, QlikProvider } from "qlik-hooks"
 import { useEngineVersion, useOpenDoc, useGetDocList } from "qlik-hooks/dist/Global"
 import { useCreateSessionObject, useClearAll } from "qlik-hooks/dist/Doc"
 import { useSelectListObjectValues, useGetLayout } from "qlik-hooks/dist/GenericObject"
-import { AppSelector } from "./components"
 import "./App.css"
 
 const qlikConfig = {
@@ -56,24 +55,21 @@ const App = () => {
   // }
 
   return (
-    <QlikProvider config={qlikConfig}>
-      <AppSelector />
-    </QlikProvider>
-    // <>
-    //   <button onClick={() => listObjectLayout.call()}>Get Layout</button>
-    //   <ul>
-    //     {list.map(listValue => (
-    //       <li
-    //         key={listValue.value}
-    //         className={listValue.state}
-    //         value={listValue.value}
-    //         onClick={() => handleSelect(listValue.value)}
-    //       >
-    //         {listValue.label}
-    //       </li>
-    //     ))}
-    //   </ul>
-    // </>
+    <>
+      {/* <button onClick={() => listObjectLayout.call()}>Get Layout</button>
+      <ul>
+        {list.map(listValue => (
+          <li
+            key={listValue.value}
+            className={listValue.state}
+            value={listValue.value}
+            onClick={() => handleSelect(listValue.value)}
+          >
+            {listValue.label}
+          </li>
+        ))}
+      </ul> */}
+    </>
   )
 }
 export default App
