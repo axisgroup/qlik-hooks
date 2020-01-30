@@ -1,11 +1,11 @@
 # Current Selections
-[Code Sandbox](https://codesandbox.io/embed/8xk40y9588)
+
 ```javascript
-import { connectSession } from "rxq";
-import { OpenDoc } from "rxq/Global";
-import { CreateSessionObject, GetField } from "rxq/Doc";
-import { GetLayout } from "rxq/GenericObject";
-import { shareReplay, startWith, switchMap } from "rxjs/operators";
+import React from "react"
+import { useConnectEngine } from "qlik-hooks"
+import { useOpenDoc } from "qlik-hooks/Global"
+import { useCreateSessionObject } from "qlik-hooks/Doc"
+import { useGetLayout } from "qlik-hooks/GenericObject"
 
 const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 
@@ -13,38 +13,43 @@ const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 const config = {
   host: "sense.axisgroup.com",
   isSecure: true,
-  appname
-};
+  appname,
+}
 
-// Connect the session and share the Global handle
-const session = connectSession(config);
-const global$ = session.global$;
+const Component = () => {
+  // Connect to the engine
+  const engine = useConnectEngine(config)
 
-// Open an app and share the app handle
-const app$ = global$.pipe(
-  switchMap(h => h.ask(OpenDoc, appname)),
-  shareReplay(1)
-);
+  // Open an app
+  const app = useOpenDoc(engine, { params: ["aae16724-dfd9-478b-b401-0d8038793adf"] })
 
-// Create a Generic Object with the current selections
-const obj$ = app$.pipe(
-  switchMap(h => h.ask(CreateSessionObject, {
-    "qInfo": {
-      "qType": "my-object"
-    },
-    "qSelectionObjectDef": {}
-  })),
-  shareReplay(1)
-);
+  // Create GenericObject with formula
+  const obj = useCreateSessionObject(app, {
+    params: [
+      {
+        qInfo: { qType: "my-object" },
+        qSelectionObjectDef: {},
+      },
+    ],
+  })
 
-// Get the latest selections whenever the model changes
-const selections$ = obj$.pipe(
-  switchMap(h => h.invalidated$.pipe(startWith(h))),
-  switchMap(h => h.ask(GetLayout))
-);
+  // Get the layout of the GenericObject to calculate the value
+  const objLayout = useGetLayout(obj, { params: [], invalidations: true })
 
-// Print the selections to the DOM
-selections$.subscribe(layout => {
-  document.querySelector("#content").innerHTML = layout.qSelectionObject.qSelections.map(sel => `<strong>${sel.qField}:</strong>   ${sel.qSelected}`).join("")
-});
+  return (
+    <div>
+      {/* Display selections output */}
+      Selections:
+      {objLayout.qResponse !== null ? (
+        objLayout.qResponse.qSelectionObject.qSelections.map((sel, i) => (
+          <div key={i}>
+            <strong>{sel.qField}:</strong> {sel.qSelected}
+          </div>
+        ))
+      ) : (
+        <div>loading...</div>
+      )}
+    </div>
+  )
+}
 ```

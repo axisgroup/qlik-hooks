@@ -556,14 +556,13 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="loop-through-selections-in-a-field">Loop Through Selections in a Field</h1>
-<p><a href="https://codesandbox.io/embed/nwwrm598r0" target="_blank">Code Sandbox</a></p>
-<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { connectSession } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq&quot;</span>;
-<span class="hljs-keyword">import</span> { OpenDoc } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Global&quot;</span>;
-<span class="hljs-keyword">import</span> { CreateSessionObject, GetField } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Doc&quot;</span>;
-<span class="hljs-keyword">import</span> { GetLayout } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/GenericObject&quot;</span>;
-<span class="hljs-keyword">import</span> { GetCardinal, LowLevelSelect } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Field&quot;</span>;
-<span class="hljs-keyword">import</span> { map, publish, repeat, shareReplay, startWith, switchMap, take, withLatestFrom } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxjs/operators&quot;</span>;
-<span class="hljs-keyword">import</span> { interval } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxjs&quot;</span>;
+<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { connectSession } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq&quot;</span>
+<span class="hljs-keyword">import</span> { OpenDoc } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Global&quot;</span>
+<span class="hljs-keyword">import</span> { CreateSessionObject, GetField } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Doc&quot;</span>
+<span class="hljs-keyword">import</span> { GetLayout } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/GenericObject&quot;</span>
+<span class="hljs-keyword">import</span> { GetCardinal, LowLevelSelect } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Field&quot;</span>
+<span class="hljs-keyword">import</span> { map, publish, repeat, shareReplay, startWith, switchMap, take, withLatestFrom } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxjs/operators&quot;</span>
+<span class="hljs-keyword">import</span> { interval } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxjs&quot;</span>
 
 <span class="hljs-keyword">const</span> appname = <span class="hljs-string">&quot;aae16724-dfd9-478b-b401-0d8038793adf&quot;</span>
 
@@ -571,69 +570,74 @@
 <span class="hljs-keyword">const</span> config = {
   host: <span class="hljs-string">&quot;sense.axisgroup.com&quot;</span>,
   isSecure: <span class="hljs-literal">true</span>,
-  appname
-};
+  appname,
+}
 
 <span class="hljs-comment">// Connect the session and share the Global handle</span>
-<span class="hljs-keyword">const</span> session = connectSession(config);
-<span class="hljs-keyword">const</span> global$ = session.global$;
-
+<span class="hljs-keyword">const</span> session = connectSession(config)
+<span class="hljs-keyword">const</span> global$ = session.global$
 
 <span class="hljs-comment">// Open an app and share the app handle</span>
 <span class="hljs-keyword">const</span> app$ = global$.pipe(
   switchMap(h =&gt; h.ask(OpenDoc, appname)),
   shareReplay(<span class="hljs-number">1</span>)
-);
+)
 
 <span class="hljs-comment">// Create a Generic Object with the current selections and a metric</span>
 <span class="hljs-keyword">const</span> obj$ = app$.pipe(
-  switchMap(h =&gt; h.ask(CreateSessionObject, {
-    <span class="hljs-string">&quot;qInfo&quot;</span>: {
-      <span class="hljs-string">&quot;qType&quot;</span>: <span class="hljs-string">&quot;my-object&quot;</span>
-    },
-    <span class="hljs-string">&quot;qSelectionObjectDef&quot;</span>: {},
-    <span class="hljs-string">&quot;myValue&quot;</span>: {
-      <span class="hljs-string">&quot;qValueExpression&quot;</span>: <span class="hljs-string">&quot;=avg(petal_length)&quot;</span>
-    }
-  })),
+  switchMap(h =&gt;
+    h.ask(CreateSessionObject, {
+      qInfo: {
+        qType: <span class="hljs-string">&quot;my-object&quot;</span>,
+      },
+      qSelectionObjectDef: {},
+      myValue: {
+        qValueExpression: <span class="hljs-string">&quot;=avg(petal_length)&quot;</span>,
+      },
+    })
+  ),
   shareReplay(<span class="hljs-number">1</span>)
-);
+)
 
 <span class="hljs-comment">// Get the latest selections whenever the model changes</span>
 <span class="hljs-keyword">const</span> selections$ = obj$.pipe(
   switchMap(h =&gt; h.invalidated$.pipe(startWith(h))),
   switchMap(h =&gt; h.ask(GetLayout))
-);
+)
 
 <span class="hljs-comment">// Print the selections to the DOM</span>
 selections$.subscribe(layout =&gt; {
-  <span class="hljs-keyword">const</span> content = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&quot;#content&quot;</span>);
-  content.innerHTML = layout.qSelectionObject.qSelections.map(sel =&gt; <span class="hljs-string">`&lt;strong&gt;<span class="hljs-subst">${sel.qField}</span>:&lt;/strong&gt;   <span class="hljs-subst">${sel.qSelected}</span>`</span>).join(<span class="hljs-string">&quot;&quot;</span>)
-  content.innerHTML += <span class="hljs-string">`&lt;br&gt;The average petal length is <span class="hljs-subst">${layout.myValue}</span>`</span>;
-});
+  <span class="hljs-keyword">const</span> content = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&quot;#content&quot;</span>)
+  content.innerHTML = layout.qSelectionObject.qSelections
+    .map(sel =&gt; <span class="hljs-string">`&lt;strong&gt;<span class="hljs-subst">${sel.qField}</span>:&lt;/strong&gt;   <span class="hljs-subst">${sel.qSelected}</span>`</span>)
+    .join(<span class="hljs-string">&quot;&quot;</span>)
+  content.innerHTML += <span class="hljs-string">`&lt;br&gt;The average petal length is <span class="hljs-subst">${layout.myValue}</span>`</span>
+})
 
 <span class="hljs-comment">// Get a field</span>
 <span class="hljs-keyword">const</span> fld$ = app$.pipe(
   switchMap(h =&gt; h.ask(GetField, <span class="hljs-string">&quot;species&quot;</span>)),
   shareReplay(<span class="hljs-number">1</span>)
-);
+)
 
 <span class="hljs-comment">// Create a loop of selections by getting the cardinality of the field,</span>
 <span class="hljs-comment">// then running a repeating interval for that cardinality and passing to</span>
 <span class="hljs-comment">// a lowLevelSelect call on the field handle</span>
 <span class="hljs-keyword">const</span> selectionLoop$ = fld$.pipe(
-  switchMap(h =&gt; h.ask(GetCardinal), (h, cnt) =&gt; ([h, cnt])),
-  switchMap(([h, cnt]) =&gt; interval(<span class="hljs-number">1500</span>).pipe(
-    take(cnt),
-    map(i =&gt; [h, i]),
-    repeat()
-  )),
+  switchMap(h =&gt; h.ask(GetCardinal), (h, cnt) =&gt; [h, cnt]),
+  switchMap(([h, cnt]) =&gt;
+    interval(<span class="hljs-number">1500</span>).pipe(
+      take(cnt),
+      map(i =&gt; [h, i]),
+      repeat()
+    )
+  ),
   switchMap(([h, i]) =&gt; h.ask(LowLevelSelect, [i], <span class="hljs-literal">false</span>)),
   publish()
-);
+)
 
 <span class="hljs-comment">// Connect the selection loop</span>
-selectionLoop$.connect();
+selectionLoop$.connect()
 </code></pre>
 
                                 
@@ -678,7 +682,7 @@ selectionLoop$.connect();
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"10. Loop through Selections in a Field","level":"1.4.10","depth":2,"next":{"title":"11. Make Selections in a Listbox","level":"1.4.11","depth":2,"path":"recipes/make-lb-selections.md","ref":"recipes/make-lb-selections.md","articles":[]},"previous":{"title":"09. Make a Selection in a Field","level":"1.4.9","depth":2,"path":"recipes/make-a-selection.md","ref":"recipes/make-a-selection.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"recipes/loop-selections.md","mtime":"2020-01-28T23:28:34.776Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"10. Loop through Selections in a Field","level":"1.4.10","depth":2,"next":{"title":"11. Make Selections in a Listbox","level":"1.4.11","depth":2,"path":"recipes/make-lb-selections.md","ref":"recipes/make-lb-selections.md","articles":[]},"previous":{"title":"09. Make a Selection in a Field","level":"1.4.9","depth":2,"path":"recipes/make-a-selection.md","ref":"recipes/make-a-selection.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"recipes/loop-selections.md","mtime":"2020-01-30T21:20:23.816Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

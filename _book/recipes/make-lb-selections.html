@@ -556,13 +556,11 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="make-selections-in-a-listbox">Make Selections in a Listbox</h1>
-<p><a href="https://codesandbox.io/embed/3kj6nw46q" target="_blank">Code Sandbox</a></p>
-<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { connectSession } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq&quot;</span>;
-<span class="hljs-keyword">import</span> { OpenDoc } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Global&quot;</span>;
-<span class="hljs-keyword">import</span> { CreateSessionObject } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Doc&quot;</span>;
-<span class="hljs-keyword">import</span> { GetLayout, SelectListObjectValues } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/GenericObject&quot;</span>;
-<span class="hljs-keyword">import</span> { filter, map, publish, repeat, shareReplay, startWith, switchMap, take, withLatestFrom } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxjs/operators&quot;</span>;
-<span class="hljs-keyword">import</span> { fromEvent } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxjs&quot;</span>;
+<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;react&quot;</span>
+<span class="hljs-keyword">import</span> { useConnectEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks&quot;</span>
+<span class="hljs-keyword">import</span> { useOpenDoc } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/dist/Global&quot;</span>
+<span class="hljs-keyword">import</span> { useCreateSessionObject } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/dist/Doc&quot;</span>
+<span class="hljs-keyword">import</span> { useGetLayout, useSelectListObjectValues } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/dist/GenericObject&quot;</span>
 
 <span class="hljs-keyword">const</span> appname = <span class="hljs-string">&quot;aae16724-dfd9-478b-b401-0d8038793adf&quot;</span>
 
@@ -570,90 +568,84 @@
 <span class="hljs-keyword">const</span> config = {
   host: <span class="hljs-string">&quot;sense.axisgroup.com&quot;</span>,
   isSecure: <span class="hljs-literal">true</span>,
-  appname
-};
+  appname,
+}
 
-<span class="hljs-comment">// Connect the session and share the Global handle</span>
-<span class="hljs-keyword">const</span> session = connectSession(config);
-<span class="hljs-keyword">const</span> global$ = session.global$;
+<span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-comment">// Connect to the engine</span>
+  <span class="hljs-keyword">const</span> engine = useConnectEngine(config)
 
-<span class="hljs-comment">// Open an app and share the app handle</span>
-<span class="hljs-keyword">const</span> app$ = global$.pipe(
-  switchMap(h =&gt; h.ask(OpenDoc, appname)),
-  shareReplay(<span class="hljs-number">1</span>)
-);
+  <span class="hljs-comment">// Open an app</span>
+  <span class="hljs-keyword">const</span> app = useOpenDoc(engine, { params: [<span class="hljs-string">&quot;aae16724-dfd9-478b-b401-0d8038793adf&quot;</span>] })
 
-<span class="hljs-comment">// Create a Generic Object with a metric</span>
-<span class="hljs-keyword">const</span> obj$ = app$.pipe(
-  switchMap(h =&gt; h.ask(CreateSessionObject, {
-    <span class="hljs-string">&quot;qInfo&quot;</span>: {
-      <span class="hljs-string">&quot;qType&quot;</span>: <span class="hljs-string">&quot;my-object&quot;</span>
-    },
-    <span class="hljs-string">&quot;myValue&quot;</span>: {
-      <span class="hljs-string">&quot;qValueExpression&quot;</span>: <span class="hljs-string">&quot;=avg(petal_length)&quot;</span>
-    }
-  })),
-  shareReplay(<span class="hljs-number">1</span>)
-);
-
-<span class="hljs-comment">// Get the latest selections whenever the model changes</span>
-<span class="hljs-keyword">const</span> metricLayouts$ = obj$.pipe(
-  switchMap(h =&gt; h.invalidated$.pipe(startWith(h))),
-  switchMap(h =&gt; h.ask(GetLayout))
-);
-
-<span class="hljs-comment">// Print the selections to the DOM</span>
-metricLayouts$.subscribe(layout =&gt; {
-  <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&quot;#metric&quot;</span>).innerHTML = <span class="hljs-string">`&lt;br&gt;The average petal length is <span class="hljs-subst">${layout.myValue}</span>`</span>;
-});
-
-<span class="hljs-comment">// Create a Generic Object with a list object for the field &quot;species&quot;</span>
-<span class="hljs-keyword">const</span> lb$ = app$.pipe(
-  switchMap(h =&gt; h.ask(CreateSessionObject, {
-    <span class="hljs-string">&quot;qInfo&quot;</span>: {
-      <span class="hljs-string">&quot;qType&quot;</span>: <span class="hljs-string">&quot;my-listbox&quot;</span>
-    },
-    <span class="hljs-string">&quot;qListObjectDef&quot;</span>: {
-      <span class="hljs-string">&quot;qDef&quot;</span>: {
-        <span class="hljs-string">&quot;qFieldDefs&quot;</span>: [<span class="hljs-string">&quot;species&quot;</span>]
+  <span class="hljs-comment">// Create GenericObject with formula</span>
+  <span class="hljs-keyword">const</span> obj = useCreateSessionObject(app, {
+    params: [
+      {
+        qInfo: { qType: <span class="hljs-string">&quot;my-object&quot;</span> },
+        myValue: { qValueExpression: <span class="hljs-string">&quot;=avg(petal_length)&quot;</span> },
       },
-      <span class="hljs-string">&quot;qInitialDataFetch&quot;</span>: [
-        {
-          <span class="hljs-string">&quot;qTop&quot;</span>: <span class="hljs-number">0</span>,
-          <span class="hljs-string">&quot;qLeft&quot;</span>: <span class="hljs-number">0</span>,
-          <span class="hljs-string">&quot;qWidth&quot;</span>: <span class="hljs-number">1</span>,
-          <span class="hljs-string">&quot;qHeight&quot;</span>: <span class="hljs-number">100</span>
-        }
-      ]
-    }
-  })),
-  shareReplay(<span class="hljs-number">1</span>)
-);
+    ],
+  })
 
-<span class="hljs-comment">// Get a stream of list object layouts</span>
-<span class="hljs-keyword">const</span> lbLayouts$ = lb$.pipe(
-  switchMap(h =&gt; h.invalidated$.pipe(startWith(h))),
-  switchMap(h =&gt; h.ask(GetLayout))
-);
+  <span class="hljs-comment">// Get the layout of the GenericObject to calculate the value</span>
+  <span class="hljs-keyword">const</span> objLayout = useGetLayout(obj, { params: [], invalidations: <span class="hljs-literal">true</span> })
 
-<span class="hljs-comment">// Render the list object to the page in an unordered list</span>
-lbLayouts$.subscribe(layout =&gt; {
-  <span class="hljs-keyword">const</span> data = layout.qListObject.qDataPages[<span class="hljs-number">0</span>].qMatrix;
-  <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&quot;ul&quot;</span>).innerHTML = data.map(item =&gt; <span class="hljs-string">`&lt;li class=&quot;<span class="hljs-subst">${item[0].qState}</span>&quot; data-qno=<span class="hljs-subst">${item[0].qElemNumber}</span>&gt;
-      <span class="hljs-subst">${item[0].qText}</span>
-  &lt;/li&gt;`</span>).join(<span class="hljs-string">&quot;&quot;</span>);
-});
+  <span class="hljs-comment">// Create a GenericObject with a list object for the field &quot;species&quot;</span>
+  <span class="hljs-keyword">const</span> listBox = useCreateSessionObject(app, {
+    params: [
+      {
+        qInfo: { qType: <span class="hljs-string">&quot;my-listbox&quot;</span> },
+        qListObjectDef: {
+          qDef: {
+            qFieldDefs: [<span class="hljs-string">&quot;species&quot;</span>],
+          },
+          qInitialDataFetch: [
+            {
+              qTop: <span class="hljs-number">0</span>,
+              qLeft: <span class="hljs-number">0</span>,
+              qWidth: <span class="hljs-number">1</span>,
+              qHeight: <span class="hljs-number">100</span>,
+            },
+          ],
+        },
+      },
+    ],
+  })
 
-<span class="hljs-comment">// Select values when a user clicks on them</span>
-<span class="hljs-keyword">const</span> select$ = fromEvent(<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&quot;body&quot;</span>), <span class="hljs-string">&quot;click&quot;</span>).pipe(
-  filter(evt =&gt; evt.target.hasAttribute(<span class="hljs-string">&quot;data-qno&quot;</span>)),
-  map(evt =&gt; <span class="hljs-built_in">parseInt</span>(evt.target.getAttribute(<span class="hljs-string">&quot;data-qno&quot;</span>))),
-  withLatestFrom(lb$),
-  switchMap(([qno, h]) =&gt; h.ask(SelectListObjectValues, <span class="hljs-string">&quot;/qListObjectDef&quot;</span>, [qno], <span class="hljs-literal">true</span>)),
-  publish()
-);
+  <span class="hljs-comment">// Get the listbox layout</span>
+  <span class="hljs-keyword">const</span> listBoxLayout = useGetLayout(listBox, { params: [], invalidations: <span class="hljs-literal">true</span> })
 
-select$.connect();
+  <span class="hljs-comment">// Create selection object that can be called from user input</span>
+  <span class="hljs-keyword">const</span> listBoxSelect = useSelectListObjectValues(listBox)
+
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      {/* Display calculated value */}
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>The average petal length is {objLayout.qResponse !== null ? objLayout.qResponse.myValue : &quot;&quot;}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      {/* display listbox items */}
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        {listBoxLayout.qResponse !== null ? (
+          <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+            {listBoxLayout.qResponse.qListObject.qDataPages[0].qMatrix.map(listItem =&gt; (
+              <span class="hljs-tag">&lt;<span class="hljs-name">li</span>
+                <span class="hljs-attr">key</span>=<span class="hljs-string">{listItem[0].qElemNumber}</span>
+                <span class="hljs-attr">className</span>=<span class="hljs-string">{listItem[0].qState}</span>
+                <span class="hljs-attr">data-qno</span>=<span class="hljs-string">{listItem[0].qElemNumber}</span>
+                // <span class="hljs-attr">select</span> <span class="hljs-attr">item</span> <span class="hljs-attr">when</span> <span class="hljs-attr">click</span>
+                <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> listBoxSelect.call(&quot;/qListObjectDef&quot;, [listItem[0].qElemNumber], true)}
+              &gt;
+                {listItem[0].qText}
+              <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+            ))}
+          <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+        ) : (
+          &quot;loading...&quot;
+        )}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
+}
 </code></pre>
 
                                 
@@ -698,7 +690,7 @@ select$.connect();
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"11. Make Selections in a Listbox","level":"1.4.11","depth":2,"next":{"title":"12. Search in a Listbox","level":"1.4.12","depth":2,"path":"recipes/search-lb.md","ref":"recipes/search-lb.md","articles":[]},"previous":{"title":"10. Loop through Selections in a Field","level":"1.4.10","depth":2,"path":"recipes/loop-selections.md","ref":"recipes/loop-selections.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"recipes/make-lb-selections.md","mtime":"2020-01-28T23:28:34.856Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"11. Make Selections in a Listbox","level":"1.4.11","depth":2,"next":{"title":"12. Search in a Listbox","level":"1.4.12","depth":2,"path":"recipes/search-lb.md","ref":"recipes/search-lb.md","articles":[]},"previous":{"title":"10. Loop through Selections in a Field","level":"1.4.10","depth":2,"path":"recipes/loop-selections.md","ref":"recipes/loop-selections.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"recipes/make-lb-selections.md","mtime":"2020-01-30T21:30:16.739Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

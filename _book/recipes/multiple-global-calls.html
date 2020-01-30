@@ -556,40 +556,59 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="multiple-global-calls">Multiple Global Calls</h1>
-<p><a href="https://codesandbox.io/embed/lpzn20399q" target="_blank">Code Sandbox</a></p>
-<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { connectSession } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq&quot;</span>;
-<span class="hljs-keyword">import</span> { EngineVersion, GetDocList } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Global&quot;</span>;
-<span class="hljs-keyword">import</span> { shareReplay, switchMap } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxjs/operators&quot;</span>;
+<pre><code class="lang-javascript"><span class="hljs-comment">// Import the useConnectEngine hook and useEngineVersion hook</span>
+<span class="hljs-keyword">import</span> React, { useState, useEffect } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;react&quot;</span>
+<span class="hljs-keyword">import</span> { useConnectEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks&quot;</span>
+<span class="hljs-keyword">import</span> { useEngineVersion, useGetDocList } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/Global&quot;</span>
 
 <span class="hljs-comment">// Define the configuration for your session</span>
 <span class="hljs-keyword">const</span> config = {
   host: <span class="hljs-string">&quot;sense.axisgroup.com&quot;</span>,
-  isSecure: <span class="hljs-literal">true</span>
-};
+  isSecure: <span class="hljs-literal">true</span>,
+}
 
-<span class="hljs-comment">// Connect the session and share the Global handle</span>
-<span class="hljs-keyword">const</span> session = connectSession(config);
-<span class="hljs-keyword">const</span> global$ = session.global$;
+<span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-comment">// Connect to the engine</span>
+  <span class="hljs-keyword">const</span> engine = useConnectEngine(config)
 
-<span class="hljs-comment">// Get the engineVersion</span>
-<span class="hljs-keyword">const</span> engVer$ = global$.pipe(
-  switchMap(h =&gt; h.ask(EngineVersion))
-);
+  <span class="hljs-comment">// Get the engine version</span>
+  <span class="hljs-keyword">const</span> engineVersion = useEngineVersion(engine, { params: [] })
 
-<span class="hljs-comment">// Get the Doc List</span>
-<span class="hljs-keyword">const</span> doclist$ = global$.pipe(
-  switchMap(h =&gt; h.ask(GetDocList))
-);
+  <span class="hljs-comment">// Get the Doc list</span>
+  <span class="hljs-keyword">const</span> docList = useGetDocList(engine, { params: [] })
 
-<span class="hljs-comment">// Write the engine version to the DOM</span>
-engVer$.subscribe(response =&gt; {
-  <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&quot;#ver&quot;</span>).innerHTML = response.qComponentVersion;
-});
+  <span class="hljs-comment">// Convert qResponse to list</span>
+  <span class="hljs-keyword">const</span> [list, setList] = useState([])
+  useEffect(() =&gt; {
+    <span class="hljs-keyword">if</span> (docList.qResponse !== <span class="hljs-literal">null</span>) {
+      setList(
+        docList.qResponse.map(<span class="hljs-built_in">document</span> =&gt; ({
+          label: <span class="hljs-built_in">document</span>.qDocName,
+          value: <span class="hljs-built_in">document</span>.qDocId,
+        }))
+      )
+    }
+  }, [docList])
 
-<span class="hljs-comment">// Write the doc list to the DOM</span>
-doclist$.subscribe(dl =&gt; {
-  <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&quot;#content&quot;</span>).innerHTML += dl.map(doc =&gt; <span class="hljs-string">`&lt;li&gt;<span class="hljs-subst">${doc.qDocName}</span>&lt;/li&gt;`</span>).join(<span class="hljs-string">&quot;&quot;</span>);
-});
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      {/* Display the Engine Version */}
+      Engine Version:
+      {engineVersion.qResponse !== null ? engineVersion.qResponse.qComponentVersion : &quot;loading...&quot;}
+      {/* Display list of documents */}
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        Document List
+        <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+          {list.map(listItem =&gt; (
+            <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{listItem.value}</span> <span class="hljs-attr">value</span>=<span class="hljs-string">{listItem.value}</span>&gt;</span>
+              {listItem.label}
+            <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+          ))}
+        <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
+}
 </code></pre>
 
                                 
@@ -634,7 +653,7 @@ doclist$.subscribe(dl =&gt; {
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"03. Make Multiple Global Calls","level":"1.4.3","depth":2,"next":{"title":"04. Open an App","level":"1.4.4","depth":2,"path":"recipes/open-an-app.md","ref":"recipes/open-an-app.md","articles":[]},"previous":{"title":"02. Get the Engine Version","level":"1.4.2","depth":2,"path":"recipes/engine-version.md","ref":"recipes/engine-version.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"recipes/multiple-global-calls.md","mtime":"2020-01-28T23:28:34.918Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"03. Make Multiple Global Calls","level":"1.4.3","depth":2,"next":{"title":"04. Open an App","level":"1.4.4","depth":2,"path":"recipes/open-an-app.md","ref":"recipes/open-an-app.md","articles":[]},"previous":{"title":"02. Get the Engine Version","level":"1.4.2","depth":2,"path":"recipes/engine-version.md","ref":"recipes/engine-version.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"recipes/multiple-global-calls.md","mtime":"2020-01-30T21:01:15.220Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

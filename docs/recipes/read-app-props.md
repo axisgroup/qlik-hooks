@@ -1,34 +1,29 @@
 # Read app properties
-[Code Sandbox](https://codesandbox.io/embed/o4jjp82zwy)
+
 ```javascript
-import { connectSession } from "rxq";
-import { OpenDoc } from "rxq/Global";
-import { GetAppProperties } from "rxq/Doc";
-import { shareReplay, switchMap } from "rxjs/operators";
+// Import the useConnectEngine hook and useEngineVersion hook
+import React from "react"
+import { useConnectEngine } from "qlik-hooks"
+import { useOpenDoc } from "qlik-hooks/Global"
+import { useGetAppProperties } from "qlik-hooks/Doc"
 
 // Define the configuration for your session
 const config = {
   host: "sense.axisgroup.com",
-  isSecure: true
-};
+  isSecure: true,
+}
 
-// Connect the session and share the Global handle
-const session = connectSession(config);
-const global$ = session.global$;
+const Component = () => {
+  // Connect to the engine
+  const engine = useConnectEngine(config)
 
-// Open an app and share the app handle
-const app$ = global$.pipe(
-  switchMap(h => h.ask(OpenDoc, "aae16724-dfd9-478b-b401-0d8038793adf")),
-  shareReplay(1)
-);
+  // Open an app
+  const app = useOpenDoc(engine, { params: ["aae16724-dfd9-478b-b401-0d8038793adf"] })
 
-// Get the app properties
-const appProps$ = app$.pipe(
-  switchMap(h => h.ask(GetAppProperties))
-);
+  // Get the app properties
+  const appProps = useGetAppProperties(app, { params: [] })
 
-// Write the app title and modified date to the DOM
-appProps$.subscribe(props => {
-  document.querySelector("#content").innerHTML = `The app ${props.qTitle} was last modified at ${props.modifiedDate}`;
-});
+  // Display the app title when available
+  return appProps.qResponse !== null ? <div>{appProps.qResponse.qTitle}</div> : <div>loading...</div>
+}
 ```

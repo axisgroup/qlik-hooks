@@ -556,55 +556,39 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="set-app-properties-and-listen-for-changes">Set App Properties and Listen for Changes</h1>
-<p><a href="https://codesandbox.io/embed/n4v0p3m4n4" target="_blank">Code Sandbox</a></p>
-<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { connectSession } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq&quot;</span>;
-<span class="hljs-keyword">import</span> { OpenDoc } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Global&quot;</span>;
-<span class="hljs-keyword">import</span> { GetAppProperties, SetAppProperties } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Doc&quot;</span>;
-<span class="hljs-keyword">import</span> { publish, shareReplay, startWith, 
-  switchMap, withLatestFrom } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxjs/operators&quot;</span>;
-<span class="hljs-keyword">import</span> { fromEvent } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxjs&quot;</span>;
-
-<span class="hljs-keyword">const</span> appname = <span class="hljs-string">&quot;aae16724-dfd9-478b-b401-0d8038793adf&quot;</span>
+<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;react&quot;</span>
+<span class="hljs-keyword">import</span> { useConnectEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks&quot;</span>
+<span class="hljs-keyword">import</span> { useOpenDoc } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/Global&quot;</span>
+<span class="hljs-keyword">import</span> { useGetAppProperties, useSetAppProperties } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/Doc&quot;</span>
 
 <span class="hljs-comment">// Define the configuration for your session</span>
 <span class="hljs-keyword">const</span> config = {
   host: <span class="hljs-string">&quot;sense.axisgroup.com&quot;</span>,
   isSecure: <span class="hljs-literal">true</span>,
-  appname
-};
+}
 
-<span class="hljs-comment">// Connect the session and share the Global handle</span>
-<span class="hljs-keyword">const</span> session = connectSession(config);
-<span class="hljs-keyword">const</span> global$ = session.global$;
+<span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-comment">// Connect to the engine</span>
+  <span class="hljs-keyword">const</span> engine = useConnectEngine(config)
 
-<span class="hljs-comment">// Open an app and share the app handle</span>
-<span class="hljs-keyword">const</span> app$ = global$.pipe(
-  switchMap(h =&gt; h.ask(OpenDoc, appname)),
-  shareReplay(<span class="hljs-number">1</span>)
-);
+  <span class="hljs-comment">// Open an app</span>
+  <span class="hljs-keyword">const</span> app = useOpenDoc(engine, { params: [<span class="hljs-string">&quot;aae16724-dfd9-478b-b401-0d8038793adf&quot;</span>] })
 
-<span class="hljs-comment">// Get the app properties any time the app invalidates</span>
-<span class="hljs-keyword">const</span> appProps$ = app$.pipe(
-  switchMap(h =&gt; h.invalidated$.pipe(startWith(h))),
-  switchMap(h =&gt; h.ask(GetAppProperties))
-);
+  <span class="hljs-comment">// Get the app properties</span>
+  <span class="hljs-keyword">const</span> appProps = useGetAppProperties(app, { params: [], invalidations: <span class="hljs-literal">true</span> })
 
-<span class="hljs-comment">// Write the app title and modified date to the DOM</span>
-appProps$.subscribe(props =&gt; {
-  <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&quot;#content&quot;</span>).innerHTML = <span class="hljs-string">`The app&apos;s prop &quot;random&quot; is <span class="hljs-subst">${props.random}</span>`</span>;
-});
+  <span class="hljs-comment">// Create SetAppProperties API instance</span>
+  <span class="hljs-keyword">const</span> setAppProps = useSetAppProperties(app)
 
-<span class="hljs-comment">// Whenever a user clicks the button, update the app props with a random prop</span>
-<span class="hljs-keyword">const</span> updateAppProps$ = fromEvent(<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&quot;#set-random&quot;</span>), <span class="hljs-string">&quot;click&quot;</span>).pipe(
-  withLatestFrom(app$),
-  switchMap(([evt, h]) =&gt; h.ask(SetAppProperties, {
-    <span class="hljs-string">&quot;random&quot;</span>: <span class="hljs-built_in">Math</span>.random()
-  })),
-  publish()
-);
-
-<span class="hljs-comment">// Connect the app update mechanism</span>
-updateAppProps$.connect();
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      {/* Call setApprops when click button */}
+      <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> setAppProps.call({ random: Math.random() })}&gt;Set Random<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+      {/* Display app props when available */}
+      {appProps.qResponse !== null ? <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{appProps.qResponse.random}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> : <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>loading...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
+}
 </code></pre>
 
                                 
@@ -649,7 +633,7 @@ updateAppProps$.connect();
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"06. Set App Properties and Listen for Changes","level":"1.4.6","depth":2,"next":{"title":"07. Calculate a Value with a GenericObject","level":"1.4.7","depth":2,"path":"recipes/gen-obj-value.md","ref":"recipes/gen-obj-value.md","articles":[]},"previous":{"title":"05. Get App Properties","level":"1.4.5","depth":2,"path":"recipes/read-app-props.md","ref":"recipes/read-app-props.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"recipes/set-app-props.md","mtime":"2020-01-28T23:28:35.052Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"06. Set App Properties and Listen for Changes","level":"1.4.6","depth":2,"next":{"title":"07. Calculate a Value with a GenericObject","level":"1.4.7","depth":2,"path":"recipes/gen-obj-value.md","ref":"recipes/gen-obj-value.md","articles":[]},"previous":{"title":"05. Get App Properties","level":"1.4.5","depth":2,"path":"recipes/read-app-props.md","ref":"recipes/read-app-props.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"recipes/set-app-props.md","mtime":"2020-01-30T21:01:04.302Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

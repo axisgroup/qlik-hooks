@@ -1,10 +1,7 @@
-# Multiple Global Calls
-
-```javascript
 // Import the useConnectEngine hook and useEngineVersion hook
 import React, { useState, useEffect } from "react"
 import { useConnectEngine } from "qlik-hooks"
-import { useEngineVersion, useGetDocList } from "qlik-hooks/Global"
+import { useEngineVersion, useGetDocList } from "qlik-hooks/dist/Global"
 
 // Define the configuration for your session
 const config = {
@@ -54,4 +51,5 @@ const Component = () => {
     </div>
   )
 }
-```
+
+export default Component

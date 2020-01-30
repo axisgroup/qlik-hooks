@@ -1,86 +1,59 @@
-import React, { useEffect, useState } from "react"
-import { useConnectEngine, QlikProvider, schema } from "qlik-hooks"
-import { useEngineVersion, useOpenDoc, useGetDocList } from "qlik-hooks/dist/Global"
-import { useCreateSessionObject, useClearAll } from "qlik-hooks/dist/Doc"
-import { useSelectListObjectValues, useGetLayout } from "qlik-hooks/dist/GenericObject"
-import { Dashboard, EngineVersion, HandleInvalidations } from "./components"
-import "./App.css"
-
-const qlikConfig = {
-  host: "localhost",
-  port: 19076,
-}
-
-const qDef = {
-  qInfo: { qType: "listbox" },
-  qListObjectDef: {
-    qDef: {
-      qFieldDefs: ["Region"],
-    },
-    qInitialDataFetch: [{ qWidth: 1, qHeight: 100 }],
-  },
-}
+import React from "react"
+import {
+  ConnectToEngine,
+  EngineVersion,
+  MultipleGlobalCalls,
+  OpenAnApp,
+  ReadAppProperties,
+  SetAppProps,
+  GenObjValue,
+  CurrentSelections,
+  MakeASelection,
+  MakeLBSelections,
+} from "./recipes"
 
 const App = () => {
-  const engine = useConnectEngine({
-    host: "localhost",
-    port: 19076,
-  })
-
-  const doc = useOpenDoc(engine, { params: ["Executive Dashboard.qvf"] })
-
-  const listObject = useCreateSessionObject(doc, {
-    params: [
-      {
-        qInfo: { qType: "listbox" },
-        qListObjectDef: {
-          qDef: { qFieldDefs: ["Region"] },
-          qInitialDataFetch: [{ qWidth: 1, qHeight: 100 }],
-        },
-      },
-    ],
-  })
-
-  const listObjectLayout = useGetLayout(listObject, { params: [], invalidations: true })
-
-  const [list, setList] = useState([])
-  useEffect(() => {
-    if (listObjectLayout.qResponse !== null) {
-      const qMatrix = listObjectLayout.qResponse.qListObject.qDataPages[0].qMatrix
-
-      setList(
-        qMatrix.map(row => ({
-          label: row[0].qText,
-          value: row[0].qElemNumber,
-          state: row[0].qState,
-        }))
-      )
-    }
-  }, [listObjectLayout])
-
-  const selectListObjectValues = useSelectListObjectValues(listObject)
-
-  const handleListObjectSelection = value => {
-    selectListObjectValues.call("/qListObjectDef", [value], true)
-  }
-
-  return (
-    <div>
-      <ul>
-        {list.map(listItem => (
-          <li
-            key={listItem.value}
-            value={listItem.value}
-            style={{
-              backgroundColor: listItem.state === "S" ? "#2294f2" : listItem.state === "X" ? "#b1c0c7" : "#fff",
-            }}
-            onClick={() => handleListObjectSelection(listItem.value)}
-          >
-            {listItem.label}
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
+  return <MakeLBSelections />
 }
 export default App
+
+// // Import the useConnectEngine hook and useEngineVersion hook
+// import React from "react"
+// import { useConnectEngine } from "qlik-hooks"
+// import { useOpenDoc } from "qlik-hooks/dist/Global"
+// import { useGetAppProperties, useSetAppProperties } from "qlik-hooks/dist/Doc"
+
+// // Define the configuration for your session
+// // const config = {
+// //   host: "sense.axisgroup.com",
+// //   isSecure: true,
+// // }
+// const config = {
+//   host: "localhost",
+//   port: 19076,
+// }
+
+// const Component = () => {
+//   // Connect to the engine
+//   const engine = useConnectEngine(config)
+
+//   // Open an app
+//   // const app = useOpenDoc(engine, { params: ["aae16724-dfd9-478b-b401-0d8038793adf"] })
+//   const app = useOpenDoc(engine, { params: ["Executive Dashboard.qvf"] })
+
+//   // Get the app properties
+//   const appProps = useGetAppProperties(app, { params: [], invalidations: true })
+
+//   // Create App Properties Set API caller
+//   const setAppProps = useSetAppProperties(app)
+
+//   // Display the app title when available
+//   return (
+//     <div>
+//       <button onClick={() => setAppProps.call({ random: Math.random() })}>Set Random</button>
+//       {appProps.qResponse !== null ? <div>{appProps.qResponse.random}</div> : <div>loading...</div>}
+//     </div>
+//   )
+// }
+
+// export default Component

@@ -1,10 +1,7 @@
-# Get the Engine Version
-
-```javascript
 // Import the useConnectEngine hook and useEngineVersion hook
 import React from "react"
 import { useConnectEngine } from "qlik-hooks"
-import { useEngineVersion } from "qlik-hooks/Global"
+import { useEngineVersion } from "qlik-hooks/dist/Global"
 
 // Define the configuration for your session
 const config = {
@@ -26,4 +23,5 @@ const Component = () => {
     <div>loading...</div>
   )
 }
-```
+
+export default Component

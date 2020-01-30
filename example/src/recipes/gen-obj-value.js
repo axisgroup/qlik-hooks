@@ -1,11 +1,8 @@
-# Calculate a value with a Generic Object
-
-```javascript
 import React from "react"
 import { useConnectEngine } from "qlik-hooks"
-import { useOpenDoc } from "qlik-hooks/Global"
-import { useCreateSessionObject } from "qlik-hooks/Doc"
-import { useGetLayout } from "qlik-hooks/GenericObject"
+import { useOpenDoc } from "qlik-hooks/dist/Global"
+import { useCreateSessionObject } from "qlik-hooks/dist/Doc"
+import { useGetLayout } from "qlik-hooks/dist/GenericObject"
 
 const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 
@@ -43,4 +40,5 @@ const Component = () => {
     </div>
   )
 }
-```
+
+export default Component

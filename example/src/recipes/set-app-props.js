@@ -1,10 +1,7 @@
-# Set App Properties and Listen for Changes
-
-```javascript
 import React from "react"
 import { useConnectEngine } from "qlik-hooks"
-import { useOpenDoc } from "qlik-hooks/Global"
-import { useGetAppProperties, useSetAppProperties } from "qlik-hooks/Doc"
+import { useOpenDoc } from "qlik-hooks/dist/Global"
+import { useGetAppProperties, useSetAppProperties } from "qlik-hooks/dist/Doc"
 
 // Define the configuration for your session
 const config = {
@@ -34,4 +31,5 @@ const Component = () => {
     </div>
   )
 }
-```
+
+export default Component

@@ -1,6 +1,3 @@
-# Make Selections in a Listbox
-
-```javascript
 import React from "react"
 import { useConnectEngine } from "qlik-hooks"
 import { useOpenDoc } from "qlik-hooks/dist/Global"
@@ -91,4 +88,5 @@ const Component = () => {
     </div>
   )
 }
-```
+
+export default Component

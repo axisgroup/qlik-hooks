@@ -556,31 +556,31 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="get-the-engine-version">Get the Engine Version</h1>
-<p><a href="https://codesandbox.io/embed/6j47717pz3" target="_blank">Code Sandbox</a></p>
-<pre><code class="lang-javascript"><span class="hljs-comment">// Import the connectSession function, engineVersion function, and switchMap operator</span>
-<span class="hljs-keyword">import</span> { connectSession } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq&quot;</span>;
-<span class="hljs-keyword">import</span> { EngineVersion } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Global&quot;</span>;
-<span class="hljs-keyword">import</span> { switchMap } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxjs/operators&quot;</span>;
+<pre><code class="lang-javascript"><span class="hljs-comment">// Import the useConnectEngine hook and useEngineVersion hook</span>
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;react&quot;</span>
+<span class="hljs-keyword">import</span> { useConnectEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks&quot;</span>
+<span class="hljs-keyword">import</span> { useEngineVersion } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/Global&quot;</span>
 
 <span class="hljs-comment">// Define the configuration for your session</span>
 <span class="hljs-keyword">const</span> config = {
   host: <span class="hljs-string">&quot;sense.axisgroup.com&quot;</span>,
-  isSecure: <span class="hljs-literal">true</span>
-};
+  isSecure: <span class="hljs-literal">true</span>,
+}
 
-<span class="hljs-comment">// Connect the session</span>
-<span class="hljs-keyword">const</span> session = connectSession(config);
-<span class="hljs-keyword">const</span> global$ = session.global$;
+<span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-comment">// Connect to the engine</span>
+  <span class="hljs-keyword">const</span> engine = useConnectEngine(config)
 
-<span class="hljs-comment">// Get the engineVersion</span>
-<span class="hljs-keyword">const</span> engVer$ = global$.pipe(
-  switchMap(h =&gt; h.ask(EngineVersion))
-);
+  <span class="hljs-comment">// Get the engine version</span>
+  <span class="hljs-keyword">const</span> engineVersion = useEngineVersion(engine, { params: [] })
 
-<span class="hljs-comment">// Write the engine version to the DOM</span>
-engVer$.subscribe(response =&gt; {
-  <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&quot;#ver&quot;</span>).innerHTML = response.qComponentVersion;
-});
+  <span class="hljs-comment">// Display the engine version when it is available</span>
+  <span class="hljs-keyword">return</span> engineVersion.qResponse !== <span class="hljs-literal">null</span> ? (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{engineVersion.qResponse.qComponentVersion}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  ) : (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>loading...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
+}
 </code></pre>
 
                                 
@@ -625,7 +625,7 @@ engVer$.subscribe(response =&gt; {
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"02. Get the Engine Version","level":"1.4.2","depth":2,"next":{"title":"03. Make Multiple Global Calls","level":"1.4.3","depth":2,"path":"recipes/multiple-global-calls.md","ref":"recipes/multiple-global-calls.md","articles":[]},"previous":{"title":"01. Connect to an Engine","level":"1.4.1","depth":2,"path":"recipes/connect.md","ref":"recipes/connect.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"recipes/engine-version.md","mtime":"2020-01-28T23:28:34.610Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"02. Get the Engine Version","level":"1.4.2","depth":2,"next":{"title":"03. Make Multiple Global Calls","level":"1.4.3","depth":2,"path":"recipes/multiple-global-calls.md","ref":"recipes/multiple-global-calls.md","articles":[]},"previous":{"title":"01. Connect to an Engine","level":"1.4.1","depth":2,"path":"recipes/connect.md","ref":"recipes/connect.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"recipes/engine-version.md","mtime":"2020-01-30T21:01:12.375Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

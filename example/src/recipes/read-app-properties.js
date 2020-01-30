@@ -1,10 +1,8 @@
-# Open an App
-
-```javascript
 // Import the useConnectEngine hook and useEngineVersion hook
 import React from "react"
 import { useConnectEngine } from "qlik-hooks"
-import { useOpenDoc } from "qlik-hooks/Global"
+import { useOpenDoc } from "qlik-hooks/dist/Global"
+import { useGetAppProperties } from "qlik-hooks/dist/Doc"
 
 // Define the configuration for your session
 const config = {
@@ -19,6 +17,11 @@ const Component = () => {
   // Open an app
   const app = useOpenDoc(engine, { params: ["aae16724-dfd9-478b-b401-0d8038793adf"] })
 
-  return <div>Component Content</div>
+  // Get the app properties
+  const appProps = useGetAppProperties(app, { params: [] })
+
+  // Display the app title when available
+  return appProps.qResponse !== null ? <div>{appProps.qResponse.qTitle}</div> : <div>loading...</div>
 }
-```
+
+export default Component

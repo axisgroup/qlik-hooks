@@ -556,12 +556,11 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="calculate-a-value-with-a-generic-object">Calculate a value with a Generic Object</h1>
-<p><a href="https://codesandbox.io/embed/qz3y4jvm4j" target="_blank">Code Sandbox</a></p>
-<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { connectSession } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq&quot;</span>;
-<span class="hljs-keyword">import</span> { OpenDoc } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Global&quot;</span>;
-<span class="hljs-keyword">import</span> { CreateSessionObject } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Doc&quot;</span>;
-<span class="hljs-keyword">import</span> { GetLayout } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/GenericObject&quot;</span>;
-<span class="hljs-keyword">import</span> { shareReplay, switchMap } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxjs/operators&quot;</span>;
+<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;react&quot;</span>
+<span class="hljs-keyword">import</span> { useConnectEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks&quot;</span>
+<span class="hljs-keyword">import</span> { useOpenDoc } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/Global&quot;</span>
+<span class="hljs-keyword">import</span> { useCreateSessionObject } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/Doc&quot;</span>
+<span class="hljs-keyword">import</span> { useGetLayout } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/GenericObject&quot;</span>
 
 <span class="hljs-keyword">const</span> appname = <span class="hljs-string">&quot;aae16724-dfd9-478b-b401-0d8038793adf&quot;</span>
 
@@ -569,41 +568,36 @@
 <span class="hljs-keyword">const</span> config = {
   host: <span class="hljs-string">&quot;sense.axisgroup.com&quot;</span>,
   isSecure: <span class="hljs-literal">true</span>,
-  appname
-};
+  appname,
+}
 
-<span class="hljs-comment">// Connect the session and share the Global handle</span>
-<span class="hljs-keyword">const</span> session = connectSession(config);
-<span class="hljs-keyword">const</span> global$ = session.global$;
+<span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-comment">// Connect to the engine</span>
+  <span class="hljs-keyword">const</span> engine = useConnectEngine(config)
 
-<span class="hljs-comment">// Open an app and share the app handle</span>
-<span class="hljs-keyword">const</span> app$ = global$.pipe(
-  switchMap(h =&gt; h.ask(OpenDoc, appname)),
-  shareReplay(<span class="hljs-number">1</span>)
-);
+  <span class="hljs-comment">// Open an app</span>
+  <span class="hljs-keyword">const</span> app = useOpenDoc(engine, { params: [<span class="hljs-string">&quot;aae16724-dfd9-478b-b401-0d8038793adf&quot;</span>] })
 
-<span class="hljs-comment">// Create a Generic Object with a formula</span>
-<span class="hljs-keyword">const</span> obj$ = app$.pipe(
-  switchMap(h =&gt; h.ask(CreateSessionObject, {
-    <span class="hljs-string">&quot;qInfo&quot;</span>: {
-      <span class="hljs-string">&quot;qType&quot;</span>: <span class="hljs-string">&quot;my-object&quot;</span>
-    },
-    <span class="hljs-string">&quot;myValue&quot;</span>: {
-      <span class="hljs-string">&quot;qValueExpression&quot;</span>: <span class="hljs-string">&quot;=avg(petal_length)&quot;</span>
-    }
-  })),
-  shareReplay(<span class="hljs-number">1</span>)
-);
+  <span class="hljs-comment">// Create GenericObject with formula</span>
+  <span class="hljs-keyword">const</span> obj = useCreateSessionObject(app, {
+    params: [
+      {
+        qInfo: { qType: <span class="hljs-string">&quot;my-object&quot;</span> },
+        myValue: { qValueExpression: <span class="hljs-string">&quot;=avg(petal_length)&quot;</span> },
+      },
+    ],
+  })
 
-<span class="hljs-comment">// Get the layout of the Generic Object to calculate the value</span>
-<span class="hljs-keyword">const</span> value$ = obj$.pipe(
-  switchMap(h =&gt; h.ask(GetLayout))
-);
+  <span class="hljs-comment">// Get the layout of the GenericObject to calculate the value</span>
+  <span class="hljs-keyword">const</span> objLayout = useGetLayout(obj, { params: [] })
 
-<span class="hljs-comment">// Write the value to the DOM</span>
-value$.subscribe(layout =&gt; {
-  <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">&quot;#val&quot;</span>).innerHTML = layout.myValue;
-});
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      {/* Display object value output */}
+      Petal Length: {objLayout.qResponse !== null ? <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{objLayout.qResponse.myValue}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span> : <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>loading...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
+}
 </code></pre>
 
                                 
@@ -648,7 +642,7 @@ value$.subscribe(layout =&gt; {
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"07. Calculate a Value with a GenericObject","level":"1.4.7","depth":2,"next":{"title":"08. Get a stream of Current Selections","level":"1.4.8","depth":2,"path":"recipes/current-selections.md","ref":"recipes/current-selections.md","articles":[]},"previous":{"title":"06. Set App Properties and Listen for Changes","level":"1.4.6","depth":2,"path":"recipes/set-app-props.md","ref":"recipes/set-app-props.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"recipes/gen-obj-value.md","mtime":"2020-01-28T23:28:34.649Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"07. Calculate a Value with a GenericObject","level":"1.4.7","depth":2,"next":{"title":"08. Get a stream of Current Selections","level":"1.4.8","depth":2,"path":"recipes/current-selections.md","ref":"recipes/current-selections.md","articles":[]},"previous":{"title":"06. Set App Properties and Listen for Changes","level":"1.4.6","depth":2,"path":"recipes/set-app-props.md","ref":"recipes/set-app-props.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"recipes/gen-obj-value.md","mtime":"2020-01-30T21:07:15.174Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

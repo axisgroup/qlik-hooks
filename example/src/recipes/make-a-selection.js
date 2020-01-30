@@ -1,6 +1,3 @@
-# Make a Selection
-
-```javascript
 import React from "react"
 import { useConnectEngine } from "qlik-hooks"
 import { useOpenDoc } from "qlik-hooks/dist/Global"
@@ -36,6 +33,7 @@ const Component = () => {
 
   // Get the layout of the GenericObject to calculate the value
   const objLayout = useGetLayout(obj, { params: [], invalidations: true })
+  // console.log(objLayout)
 
   // Get a field
   const fld = useGetField(app, { params: ["species"] })
@@ -63,4 +61,5 @@ const Component = () => {
     </div>
   )
 }
-```
+
+export default Component
