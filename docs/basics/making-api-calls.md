@@ -1,58 +1,90 @@
 # Making API Calls
-As discussed in [Core Concepts](../introduction/core-concepts.md), RxQ provides Handle instances that have an `ask` method for executing an API call and then return an Observable for the response.
 
-Any API method name can be entered via a string. However, the Qlik Engine API is vast so RxQ provides exports of method name enums for each Qlik class.
+When we have a Qlik Sense Object Handle, we can call any API method from the Class the handle belongs to. When we connect to the engine and receive an object back, it contains a handle of the Global class. We can then call any Global Class API with our object.
 
-Let's use the `EngineVersion` method from Qlik's Global class as an example. We can import the `EngineVersion` enum from RxQ like so:
-```javascript
-import { EngineVersion } from "rxq/Global";
-```
+Remember, whenever we use a Qlik Hook, it must follow the rules of [React Hooks](https://reactjs.org/docs/hooks-rules.html). That means Qlik Hooks should be called from within a React function component, or another custom React hook, and should never be called from inside a loop, a condition block, or a nested function.
 
-To use it, we call a Global Handle's ask method with it. Then, we can subscribe to get the engine version back:
-```javascript
-const version$ = globalHandle.ask(EngineVersion);
+## Using an API Qlik Hook
 
-version$.subscribe((version) => {
-    console.log(version);
-});
-```
+Say we have connected to Qlik Engine:
 
-There's just one problem here: how do we get the Global Handle in order to make the call? Let's review.
-
-## Getting Handles
-Handles are provided to us by QAE. Therefore, we can only receive them asychronously through some sort of API call. The Engine has several API calls that will return Handles, such as:
-* [OpenDoc](http://help.qlik.com/en-US/sense-developer/November2017/Subsystems/EngineAPI/Content/Classes/GlobalClass/Global-class-OpenDoc-method.htm), which will return a Doc Handle from a Global Handle
-* [GetField](http://help.qlik.com/en-US/sense-developer/November2017/Subsystems/EngineAPI/Content/Classes/AppClass/App-class-GetField-method.htm), which will return a Field Handle from a Doc Handle
-
-RxQ automatically parses the results of Engine API calls and produces Handles for you as needed. However, this still has to happen asynchronously, so we have to write asynchronous logic to connect a Handle with an API call. This is where higher order Observables come into play.
-
-## Leveraging Higher Order Observables for API Calls
-Higher Order Observables are essentially Observables of Observables. They allow us to create asynchronous data streams based on other asynchronous data streams. This concept is pertitent to us when making API calls, since we are trying to produce an async API call from an asynchronously provided Handle.
-
-RxJS makes handling these higher order observables easy using operators like [mergeMap](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-mergeMap), [concatMap](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-concatMap), and [switchMap](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-switchMap) to flatten them into normal Observables. 
-
-When using `connectSession`, the resulting Observable provides the Global Handle for the established session. By combining this Observable with the `switchMap` operator, we can get our engine version like so:
-
-```javascript
-import { connectSession } from "rxq";
-import { EngineVersion } from "rxq/Global";
-import { switchMap } from "rxjs/operators";
-
-const session = connectSession({
+```jsx
+const Component = () => {
+  const engine = useConnectEngine({
     host: "localhost",
     port: 4848,
-    isSecure: false
-});
+    isSecure: false,
+  })
 
-const global$ = session.global$;
-
-const version$ = global$.pipe(
-    switchMap(handle => handle.ask(EngineVersion))
-);
-
-version$.subscribe(version => {
-    console.log(version);
-});
+  return <div>...component content</div>
+}
 ```
 
-We commonly use `switchMap` when utilizing RxQ because we often only care about making an API call on the latest Handle provided. For more on higher order observables, [we recommend this course](https://egghead.io/courses/use-higher-order-observables-in-rxjs-effectively).
+The `engine` object we get back contains a handle of the Global class type that can be used in conjunction with any of the Global API methods. Let's see how we can use this to get the version of our Qlik Engine. First, we need to import the EngineVersion API hook method from the qlik-hooks library
+
+```jsx
+import { useEngineVersion } from "qlik-hooks/Global"
+```
+
+Now we can run the useEngineVersion hook in our React component, passing in the object we are running the method against, and any input parameters the method takes
+
+```jsx
+const engineVersion = useEngineVersion(engine, { params: [] })
+```
+
+We can then use the contents of the `qResponse` property to access the engine version returned from the Qlik Engine. There's one problem though - the first time we receive the state of `engineVersion`, `qResponse` is equal to null! This is because API Hook calls are made asynchronously.
+
+## Asynchronous Object Calls
+
+It is important to understand that the API method calls occuring in Qlik Hooks happen asynchronously. When we call a method such as `useEngineVersion`, a request is sent to the engine asking for the version, but before the version is returned, our code will continue to run. Because of this, we can't do anything with our engineVersion object until its state updates with the qResponse we need.
+
+If inside a React component we were to run this code:
+
+```jsx
+const Component = () => {
+  const engineVersion = useEngineVersion(engine, { params: [] })
+
+  return <div>{engineVersion.qResponse.qComponentVersion}</div>
+}
+```
+
+we would get an error because the qResponse property on engineVersion initially has a value of null. It's not until a short time later that the engineVersion state gets updated with the response from the engine.
+
+We instead need to implement our code to check for a valid qResponse before trying to use the data within.
+
+```jsx
+const Component = () => {
+  const engineVersion = useEngineVersion(engine, { params: [] })
+
+  return engineVersion.qResponse !== null ? (
+    <div>{engineVersion.qResponse.qComponentVersion}</div>
+  ) : (
+    <div>loading...</div>
+  )
+}
+```
+
+## Connecting Handles
+
+The previous section demonstrates an example of calling an action API Qlik Hook, but what if we want to connect to a different object that has its own set of Class API methods. This is necessary if we want to open a Qlik Application, or create new objects within an app that calculate data tables.
+
+Connecting to an application would look something like this
+
+```jsx
+import { useConnectEngine } from "qlik-hooks"
+import { useOpenDoc } from "qlik-hooks/Global"
+
+const Component = () => {
+  const engine = useConnectEngine({
+    host: "localhost",
+    port: 4848,
+    isSecure: false,
+  })
+
+  const doc = useOpenDoc(engine, { params: ["Executive Dashboard.qvf"] })
+
+  return <div>component content</div>
+}
+```
+
+Now, we have a doc object that contains a handle of the type Doc, and we can run any Doc API class.

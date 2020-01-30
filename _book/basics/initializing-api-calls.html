@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Handle Invalidations · GitBook</title>
+        <title>Initializing API Calls · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -57,10 +57,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="suspending-invalidations.html" />
+    <link rel="next" href="invalidations.html" />
     
     
-    <link rel="prev" href="reusing-handles.html" />
+    <link rel="prev" href="making-api-calls.html" />
     
 
     </head>
@@ -129,32 +129,6 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.2" data-path="../introduction/rxq-vs-enigma.html">
-            
-                <a href="../introduction/rxq-vs-enigma.html">
-            
-                    
-                    RxQ vs. Enigma
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.2.3" data-path="../introduction/core-concepts.html">
-            
-                <a href="../introduction/core-concepts.html">
-            
-                    
-                    Core Concepts
-            
-                </a>
-            
-
-            
-        </li>
-    
 
             </ul>
             
@@ -200,12 +174,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.3" data-path="reusing-handles.html">
+        <li class="chapter active" data-level="1.3.3" data-path="initializing-api-calls.html">
             
-                <a href="reusing-handles.html">
+                <a href="initializing-api-calls.html">
             
                     
-                    Reusing Handles
+                    Initializing API Calls
             
                 </a>
             
@@ -213,77 +187,12 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.3.4" data-path="handle-invalidations.html">
+        <li class="chapter " data-level="1.3.4" data-path="invalidations.html">
             
-                <a href="handle-invalidations.html">
-            
-                    
-                    Handle Invalidations
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.5" data-path="suspending-invalidations.html">
-            
-                <a href="suspending-invalidations.html">
+                <a href="invalidations.html">
             
                     
-                    Suspending Invalidations
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.6" data-path="closing-a-session.html">
-            
-                <a href="closing-a-session.html">
-            
-                    
-                    Closing a Session
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.7" data-path="notifications.html">
-            
-                <a href="notifications.html">
-            
-                    
-                    Notifications
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.8" data-path="delta.html">
-            
-                <a href="delta.html">
-            
-                    
-                    Delta Mode
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.9" data-path="shortcut-operators.html">
-            
-                <a href="shortcut-operators.html">
-            
-                    
-                    Shortcut Operators
+                    Invalidations
             
                 </a>
             
@@ -631,7 +540,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Handle Invalidations</a>
+        <a href=".." >Initializing API Calls</a>
     </h1>
 </div>
 
@@ -646,45 +555,118 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="handle-invalidations">Handle Invalidations</h1>
-<p>In QAE, Handles can have properties or calculated values that change while the session is open. This usually happens as a result of API calls - maybe a filter is applied that changes the calculated data you have from a GenericObject, or maybe you update some metadata in your App properties. </p>
-<p>QAE categorizes Handles into two states: valid and invalid. A valid Handle is one in which you have the latest properties or data for it. An invalid Handle is one in which you don&apos;t have the latest properties for it &#x2013; the Handle has changed on the server since you last used it, but you have not pulled the latest information to your app. There is a disconnect between server state and client state; hence, your Handle is invalid.</p>
-<p>Whenever an operation occurs that causes a Handle to go from valid to invalid, the Engine notifies us via the WebSocket connection so that we can respond if needed. A really common use case for this is getting data from a GenericObject. Let&apos;s say we have the following stream that gives us data from QAE:</p>
-<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { CreateSessionObject } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Doc&quot;</span>;
-<span class="hljs-keyword">import</span> { GetLayout } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/GenericObject&quot;</span>;
-<span class="hljs-keyword">import</span> { shareReplay, switchMap } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxjs/operators&quot;</span>;
+                                <h1 id="initializing-api-calls">Initializing API Calls</h1>
+<p>You&apos;ve seen in previous examples how we can call API methods with parameters, but what if we want to initialize an API call definition, but only call it when specific user interaction requires it? Let&apos;s walk through an example of when this may be the case.</p>
+<h2 id="listobject">ListObject</h2>
+<p>Let&apos;s progress the examples we&apos;ve seen so far to create a GenericObject in a Qlik App that contains a ListObject</p>
+<pre><code class="lang-jsx"><span class="hljs-keyword">import</span> { useConnectEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks&quot;</span>
+<span class="hljs-keyword">import</span> { useOpenDoc } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/Global&quot;</span>
+<span class="hljs-keyword">import</span> { useCreateSessionObject } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/Doc&quot;</span>
 
-<span class="hljs-keyword">const</span> app$; <span class="hljs-comment">// assume we have a Doc Handle that we&apos;ve opened</span>
+<span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-keyword">const</span> engine = useConnectEngine({
+    host: <span class="hljs-string">&quot;localhost&quot;</span>,
+    port: <span class="hljs-number">4848</span>,
+    isSecure: <span class="hljs-literal">false</span>,
+  })
 
-<span class="hljs-keyword">const</span> obj$ = app$.pipe(
-    switchMap(h =&gt; h.ask(CreateSessionObject, {
-        qInfo: {
-            qType: <span class="hljs-string">&quot;session&quot;</span>
+  <span class="hljs-keyword">const</span> doc = useOpenDoc(engine, { params: [<span class="hljs-string">&quot;Executive Dashboard.qvf&quot;</span>] })
+
+  <span class="hljs-keyword">const</span> listObject = useCreateSessionObject(doc, {
+    params: [
+      {
+        qInfo: { qType: <span class="hljs-string">&quot;listbox&quot;</span> },
+        qListObjectDef: {
+          qDef: { qFieldDefs: [<span class="hljs-string">&quot;Region&quot;</span>] },
+          qInitialDataFetch: [{ qWidth: <span class="hljs-number">1</span>, qHeight: <span class="hljs-number">100</span> }],
         },
-        myValue: {
-            qValueExpression: <span class="hljs-string">&quot;=sum(Sales)&quot;</span>
-        }
-    })),
-    shareReplay(<span class="hljs-number">1</span>)
-);
+      },
+    ],
+  })
 
-<span class="hljs-keyword">const</span> layout$ = obj$.pipe(
-    switchMap(h =&gt; h.ask(GetLayout))
-);
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>component content<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+}
+</code></pre>
+<p>We can fetch data from the ListObject using the GetLayout method, and display it as an unordered list in the jsx we return</p>
+<pre><code class="lang-jsx"><span class="hljs-comment">//...</span>
+<span class="hljs-keyword">import</span> { useState, useEffect } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;react&quot;</span>
+<span class="hljs-keyword">import</span> { useGetLayout } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/GenericObject&quot;</span>
 
-layout$.subscribe(<span class="hljs-built_in">console</span>.log);
+<span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-comment">//...</span>
+
+  <span class="hljs-keyword">const</span> listObjectLayout = useGetLayout(listObject, { params: [] })
+
+  <span class="hljs-keyword">const</span> [list, setList] = useState([])
+  useEffect(() =&gt; {
+    <span class="hljs-keyword">if</span> (listObjectLayout.qResponse !== <span class="hljs-literal">null</span>) {
+      <span class="hljs-keyword">const</span> qMatrix = listObjectLayout.qResponse.qListObject.qDataPages[<span class="hljs-number">0</span>].qMatrix
+
+      setList(
+        qMatrix.map(row =&gt; ({
+          label: row[<span class="hljs-number">0</span>].qText,
+          value: row[<span class="hljs-number">0</span>].qElemNumber,
+          state: row[<span class="hljs-number">0</span>].qState,
+        }))
+      )
+    }
+  }, [listObjectLayout])
+
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+        {list.map(listItem =&gt; (
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span>
+            <span class="hljs-attr">key</span>=<span class="hljs-string">{listItem.value}</span>
+            <span class="hljs-attr">value</span>=<span class="hljs-string">{listItem.value}</span>
+            <span class="hljs-attr">style</span>=<span class="hljs-string">{{</span>
+              <span class="hljs-attr">backgroundColor:</span> <span class="hljs-attr">listItem.state</span> =<span class="hljs-string">==</span> &quot;<span class="hljs-attr">S</span>&quot; ? &quot;#<span class="hljs-attr">2294f2</span>&quot; <span class="hljs-attr">:</span> <span class="hljs-attr">listItem.state</span> =<span class="hljs-string">==</span> &quot;<span class="hljs-attr">X</span>&quot; ? &quot;#<span class="hljs-attr">b1c0c7</span>&quot; <span class="hljs-attr">:</span> &quot;#<span class="hljs-attr">fff</span>&quot;,
+            }}
+          &gt;</span>
+            {listItem.label}
+          <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+        ))}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
+}
 </code></pre>
-<p>The code above will calculate the layout of our GenericObject once and print it to the console. What if the data model state changes? Suppose we apply a selection that causes our <code>sum(Sales)</code> expression to change in value. The layout we received previously will be out of sync with the server. The GenericObject will be invalid.</p>
-<p>To resolve this situation, we need to call <code>getLayout</code> again. This will get us the up to date data and validate the GenericObject. </p>
-<p>In RxQ, each Handle comes with an <code>invalidation$</code> stream on it. This stream will fire with the Handle any time that the Engine API tells us that the Handle has invalidated. Using this stream, we can rewrite our layout logic above to produce a stream of layouts that will be calculated on every invalidation. We will also add an initial layout call to the stream:</p>
-<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> layouts$ = obj$.pipe(
-    switchMap(h =&gt; h.invalidated$.pipe(
-        startWith(h)
-    )),
-    switchMap(h =&gt; h.ask(GetLayout))
-);
+<p>The next logical piece we would want to add to our ListObject is an ability to make selections when a user clicks on a list item. To do that, we need to initialize the <code>useSelectListObjectValues</code> method on our ListObject, but there&apos;s one problem, by passing in a params input, we&apos;re effectively calling the selection function with an initial state. Instead, we want to initialize the api method, and expose a way for that same method to be called whenever a user interacts with the list.</p>
+<p>We can do this by not including a params option to the Qlik Hook, and instead utilizing the <code>call</code> method on the object we create from the hook.</p>
+<pre><code class="lang-jsx"><span class="hljs-comment">//...</span>
+<span class="hljs-keyword">import</span> { useGetLayout, useSelectListObjectValues } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/GenericObject&quot;</span>
+
+<span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-comment">//...</span>
+
+  <span class="hljs-keyword">const</span> selectListObjectValues = useSelectListObjectValues(listObject)
+
+  <span class="hljs-keyword">const</span> handleListObjectSelection = value =&gt; {
+    selectListObjectValues.call(<span class="hljs-string">&quot;/qListObjectDef&quot;</span>, [value], <span class="hljs-literal">true</span>)
+  }
+
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+        {list.map(listItem =&gt; (
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span>
+            <span class="hljs-attr">key</span>=<span class="hljs-string">{listItem.value}</span>
+            <span class="hljs-attr">value</span>=<span class="hljs-string">{listItem.value}</span>
+            <span class="hljs-attr">style</span>=<span class="hljs-string">{{</span>
+              <span class="hljs-attr">backgroundColor:</span> <span class="hljs-attr">listItem.state</span> =<span class="hljs-string">==</span> &quot;<span class="hljs-attr">S</span>&quot; ? &quot;#<span class="hljs-attr">2294f2</span>&quot; <span class="hljs-attr">:</span> <span class="hljs-attr">listItem.state</span> =<span class="hljs-string">==</span> &quot;<span class="hljs-attr">X</span>&quot; ? &quot;#<span class="hljs-attr">b1c0c7</span>&quot; <span class="hljs-attr">:</span> &quot;#<span class="hljs-attr">fff</span>&quot;,
+            }}
+            <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> handleListObjectSelection(listItem.value)}
+          &gt;
+            {listItem.label}
+          <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+        ))}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
+}
 </code></pre>
-<p>Now our <code>layouts$</code> stream will stay in sync with the server.</p>
+<p>By doing this we don&apos;t select any values in our ListObject until a user clicks on the list.</p>
+<p>This gives us an <em>almost</em> fully working ListObject, but we still aren&apos;t getting the selection state of the list items to show. Check out the next section <a href="invalidations">Invalidations</a> to see why.</p>
 
                                 
                                 </section>
@@ -712,12 +694,12 @@ layout$.subscribe(<span class="hljs-built_in">console</span>.log);
 
             
                 
-                <a href="reusing-handles.html" class="navigation navigation-prev " aria-label="Previous page: Reusing Handles">
+                <a href="making-api-calls.html" class="navigation navigation-prev " aria-label="Previous page: Making API Calls">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="suspending-invalidations.html" class="navigation navigation-next " aria-label="Next page: Suspending Invalidations">
+                <a href="invalidations.html" class="navigation navigation-next " aria-label="Next page: Invalidations">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -728,7 +710,7 @@ layout$.subscribe(<span class="hljs-built_in">console</span>.log);
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Handle Invalidations","level":"1.3.4","depth":2,"next":{"title":"Suspending Invalidations","level":"1.3.5","depth":2,"path":"basics/suspending-invalidations.md","ref":"basics/suspending-invalidations.md","articles":[]},"previous":{"title":"Reusing Handles","level":"1.3.3","depth":2,"path":"basics/reusing-handles.md","ref":"basics/reusing-handles.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"basics/handle-invalidations.md","mtime":"2020-01-28T23:28:34.043Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-29T15:54:56.393Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Initializing API Calls","level":"1.3.3","depth":2,"next":{"title":"Invalidations","level":"1.3.4","depth":2,"path":"basics/invalidations.md","ref":"basics/invalidations.md","articles":[]},"previous":{"title":"Making API Calls","level":"1.3.2","depth":2,"path":"basics/making-api-calls.md","ref":"basics/making-api-calls.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"basics/initializing-api-calls.md","mtime":"2020-01-30T20:28:37.286Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

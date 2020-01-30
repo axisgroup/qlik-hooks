@@ -1,27 +1,31 @@
+# Invalidations
+
+There are some API calls we make that return the state of certain objects within a Qlik document. Qlik's associative engine allows us to update the selection state of the document, and when this happens, we want to receive an updated version of any object states that may have changed.
+
+Looking back the last example in [Initializing API Calls](./initializing-api-calls), we were able to fetch the data of our ListObject through the GetLayout method, but if we make a selection, we need to re-fetch the data by calling GetLayout again
+
+```jsx
+listObjectLayout.call()
+```
+
+But there is an easier method. Qlik Hook action methods (this is, methods that dont' create and return and object handle) have an input option that allows you to re-call the api when an invalidation event occurs
+
+```jsx
+//...
+const listObjectLayout = useGetLayout(listObject, { params: [], invalidations: true })
+//...
+```
+
+Taking this and applying it to the last exmaple gives us a fully functioning ListObject that updates automatically on selection
+
+```jsx
 import React, { useEffect, useState } from "react"
-import { useConnectEngine, QlikProvider, schema } from "qlik-hooks"
-import { useEngineVersion, useOpenDoc, useGetDocList } from "qlik-hooks/dist/Global"
-import { useCreateSessionObject, useClearAll } from "qlik-hooks/dist/Doc"
+import { useConnectEngine } from "qlik-hooks"
+import { useOpenDoc } from "qlik-hooks/dist/Global"
+import { useCreateSessionObject } from "qlik-hooks/dist/Doc"
 import { useSelectListObjectValues, useGetLayout } from "qlik-hooks/dist/GenericObject"
-import { Dashboard, EngineVersion, HandleInvalidations } from "./components"
-import "./App.css"
 
-const qlikConfig = {
-  host: "localhost",
-  port: 19076,
-}
-
-const qDef = {
-  qInfo: { qType: "listbox" },
-  qListObjectDef: {
-    qDef: {
-      qFieldDefs: ["Region"],
-    },
-    qInitialDataFetch: [{ qWidth: 1, qHeight: 100 }],
-  },
-}
-
-const App = () => {
+const Component = () => {
   const engine = useConnectEngine({
     host: "localhost",
     port: 19076,
@@ -83,4 +87,4 @@ const App = () => {
     </div>
   )
 }
-export default App
+```

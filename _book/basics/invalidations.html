@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Notifications · GitBook</title>
+        <title>Invalidations · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -57,10 +57,8 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="delta.html" />
     
-    
-    <link rel="prev" href="closing-a-session.html" />
+    <link rel="prev" href="initializing-api-calls.html" />
     
 
     </head>
@@ -129,32 +127,6 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.2" data-path="../introduction/rxq-vs-enigma.html">
-            
-                <a href="../introduction/rxq-vs-enigma.html">
-            
-                    
-                    RxQ vs. Enigma
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.2.3" data-path="../introduction/core-concepts.html">
-            
-                <a href="../introduction/core-concepts.html">
-            
-                    
-                    Core Concepts
-            
-                </a>
-            
-
-            
-        </li>
-    
 
             </ul>
             
@@ -200,12 +172,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.3" data-path="reusing-handles.html">
+        <li class="chapter " data-level="1.3.3" data-path="initializing-api-calls.html">
             
-                <a href="reusing-handles.html">
+                <a href="initializing-api-calls.html">
             
                     
-                    Reusing Handles
+                    Initializing API Calls
             
                 </a>
             
@@ -213,77 +185,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.4" data-path="handle-invalidations.html">
+        <li class="chapter active" data-level="1.3.4" data-path="invalidations.html">
             
-                <a href="handle-invalidations.html">
-            
-                    
-                    Handle Invalidations
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.5" data-path="suspending-invalidations.html">
-            
-                <a href="suspending-invalidations.html">
+                <a href="invalidations.html">
             
                     
-                    Suspending Invalidations
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.6" data-path="closing-a-session.html">
-            
-                <a href="closing-a-session.html">
-            
-                    
-                    Closing a Session
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter active" data-level="1.3.7" data-path="notifications.html">
-            
-                <a href="notifications.html">
-            
-                    
-                    Notifications
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.8" data-path="delta.html">
-            
-                <a href="delta.html">
-            
-                    
-                    Delta Mode
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.9" data-path="shortcut-operators.html">
-            
-                <a href="shortcut-operators.html">
-            
-                    
-                    Shortcut Operators
+                    Invalidations
             
                 </a>
             
@@ -631,7 +538,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Notifications</a>
+        <a href=".." >Invalidations</a>
     </h1>
 </div>
 
@@ -646,20 +553,86 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="notifications">Notifications</h1>
-<p>RxQ provides an Observable <code>session.notifications$</code>. This Observable provides messages related to the inner workings of RxQ and the Engine session. It is especially useful for debugging purposes. It sends messages in the format:</p>
-<pre><code>{
-  type: a string indicating the type of notification
-  data: any data associated with the notification
+                                <h1 id="invalidations">Invalidations</h1>
+<p>There are some API calls we make that return the state of certain objects within a Qlik document. Qlik&apos;s associative engine allows us to update the selection state of the document, and when this happens, we want to receive an updated version of any object states that may have changed.</p>
+<p>Looking back the last example in <a href="initializing-api-calls">Initializing API Calls</a>, we were able to fetch the data of our ListObject through the GetLayout method, but if we make a selection, we need to re-fetch the data by calling GetLayout again</p>
+<pre><code class="lang-jsx">listObjectLayout.call()
+</code></pre>
+<p>But there is an easier method. Qlik Hook action methods (this is, methods that dont&apos; create and return and object handle) have an input option that allows you to re-call the api when an invalidation event occurs</p>
+<pre><code class="lang-jsx"><span class="hljs-comment">//...</span>
+<span class="hljs-keyword">const</span> listObjectLayout = useGetLayout(listObject, { params: [], invalidations: <span class="hljs-literal">true</span> })
+<span class="hljs-comment">//...</span>
+</code></pre>
+<p>Taking this and applying it to the last exmaple gives us a fully functioning ListObject that updates automatically on selection</p>
+<pre><code class="lang-jsx"><span class="hljs-keyword">import</span> React, { useEffect, useState } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;react&quot;</span>
+<span class="hljs-keyword">import</span> { useConnectEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks&quot;</span>
+<span class="hljs-keyword">import</span> { useOpenDoc } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/dist/Global&quot;</span>
+<span class="hljs-keyword">import</span> { useCreateSessionObject } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/dist/Doc&quot;</span>
+<span class="hljs-keyword">import</span> { useSelectListObjectValues, useGetLayout } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/dist/GenericObject&quot;</span>
+
+<span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-keyword">const</span> engine = useConnectEngine({
+    host: <span class="hljs-string">&quot;localhost&quot;</span>,
+    port: <span class="hljs-number">19076</span>,
+  })
+
+  <span class="hljs-keyword">const</span> doc = useOpenDoc(engine, { params: [<span class="hljs-string">&quot;Executive Dashboard.qvf&quot;</span>] })
+
+  <span class="hljs-keyword">const</span> listObject = useCreateSessionObject(doc, {
+    params: [
+      {
+        qInfo: { qType: <span class="hljs-string">&quot;listbox&quot;</span> },
+        qListObjectDef: {
+          qDef: { qFieldDefs: [<span class="hljs-string">&quot;Region&quot;</span>] },
+          qInitialDataFetch: [{ qWidth: <span class="hljs-number">1</span>, qHeight: <span class="hljs-number">100</span> }],
+        },
+      },
+    ],
+  })
+
+  <span class="hljs-keyword">const</span> listObjectLayout = useGetLayout(listObject, { params: [], invalidations: <span class="hljs-literal">true</span> })
+
+  <span class="hljs-keyword">const</span> [list, setList] = useState([])
+  useEffect(() =&gt; {
+    <span class="hljs-keyword">if</span> (listObjectLayout.qResponse !== <span class="hljs-literal">null</span>) {
+      <span class="hljs-keyword">const</span> qMatrix = listObjectLayout.qResponse.qListObject.qDataPages[<span class="hljs-number">0</span>].qMatrix
+
+      setList(
+        qMatrix.map(row =&gt; ({
+          label: row[<span class="hljs-number">0</span>].qText,
+          value: row[<span class="hljs-number">0</span>].qElemNumber,
+          state: row[<span class="hljs-number">0</span>].qState,
+        }))
+      )
+    }
+  }, [listObjectLayout])
+
+  <span class="hljs-keyword">const</span> selectListObjectValues = useSelectListObjectValues(listObject)
+
+  <span class="hljs-keyword">const</span> handleListObjectSelection = value =&gt; {
+    selectListObjectValues.call(<span class="hljs-string">&quot;/qListObjectDef&quot;</span>, [value], <span class="hljs-literal">true</span>)
+  }
+
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+        {list.map(listItem =&gt; (
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span>
+            <span class="hljs-attr">key</span>=<span class="hljs-string">{listItem.value}</span>
+            <span class="hljs-attr">value</span>=<span class="hljs-string">{listItem.value}</span>
+            <span class="hljs-attr">style</span>=<span class="hljs-string">{{</span>
+              <span class="hljs-attr">backgroundColor:</span> <span class="hljs-attr">listItem.state</span> =<span class="hljs-string">==</span> &quot;<span class="hljs-attr">S</span>&quot; ? &quot;#<span class="hljs-attr">2294f2</span>&quot; <span class="hljs-attr">:</span> <span class="hljs-attr">listItem.state</span> =<span class="hljs-string">==</span> &quot;<span class="hljs-attr">X</span>&quot; ? &quot;#<span class="hljs-attr">b1c0c7</span>&quot; <span class="hljs-attr">:</span> &quot;#<span class="hljs-attr">fff</span>&quot;,
+            }}
+            <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> handleListObjectSelection(listItem.value)}
+          &gt;
+            {listItem.label}
+          <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+        ))}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
 }
-</code></pre><p>The following type of notifications are emitted:</p>
-<ul>
-<li><code>&quot;traffic:sent&quot;</code> &#x2013; messages received in the WebSocket</li>
-<li><code>&quot;traffic:received&quot;</code> &#x2013; messages sent through the WebSocket</li>
-<li><code>&quot;traffic:change&quot;</code> &#x2013; lists of change handles sent by the Engine</li>
-<li><code>&quot;traffic:suspend-status&quot;</code> &#x2013; the suspense state of the session</li>
-<li><code>&quot;socket:close&quot;</code> &#x2013; the WebSocket event when the socket is closed</li>
-</ul>
+</code></pre>
 
                                 
                                 </section>
@@ -687,14 +660,10 @@
 
             
                 
-                <a href="closing-a-session.html" class="navigation navigation-prev " aria-label="Previous page: Closing a Session">
+                <a href="initializing-api-calls.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Initializing API Calls">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
-                
-                <a href="delta.html" class="navigation navigation-next " aria-label="Next page: Delta Mode">
-                    <i class="fa fa-angle-right"></i>
-                </a>
                 
             
         
@@ -703,7 +672,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Notifications","level":"1.3.7","depth":2,"next":{"title":"Delta Mode","level":"1.3.8","depth":2,"path":"basics/delta.md","ref":"basics/delta.md","articles":[]},"previous":{"title":"Closing a Session","level":"1.3.6","depth":2,"path":"basics/closing-a-session.md","ref":"basics/closing-a-session.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"basics/notifications.md","mtime":"2020-01-28T23:28:34.128Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-29T15:54:56.393Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Invalidations","level":"1.3.4","depth":2,"next":{"title":"Recipes","level":"1.4","depth":1,"ref":"","articles":[{"title":"01. Connect to an Engine","level":"1.4.1","depth":2,"path":"recipes/connect.md","ref":"recipes/connect.md","articles":[]},{"title":"02. Get the Engine Version","level":"1.4.2","depth":2,"path":"recipes/engine-version.md","ref":"recipes/engine-version.md","articles":[]},{"title":"03. Make Multiple Global Calls","level":"1.4.3","depth":2,"path":"recipes/multiple-global-calls.md","ref":"recipes/multiple-global-calls.md","articles":[]},{"title":"04. Open an App","level":"1.4.4","depth":2,"path":"recipes/open-an-app.md","ref":"recipes/open-an-app.md","articles":[]},{"title":"05. Get App Properties","level":"1.4.5","depth":2,"path":"recipes/read-app-props.md","ref":"recipes/read-app-props.md","articles":[]},{"title":"06. Set App Properties and Listen for Changes","level":"1.4.6","depth":2,"path":"recipes/set-app-props.md","ref":"recipes/set-app-props.md","articles":[]},{"title":"07. Calculate a Value with a GenericObject","level":"1.4.7","depth":2,"path":"recipes/gen-obj-value.md","ref":"recipes/gen-obj-value.md","articles":[]},{"title":"08. Get a stream of Current Selections","level":"1.4.8","depth":2,"path":"recipes/current-selections.md","ref":"recipes/current-selections.md","articles":[]},{"title":"09. Make a Selection in a Field","level":"1.4.9","depth":2,"path":"recipes/make-a-selection.md","ref":"recipes/make-a-selection.md","articles":[]},{"title":"10. Loop through Selections in a Field","level":"1.4.10","depth":2,"path":"recipes/loop-selections.md","ref":"recipes/loop-selections.md","articles":[]},{"title":"11. Make Selections in a Listbox","level":"1.4.11","depth":2,"path":"recipes/make-lb-selections.md","ref":"recipes/make-lb-selections.md","articles":[]},{"title":"12. Search in a Listbox","level":"1.4.12","depth":2,"path":"recipes/search-lb.md","ref":"recipes/search-lb.md","articles":[]},{"title":"13. Apply Patches to an Object","level":"1.4.13","depth":2,"path":"recipes/apply-patches.md","ref":"recipes/apply-patches.md","articles":[]},{"title":"14. Get a page of data in a HyperCube on invalidation","level":"1.4.14","depth":2,"path":"recipes/get-data-page-on-invalid.md","ref":"recipes/get-data-page-on-invalid.md","articles":[]},{"title":"15. Get pages of data in parallel","level":"1.4.15","depth":2,"path":"recipes/get-pages-in-parallel.md","ref":"recipes/get-pages-in-parallel.md","articles":[]},{"title":"16. Get pages of data sequentially","level":"1.4.16","depth":2,"path":"recipes/get-pages-in-sequence.md","ref":"recipes/get-pages-in-sequence.md","articles":[]},{"title":"17. Make selections on app open","level":"1.4.17","depth":2,"path":"recipes/make-selections-on-app-open.md","ref":"recipes/make-selections-on-app-open.md","articles":[]},{"title":"18. Calculate the duration of an API call and response","level":"1.4.18","depth":2,"path":"recipes/calc-time.md","ref":"recipes/calc-time.md","articles":[]},{"title":"19. Batch Invalidations with Suspend","level":"1.4.19","depth":2,"path":"recipes/batch-invalidations.md","ref":"recipes/batch-invalidations.md","articles":[]},{"title":"20. Toggle Calculations Between Multiple Apps","level":"1.4.20","depth":2,"path":"recipes/toggle-sessions.md","ref":"recipes/toggle-sessions.md","articles":[]},{"title":"21. Auto-reconnect Generic Objects after a network drop","level":"1.4.21","depth":2,"path":"recipes/offline.md","ref":"recipes/offline.md","articles":[]},{"title":"22. Using shortcut operators to get a layout stream","level":"1.4.22","depth":2,"path":"recipes/shortcut-operators.md","ref":"recipes/shortcut-operators.md","articles":[]}]},"previous":{"title":"Initializing API Calls","level":"1.3.3","depth":2,"path":"basics/initializing-api-calls.md","ref":"basics/initializing-api-calls.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"basics/invalidations.md","mtime":"2020-01-30T20:29:16.533Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

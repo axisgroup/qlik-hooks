@@ -57,7 +57,7 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="reusing-handles.html" />
+    <link rel="next" href="initializing-api-calls.html" />
     
     
     <link rel="prev" href="connecting.html" />
@@ -129,32 +129,6 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.2" data-path="../introduction/rxq-vs-enigma.html">
-            
-                <a href="../introduction/rxq-vs-enigma.html">
-            
-                    
-                    RxQ vs. Enigma
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.2.3" data-path="../introduction/core-concepts.html">
-            
-                <a href="../introduction/core-concepts.html">
-            
-                    
-                    Core Concepts
-            
-                </a>
-            
-
-            
-        </li>
-    
 
             </ul>
             
@@ -200,12 +174,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.3" data-path="reusing-handles.html">
+        <li class="chapter " data-level="1.3.3" data-path="initializing-api-calls.html">
             
-                <a href="reusing-handles.html">
+                <a href="initializing-api-calls.html">
             
                     
-                    Reusing Handles
+                    Initializing API Calls
             
                 </a>
             
@@ -213,77 +187,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.4" data-path="handle-invalidations.html">
+        <li class="chapter " data-level="1.3.4" data-path="invalidations.html">
             
-                <a href="handle-invalidations.html">
-            
-                    
-                    Handle Invalidations
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.5" data-path="suspending-invalidations.html">
-            
-                <a href="suspending-invalidations.html">
+                <a href="invalidations.html">
             
                     
-                    Suspending Invalidations
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.6" data-path="closing-a-session.html">
-            
-                <a href="closing-a-session.html">
-            
-                    
-                    Closing a Session
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.7" data-path="notifications.html">
-            
-                <a href="notifications.html">
-            
-                    
-                    Notifications
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.8" data-path="delta.html">
-            
-                <a href="delta.html">
-            
-                    
-                    Delta Mode
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.9" data-path="shortcut-operators.html">
-            
-                <a href="shortcut-operators.html">
-            
-                    
-                    Shortcut Operators
+                    Invalidations
             
                 </a>
             
@@ -647,51 +556,67 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="making-api-calls">Making API Calls</h1>
-<p>As discussed in <a href="../introduction/core-concepts.html">Core Concepts</a>, RxQ provides Handle instances that have an <code>ask</code> method for executing an API call and then return an Observable for the response.</p>
-<p>Any API method name can be entered via a string. However, the Qlik Engine API is vast so RxQ provides exports of method name enums for each Qlik class.</p>
-<p>Let&apos;s use the <code>EngineVersion</code> method from Qlik&apos;s Global class as an example. We can import the <code>EngineVersion</code> enum from RxQ like so:</p>
-<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { EngineVersion } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Global&quot;</span>;
-</code></pre>
-<p>To use it, we call a Global Handle&apos;s ask method with it. Then, we can subscribe to get the engine version back:</p>
-<pre><code class="lang-javascript"><span class="hljs-keyword">const</span> version$ = globalHandle.ask(EngineVersion);
-
-version$.subscribe((version) =&gt; {
-    <span class="hljs-built_in">console</span>.log(version);
-});
-</code></pre>
-<p>There&apos;s just one problem here: how do we get the Global Handle in order to make the call? Let&apos;s review.</p>
-<h2 id="getting-handles">Getting Handles</h2>
-<p>Handles are provided to us by QAE. Therefore, we can only receive them asychronously through some sort of API call. The Engine has several API calls that will return Handles, such as:</p>
-<ul>
-<li><a href="http://help.qlik.com/en-US/sense-developer/November2017/Subsystems/EngineAPI/Content/Classes/GlobalClass/Global-class-OpenDoc-method.htm" target="_blank">OpenDoc</a>, which will return a Doc Handle from a Global Handle</li>
-<li><a href="http://help.qlik.com/en-US/sense-developer/November2017/Subsystems/EngineAPI/Content/Classes/AppClass/App-class-GetField-method.htm" target="_blank">GetField</a>, which will return a Field Handle from a Doc Handle</li>
-</ul>
-<p>RxQ automatically parses the results of Engine API calls and produces Handles for you as needed. However, this still has to happen asynchronously, so we have to write asynchronous logic to connect a Handle with an API call. This is where higher order Observables come into play.</p>
-<h2 id="leveraging-higher-order-observables-for-api-calls">Leveraging Higher Order Observables for API Calls</h2>
-<p>Higher Order Observables are essentially Observables of Observables. They allow us to create asynchronous data streams based on other asynchronous data streams. This concept is pertitent to us when making API calls, since we are trying to produce an async API call from an asynchronously provided Handle.</p>
-<p>RxJS makes handling these higher order observables easy using operators like <a href="http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-mergeMap" target="_blank">mergeMap</a>, <a href="http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-concatMap" target="_blank">concatMap</a>, and <a href="http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-switchMap" target="_blank">switchMap</a> to flatten them into normal Observables. </p>
-<p>When using <code>connectSession</code>, the resulting Observable provides the Global Handle for the established session. By combining this Observable with the <code>switchMap</code> operator, we can get our engine version like so:</p>
-<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { connectSession } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq&quot;</span>;
-<span class="hljs-keyword">import</span> { EngineVersion } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq/Global&quot;</span>;
-<span class="hljs-keyword">import</span> { switchMap } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxjs/operators&quot;</span>;
-
-<span class="hljs-keyword">const</span> session = connectSession({
+<p>When we have a Qlik Sense Object Handle, we can call any API method from the Class the handle belongs to. When we connect to the engine and receive an object back, it contains a handle of the Global class. We can then call any Global Class API with our object.</p>
+<p>Remember, whenever we use a Qlik Hook, it must follow the rules of <a href="https://reactjs.org/docs/hooks-rules.html" target="_blank">React Hooks</a>. That means Qlik Hooks should be called from within a React function component, or another custom React hook, and should never be called from inside a loop, a condition block, or a nested function.</p>
+<h2 id="using-an-api-qlik-hook">Using an API Qlik Hook</h2>
+<p>Say we have connected to Qlik Engine:</p>
+<pre><code class="lang-jsx"><span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-keyword">const</span> engine = useConnectEngine({
     host: <span class="hljs-string">&quot;localhost&quot;</span>,
     port: <span class="hljs-number">4848</span>,
-    isSecure: <span class="hljs-literal">false</span>
-});
+    isSecure: <span class="hljs-literal">false</span>,
+  })
 
-<span class="hljs-keyword">const</span> global$ = session.global$;
-
-<span class="hljs-keyword">const</span> version$ = global$.pipe(
-    switchMap(handle =&gt; handle.ask(EngineVersion))
-);
-
-version$.subscribe(version =&gt; {
-    <span class="hljs-built_in">console</span>.log(version);
-});
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>...component content<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+}
 </code></pre>
-<p>We commonly use <code>switchMap</code> when utilizing RxQ because we often only care about making an API call on the latest Handle provided. For more on higher order observables, <a href="https://egghead.io/courses/use-higher-order-observables-in-rxjs-effectively" target="_blank">we recommend this course</a>.</p>
+<p>The <code>engine</code> object we get back contains a handle of the Global class type that can be used in conjunction with any of the Global API methods. Let&apos;s see how we can use this to get the version of our Qlik Engine. First, we need to import the EngineVersion API hook method from the qlik-hooks library</p>
+<pre><code class="lang-jsx"><span class="hljs-keyword">import</span> { useEngineVersion } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/Global&quot;</span>
+</code></pre>
+<p>Now we can run the useEngineVersion hook in our React component, passing in the object we are running the method against, and any input parameters the method takes</p>
+<pre><code class="lang-jsx"><span class="hljs-keyword">const</span> engineVersion = useEngineVersion(engine, { params: [] })
+</code></pre>
+<p>We can then use the contents of the <code>qResponse</code> property to access the engine version returned from the Qlik Engine. There&apos;s one problem though - the first time we receive the state of <code>engineVersion</code>, <code>qResponse</code> is equal to null! This is because API Hook calls are made asynchronously.</p>
+<h2 id="asynchronous-object-calls">Asynchronous Object Calls</h2>
+<p>It is important to understand that the API method calls occuring in Qlik Hooks happen asynchronously. When we call a method such as <code>useEngineVersion</code>, a request is sent to the engine asking for the version, but before the version is returned, our code will continue to run. Because of this, we can&apos;t do anything with our engineVersion object until its state updates with the qResponse we need.</p>
+<p>If inside a React component we were to run this code:</p>
+<pre><code class="lang-jsx"><span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-keyword">const</span> engineVersion = useEngineVersion(engine, { params: [] })
+
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{engineVersion.qResponse.qComponentVersion}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+}
+</code></pre>
+<p>we would get an error because the qResponse property on engineVersion initially has a value of null. It&apos;s not until a short time later that the engineVersion state gets updated with the response from the engine.</p>
+<p>We instead need to implement our code to check for a valid qResponse before trying to use the data within.</p>
+<pre><code class="lang-jsx"><span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-keyword">const</span> engineVersion = useEngineVersion(engine, { params: [] })
+
+  <span class="hljs-keyword">return</span> engineVersion.qResponse !== <span class="hljs-literal">null</span> ? (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>{engineVersion.qResponse.qComponentVersion}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  ) : (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>loading...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
+}
+</code></pre>
+<h2 id="connecting-handles">Connecting Handles</h2>
+<p>The previous section demonstrates an example of calling an action API Qlik Hook, but what if we want to connect to a different object that has its own set of Class API methods. This is necessary if we want to open a Qlik Application, or create new objects within an app that calculate data tables.</p>
+<p>Connecting to an application would look something like this</p>
+<pre><code class="lang-jsx"><span class="hljs-keyword">import</span> { useConnectEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks&quot;</span>
+<span class="hljs-keyword">import</span> { useOpenDoc } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/Global&quot;</span>
+
+<span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-keyword">const</span> engine = useConnectEngine({
+    host: <span class="hljs-string">&quot;localhost&quot;</span>,
+    port: <span class="hljs-number">4848</span>,
+    isSecure: <span class="hljs-literal">false</span>,
+  })
+
+  <span class="hljs-keyword">const</span> doc = useOpenDoc(engine, { params: [<span class="hljs-string">&quot;Executive Dashboard.qvf&quot;</span>] })
+
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>component content<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+}
+</code></pre>
+<p>Now, we have a doc object that contains a handle of the type Doc, and we can run any Doc API class.</p>
 
                                 
                                 </section>
@@ -724,7 +649,7 @@ version$.subscribe(version =&gt; {
                 </a>
                 
                 
-                <a href="reusing-handles.html" class="navigation navigation-next " aria-label="Next page: Reusing Handles">
+                <a href="initializing-api-calls.html" class="navigation navigation-next " aria-label="Next page: Initializing API Calls">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -735,7 +660,7 @@ version$.subscribe(version =&gt; {
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Making API Calls","level":"1.3.2","depth":2,"next":{"title":"Reusing Handles","level":"1.3.3","depth":2,"path":"basics/reusing-handles.md","ref":"basics/reusing-handles.md","articles":[]},"previous":{"title":"Connecting","level":"1.3.1","depth":2,"path":"basics/connecting.md","ref":"basics/connecting.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"basics/making-api-calls.md","mtime":"2020-01-28T23:28:34.083Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-29T15:54:56.393Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Making API Calls","level":"1.3.2","depth":2,"next":{"title":"Initializing API Calls","level":"1.3.3","depth":2,"path":"basics/initializing-api-calls.md","ref":"basics/initializing-api-calls.md","articles":[]},"previous":{"title":"Connecting","level":"1.3.1","depth":2,"path":"basics/connecting.md","ref":"basics/connecting.md","articles":[]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"basics/making-api-calls.md","mtime":"2020-01-30T20:20:02.526Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

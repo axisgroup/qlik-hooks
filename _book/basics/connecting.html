@@ -127,32 +127,6 @@
             
         </li>
     
-        <li class="chapter " data-level="1.2.2" data-path="../introduction/rxq-vs-enigma.html">
-            
-                <a href="../introduction/rxq-vs-enigma.html">
-            
-                    
-                    RxQ vs. Enigma
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.2.3" data-path="../introduction/core-concepts.html">
-            
-                <a href="../introduction/core-concepts.html">
-            
-                    
-                    Core Concepts
-            
-                </a>
-            
-
-            
-        </li>
-    
 
             </ul>
             
@@ -198,12 +172,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.3" data-path="reusing-handles.html">
+        <li class="chapter " data-level="1.3.3" data-path="initializing-api-calls.html">
             
-                <a href="reusing-handles.html">
+                <a href="initializing-api-calls.html">
             
                     
-                    Reusing Handles
+                    Initializing API Calls
             
                 </a>
             
@@ -211,77 +185,12 @@
             
         </li>
     
-        <li class="chapter " data-level="1.3.4" data-path="handle-invalidations.html">
+        <li class="chapter " data-level="1.3.4" data-path="invalidations.html">
             
-                <a href="handle-invalidations.html">
-            
-                    
-                    Handle Invalidations
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.5" data-path="suspending-invalidations.html">
-            
-                <a href="suspending-invalidations.html">
+                <a href="invalidations.html">
             
                     
-                    Suspending Invalidations
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.6" data-path="closing-a-session.html">
-            
-                <a href="closing-a-session.html">
-            
-                    
-                    Closing a Session
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.7" data-path="notifications.html">
-            
-                <a href="notifications.html">
-            
-                    
-                    Notifications
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.8" data-path="delta.html">
-            
-                <a href="delta.html">
-            
-                    
-                    Delta Mode
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="1.3.9" data-path="shortcut-operators.html">
-            
-                <a href="shortcut-operators.html">
-            
-                    
-                    Shortcut Operators
+                    Invalidations
             
                 </a>
             
@@ -645,16 +554,10 @@
                                 <section class="normal markdown-section">
                                 
                                 <h1 id="connecting">Connecting</h1>
-<p>In order to work with QAE, we need to establish a session with the Engine. This session is created by connecting to an Engine over a WebSocket.</p>
-<p>RxQ provides a function called <code>connectSession</code> that will establish the session with the Engine. It returns a Session object that contains an Observable for the Global Handle, a <code>close</code> function for closing the session imperatively, and an Observable of notifications from the engine and RxQ (useful for debugging):</p>
-<p>Session Object Properties</p>
-<ul>
-<li><strong>global$</strong> - <em>(Observable)</em> An Observable for the Global Handle of the session</li>
-<li><strong>close</strong> - <em>(Function)</em> A function that closes the WebSocket, ending the session</li>
-<li><strong>notifications$</strong> - *(Observable) An Observable of notifications from the engine and RxQ</li>
-</ul>
+<p>To use Qlik Hooks in our application, we need to establish a session with the Qlik Engine over a WebSocket.</p>
+<p>Qlik Hooks provides a hook called <code>useConnectEngine</code> that will establish the session with the Engine, and return back to us a handle to the Global instance of the engine. We can use the engine object we get back with any of the API methods defined in the Global class.</p>
 <h2 id="setup">Setup</h2>
-<p>The <code>connectSession</code> function takes in a configuration object that determines the session that is created. It can read the following properties:</p>
+<p><code>useConnectEngine</code> takes in a configuration object that creates the session. The config object should contain the following properties:</p>
 <ul>
 <li><strong>host</strong> - <em>(String)</em> Hostname of server</li>
 <li><strong>appname</strong> - <em>(String)</em> Scoped connection to app.</li>
@@ -671,18 +574,13 @@
 <li><strong>identity</strong> - <em>(String)</em> Session identity</li>
 </ul>
 <h2 id="usage">Usage</h2>
-<p>The following example shows how to use RxQ to connect to an Engine behind Qlik Sense Desktop:</p>
-<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> { connectSession } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;rxq&quot;</span>;
+<pre><code class="lang-jsx"><span class="hljs-keyword">import</span> { useConnectEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks&quot;</span>
 
-<span class="hljs-keyword">const</span> session = connectSession({
-    host: <span class="hljs-string">&quot;localhost&quot;</span>,
-    port: <span class="hljs-number">4848</span>,
-    isSecure: <span class="hljs-literal">false</span>
-});
-
-session.global$.subscribe((globalHandle) =&gt; {
-    <span class="hljs-comment">// Do something with the Global Handle</span>
-});
+<span class="hljs-keyword">const</span> engine = useConnectEngine({
+  host: <span class="hljs-string">&quot;localhost&quot;</span>,
+  port: <span class="hljs-number">4848</span>,
+  isSecure: <span class="hljs-literal">false</span>,
+})
 </code></pre>
 
                                 
@@ -723,7 +621,7 @@ session.global$.subscribe((globalHandle) =&gt; {
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Connecting","level":"1.3.1","depth":2,"next":{"title":"Making API Calls","level":"1.3.2","depth":2,"path":"basics/making-api-calls.md","ref":"basics/making-api-calls.md","articles":[]},"previous":{"title":"Basics","level":"1.3","depth":1,"ref":"","articles":[{"title":"Connecting","level":"1.3.1","depth":2,"path":"basics/connecting.md","ref":"basics/connecting.md","articles":[]},{"title":"Making API Calls","level":"1.3.2","depth":2,"path":"basics/making-api-calls.md","ref":"basics/making-api-calls.md","articles":[]},{"title":"Reusing Handles","level":"1.3.3","depth":2,"path":"basics/reusing-handles.md","ref":"basics/reusing-handles.md","articles":[]},{"title":"Handle Invalidations","level":"1.3.4","depth":2,"path":"basics/handle-invalidations.md","ref":"basics/handle-invalidations.md","articles":[]},{"title":"Suspending Invalidations","level":"1.3.5","depth":2,"path":"basics/suspending-invalidations.md","ref":"basics/suspending-invalidations.md","articles":[]},{"title":"Closing a Session","level":"1.3.6","depth":2,"path":"basics/closing-a-session.md","ref":"basics/closing-a-session.md","articles":[]},{"title":"Notifications","level":"1.3.7","depth":2,"path":"basics/notifications.md","ref":"basics/notifications.md","articles":[]},{"title":"Delta Mode","level":"1.3.8","depth":2,"path":"basics/delta.md","ref":"basics/delta.md","articles":[]},{"title":"Shortcut Operators","level":"1.3.9","depth":2,"path":"basics/shortcut-operators.md","ref":"basics/shortcut-operators.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"basics/connecting.md","mtime":"2020-01-28T23:28:33.964Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-29T15:54:56.393Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Connecting","level":"1.3.1","depth":2,"next":{"title":"Making API Calls","level":"1.3.2","depth":2,"path":"basics/making-api-calls.md","ref":"basics/making-api-calls.md","articles":[]},"previous":{"title":"Basics","level":"1.3","depth":1,"ref":"","articles":[{"title":"Connecting","level":"1.3.1","depth":2,"path":"basics/connecting.md","ref":"basics/connecting.md","articles":[]},{"title":"Making API Calls","level":"1.3.2","depth":2,"path":"basics/making-api-calls.md","ref":"basics/making-api-calls.md","articles":[]},{"title":"Initializing API Calls","level":"1.3.3","depth":2,"path":"basics/initializing-api-calls.md","ref":"basics/initializing-api-calls.md","articles":[]},{"title":"Invalidations","level":"1.3.4","depth":2,"path":"basics/invalidations.md","ref":"basics/invalidations.md","articles":[]}]},"dir":"ltr"},"config":{"plugins":["livereload"],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"basics/connecting.md","mtime":"2020-01-30T19:14:22.650Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-01-30T19:06:11.682Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
