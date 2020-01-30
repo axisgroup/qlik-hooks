@@ -3,9 +3,9 @@
 ```javascript
 import React from "react"
 import { useConnectEngine } from "qlik-hooks"
-import { useOpenDoc } from "qlik-hooks/dist/Global"
-import { useCreateSessionObject } from "qlik-hooks/dist/Doc"
-import { useGetLayout, useSelectListObjectValues } from "qlik-hooks/dist/GenericObject"
+import { useOpenDoc } from "qlik-hooks/Global"
+import { useCreateSessionObject } from "qlik-hooks/Doc"
+import { useGetLayout, useSelectListObjectValues } from "qlik-hooks/GenericObject"
 
 const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 

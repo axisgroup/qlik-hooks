@@ -3,10 +3,10 @@
 ```javascript
 import React from "react"
 import { useConnectEngine } from "qlik-hooks"
-import { useOpenDoc } from "qlik-hooks/dist/Global"
-import { useCreateSessionObject, useGetField } from "qlik-hooks/dist/Doc"
-import { useGetLayout } from "qlik-hooks/dist/GenericObject"
-import { useSelect } from "qlik-hooks/dist/Field"
+import { useOpenDoc } from "qlik-hooks/Global"
+import { useCreateSessionObject, useGetField } from "qlik-hooks/Doc"
+import { useGetLayout } from "qlik-hooks/GenericObject"
+import { useSelect } from "qlik-hooks/Field"
 
 const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 
