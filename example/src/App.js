@@ -1,4 +1,6 @@
-import React from "react"
+import React, { useEffect } from "react"
+import { useConnectEngine } from "qlik-hooks"
+import { useEngineVersion } from "qlik-hooks/dist/Global"
 import {
   ConnectToEngine,
   EngineVersion,
@@ -12,8 +14,24 @@ import {
   MakeLBSelections,
 } from "./recipes"
 
+// Define the configuration for your session
+const config = {
+  host: "sense.axisgroup.com",
+  isSecure: true,
+}
+
 const App = () => {
-  return <MakeLBSelections />
+  // Connect to the engine
+  const engine = useConnectEngine(config)
+
+  // Get the engine version
+  const engineVersion = useEngineVersion(engine, { params: [] })
+  useEffect(() => {
+    console.log(engineVersion)
+  }, [engineVersion])
+
+  return <button onClick={() => engineVersion.call()}>Get Engine Version</button>
+  // return <MakeLBSelections />
 }
 export default App
 

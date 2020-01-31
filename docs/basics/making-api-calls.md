@@ -11,9 +11,8 @@ Say we have connected to Qlik Engine:
 ```jsx
 const Component = () => {
   const engine = useConnectEngine({
-    host: "localhost",
-    port: 4848,
-    isSecure: false,
+    host: "sense.axisgroup.com",
+    isSecure: true,
   })
 
   return <div>...component content</div>
@@ -26,13 +25,41 @@ The `engine` object we get back contains a handle of the Global class type that 
 import { useEngineVersion } from "qlik-hooks/Global"
 ```
 
-Now we can run the useEngineVersion hook in our React component, passing in the object we are running the method against, and any input parameters the method takes
+Now we can run the useEngineVersion hook in our React component, passing in the Handle object we are running the method against
 
 ```jsx
-const engineVersion = useEngineVersion(engine, { params: [] })
+const Component = () => {
+  const engineVersion = useEngineVersion(engine)
+  console.log(engineVersion)
+}
 ```
 
-We can then use the contents of the `qResponse` property to access the engine version returned from the Qlik Engine. There's one problem though - the first time we receive the state of `engineVersion`, `qResponse` is equal to null! This is because API Hook calls are made asynchronously.
+We can see this object contains 3 properties: the loading state, the response from the Qlik Engine, and a function to actually call the api method. At this point in time, the API call has been set up, but the request has not yet been sent to the engine. We can also see that qResponse is null, again because we have not yet sent the request. Let's introduce a method for an end user to call the api method.
+
+```jsx
+const Component = () => {
+  useEffect(() => {
+    console.log(engineVersion)
+  }, [engineVersion])
+
+  return <button onClick={() => engineVersion.call()}>Get Engine Version</button>
+}
+```
+
+When we interact with the button, the EngineVersion method is called, and the engineVersion object temporarily goes into a loading state (with loading set to true) until it finally receives and stores the response from Qlik in the qResponse property.
+
+This is a good start, but what if we don't want to require user interaction to call this API method. Instead we want to just call this method once and have its value. This can be done by calling the useConnectEngine hook with a second input, an object containing the params array that gets passed to the engine with the api call.
+
+```jsx
+const Component = () => {
+  const engineVersion = useEngineVersion(engine, { params: [] })
+  console.log(engineVersion)
+
+  return null
+}
+```
+
+Initially, engineVersion is set to the same state we see in the first example without params initialization, but this time the hook has sent the api request to the engine already, and will soon after get the response back. Initializing an API hook with params doesn't necessarily mean the method call has to be one-and-done. We can still use the call function on the engineVersion object to keep calling the api method at any point in the future.
 
 ## Asynchronous Object Calls
 
@@ -66,7 +93,7 @@ const Component = () => {
 
 ## Connecting Handles
 
-The previous section demonstrates an example of calling an action API Qlik Hook, but what if we want to connect to a different object that has its own set of Class API methods. This is necessary if we want to open a Qlik Application, or create new objects within an app that calculate data tables.
+The previous section demonstrates an example of calling an Action Qlik Hook, but what if we want to connect to a new Handle object that has its own set of class API methods. This is necessary if we want to open a Qlik Application, or create new objects within an app that calculate data tables (take a look at the [QAE Class Hierarchy](../introduction/qae-hierarchy.html) for a refresher on class layouts).
 
 Connecting to an application would look something like this
 
@@ -76,12 +103,11 @@ import { useOpenDoc } from "qlik-hooks/Global"
 
 const Component = () => {
   const engine = useConnectEngine({
-    host: "localhost",
-    port: 4848,
-    isSecure: false,
+    host: "sense.axisgroup.com",
+    isSecure: true,
   })
 
-  const doc = useOpenDoc(engine, { params: ["Executive Dashboard.qvf"] })
+  const doc = useOpenDoc(engine, { params: ["aae16724-dfd9-478b-b401-0d8038793adf"] })
 
   return <div>component content</div>
 }

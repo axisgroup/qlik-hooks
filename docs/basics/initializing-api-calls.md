@@ -123,4 +123,4 @@ const Component = () => {
 
 By doing this we don't select any values in our ListObject until a user clicks on the list.
 
-This gives us an _almost_ fully working ListObject, but we still aren't getting the selection state of the list items to show. Check out the next section [Invalidations](./invalidations) to see why.
+This gives us an _almost_ fully working ListObject, but we still aren't getting the selection state of the list items to show. Check out the next section [Invalidations](./invalidations.html) to see why.

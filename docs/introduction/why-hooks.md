@@ -1,6 +1,6 @@
 # Why Qlik Hooks?
 
-[React Hooks](https://reactjs.org/docs/hooks-intro.html) are functions that let you "hook into" React state from function components. They provide a method to extract stateful logic from React components, so they can be shared and reused between components. Hooks greatly lessen the need for Class-based React components, allowing for functional components to used while still preserving the stateful nature of a Class.
+[React Hooks](https://reactjs.org/docs/hooks-intro.html) are functions that let you "hook into" React state from functional components. They provide a method to extract stateful logic from React components so they can be shared and reused in a declarative format, lessening the need for Class-based React components.
 
 _Class-Component_
 

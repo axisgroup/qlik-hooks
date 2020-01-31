@@ -1,8 +1,11 @@
 # Table of Contents
 
-- [Qlik Hooks v0.2.1](README.md)
+- [Qlik Hooks v0.2.0](README.md)
 - [Introduction]()
   - [Why Hooks?](/introduction/why-hooks.md)
+  - [Qlik Hooks vs. RxQ vs. Enigma](/introduction/qlik-hooks-vs-rxq-vs-enigma.md)
+  - [Core Concepts](/introduction/core-concepts.md)
+  - [QAE Hierarchy](/introduction/qae-hierarchy.md)
 - [Basics]()
   - [Connecting](basics/connecting.md)
   - [Making API Calls](basics/making-api-calls.md)
