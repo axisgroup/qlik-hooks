@@ -49,4 +49,4 @@ export default function Dog(props) {
 }
 ```
 
-By using Hooks, we can convert our Class component into a functional component, and manage state without using a Class component.
+By using Hooks, we can convert our Class component into a functional component, and manage state more easily across components in our application.

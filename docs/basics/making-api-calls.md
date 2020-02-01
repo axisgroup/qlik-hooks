@@ -1,6 +1,6 @@
 # Making API Calls
 
-When we have a Qlik Sense Object Handle, we can call any API method from the Class the handle belongs to. When we connect to the engine and receive an object back, it contains a handle of the Global class. We can then call any Global Class API with our object.
+When we have a Qlik Sense Object Handle, we can call any API method from the Class the handle belongs to. When we connect to the engine and receive an object back, it contains a handle of the Global class type. We can then call any Global Class API method with our object.
 
 Remember, whenever we use a Qlik Hook, it must follow the rules of [React Hooks](https://reactjs.org/docs/hooks-rules.html). That means Qlik Hooks should be called from within a React function component, or another custom React hook, and should never be called from inside a loop, a condition block, or a nested function.
 

@@ -1,20 +1,16 @@
 # Core Concepts
 
-In its backend, Qlik Hooks version 0.x uses RxQ to connect to the Qlik Associative Engine, and converts the outputs of those Observable streams into React hook states. When we initialize a Qlik Hook, a state object is created for that method call. The corresponding API call is executed against the engine, and the state object gets set to the response received from the Qlik Engine. For a more in-depth review of how communication with the Qlik Engine works, check out the [Engine Tutorial Series](https://opensrc.axisgroup.com/tutorials/engine/101.%20What%20is%20QIX%20and%20Why%20Should%20You%20Care.html).
-
-## QAE Background
-
-To better understand how this works, a basic understanding of how Qlik's Engine API works is helpful. The Engine API uses the JSON-RPC 2.0 protocol via a WebSocket for bidirectional communication. Messages can be sent to the Engine to initiate API calls. Responses can be received from the Engine. The Engine can also push messages without a preceding request.
+In its backend, Qlik Hooks version 0.3.x uses RxQ to connect to the Qlik Associative Engine, and converts the outputs of those Observable streams into React hook states. When we initialize a Qlik Hook, a state object is created for that method call. The corresponding API call is executed against the engine, and the state object gets set to the eventual response received from the Qlik Engine. For a more in-depth review of how communication with the Qlik Engine works, check out the [Engine Tutorial Series](https://opensrc.axisgroup.com/tutorials/engine/101.%20What%20is%20QIX%20and%20Why%20Should%20You%20Care.html).
 
 ## Qlik Hook Types
 
-In the Qlik Hooks library, there are 2 types of hook methods we can call - Handle creators and Actions. A Handle creator is an API method that creates a handle reference to another object on the Qlik Engine. Every handle belongs to an API class that has its own set of methods it can call. (See [Qlik Engine API Hierarchy](./qae-hierarchy.html) for more details). Any other API method that doesn't create and return a handle to a new object is an Action hook.
+In the Qlik Hooks library, there are 2 types of hook methods we can call - **Handle** creators and **Actions**. A Handle creator is an API method that creates a reference handle to another object on the Qlik Engine. Every handle belongs to an API class that has its own set of API methods it can call. (See [Qlik Engine API Hierarchy](./qae-hierarchy.html) for more details). All other API methods that don't create and return a handle to a new object are Action hooks.
 
 ## Using Qlik Hooks to Make API Calls
 
-In Qlik Hooks, hook functions are provided for each Qlik Engine API method. Each function takes in a required handle object parameter, and an optional second parameter defining the inputs for the method and whethere the state should be updated when the handle becomes invalid.
+In Qlik Hooks, a hook function is provided for each Qlik Engine API method, taking in a required handle object, and an optional second parameter defining the inputs for the method and whether the state should be updated when the handle becomes invalid.
 
-Let's look at an example using the _EngineVersion_ method. After we get a Handle object returned to us from the _useConnectEngine_ hook, we can pass the engine handle into the _useEngineVersion_ hook, and we get back an object.
+Let's look at an example using the _EngineVersion_ method. After we get a Handle object returned to us from the _useConnectEngine_ hook, we can pass the engine handle into the _useEngineVersion_ hook, and we get back an object with data.
 
 ```jsx
 const Component = () => {
@@ -31,7 +27,7 @@ const Component = () => {
 
 Here we set up an engineVersion state object that has the response from the Qlik Engine, loading state, and a call function to re-request the api and get an updated response.
 
-The engineVersion state gets set asynchronously, so the data response won't be available until a response from the Engine is received. See [Making API Calls](../basics/making-api-calls.html) for more a more in-depth look at how to use Qlik Hooks
+The engineVersion state gets set asynchronously, so the data response won't be available until a response from the Engine is received. See [Making API Calls](../basics/making-api-calls.html) for more a more in-depth look at how to use Qlik Hooks, and check out the recipes section for more examples.
 
 ## Following the Rules of React Hooks
 

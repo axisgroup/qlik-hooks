@@ -8,7 +8,7 @@ Looking back the last example in [Initializing API Calls](./initializing-api-cal
 listObjectLayout.call()
 ```
 
-But there is an easier method. Qlik Hook action methods (this is, methods that dont' create and return and object handle) have an input option that allows you to re-call the api when an invalidation event occurs
+But there is an easier way. Qlik Hook Action methods (that is, methods that don't create object handles) have an input option that allows you to automatically re-call the api when an invalidation event occurs.
 
 ```jsx
 const listObjectLayout = useGetLayout(listObject, { params: [], invalidations: true })

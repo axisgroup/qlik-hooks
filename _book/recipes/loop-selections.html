@@ -1,0 +1,759 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>10. Loop Through Selections in a Field · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="make-lb-selections.html" />
+    
+    
+    <link rel="prev" href="make-a-selection.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Qlik Hooks v0.3
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    Introduction
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../introduction/why-hooks.html">
+            
+                <a href="../introduction/why-hooks.html">
+            
+                    
+                    Why Hooks?
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../introduction/qlik-hooks-vs-rxq-vs-enigma.html">
+            
+                <a href="../introduction/qlik-hooks-vs-rxq-vs-enigma.html">
+            
+                    
+                    Qlik Hooks vs. RxQ vs. Enigma
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../introduction/core-concepts.html">
+            
+                <a href="../introduction/core-concepts.html">
+            
+                    
+                    Core Concepts
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../introduction/qae-hierarchy.html">
+            
+                <a href="../introduction/qae-hierarchy.html">
+            
+                    
+                    QAE Hierarchy
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    Basics
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../basics/connecting.html">
+            
+                <a href="../basics/connecting.html">
+            
+                    
+                    Connecting
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../basics/making-api-calls.html">
+            
+                <a href="../basics/making-api-calls.html">
+            
+                    
+                    Making API Calls
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../basics/initializing-api-calls.html">
+            
+                <a href="../basics/initializing-api-calls.html">
+            
+                    
+                    Initializing API Calls
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../basics/invalidations.html">
+            
+                <a href="../basics/invalidations.html">
+            
+                    
+                    Invalidations
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    Recipes
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="connect.html">
+            
+                <a href="connect.html">
+            
+                    
+                    01. Connect to an Engine
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="engine-version.html">
+            
+                <a href="engine-version.html">
+            
+                    
+                    02. Get the Engine Version
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="multiple-global-calls.html">
+            
+                <a href="multiple-global-calls.html">
+            
+                    
+                    03. Make Multiple Global Calls
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="open-an-app.html">
+            
+                <a href="open-an-app.html">
+            
+                    
+                    04. Open an App
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="read-app-props.html">
+            
+                <a href="read-app-props.html">
+            
+                    
+                    05. Get App Properties
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="set-app-props.html">
+            
+                <a href="set-app-props.html">
+            
+                    
+                    06. Set App Properties and Listen for Changes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="gen-obj-value.html">
+            
+                <a href="gen-obj-value.html">
+            
+                    
+                    07. Calculate a Value with a GenericObject
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="current-selections.html">
+            
+                <a href="current-selections.html">
+            
+                    
+                    08. Get a stream of Current Selections
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.9" data-path="make-a-selection.html">
+            
+                <a href="make-a-selection.html">
+            
+                    
+                    09. Make a Selection in a Field
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4.10" data-path="loop-selections.html">
+            
+                <a href="loop-selections.html">
+            
+                    
+                    10. Loop Through Selections in a Field
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.11" data-path="make-lb-selections.html">
+            
+                <a href="make-lb-selections.html">
+            
+                    
+                    11. Make Selections in a Listbox
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.12" data-path="search-lb.html">
+            
+                <a href="search-lb.html">
+            
+                    
+                    12. Search in a Listbox
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.13" data-path="apply-patches.html">
+            
+                <a href="apply-patches.html">
+            
+                    
+                    13. Apply Patches to an Object
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.14" data-path="get-data-page-on-invalid.html">
+            
+                <a href="get-data-page-on-invalid.html">
+            
+                    
+                    14. Get a page of data in a HyperCube on invalidation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.15" data-path="get-pages-in-parallel.html">
+            
+                <a href="get-pages-in-parallel.html">
+            
+                    
+                    15. Get pages of data in parallel
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.16" data-path="get-pages-in-sequence.html">
+            
+                <a href="get-pages-in-sequence.html">
+            
+                    
+                    16. Get pages of data sequentially
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.17" data-path="make-selections-on-app-open.html">
+            
+                <a href="make-selections-on-app-open.html">
+            
+                    
+                    17. Make selections on app open
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.18" data-path="calc-time.html">
+            
+                <a href="calc-time.html">
+            
+                    
+                    18. Calculate the duration of an API call and response
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.19" data-path="toggle-sessions.html">
+            
+                <a href="toggle-sessions.html">
+            
+                    
+                    20. Toggle Calculations Between Multiple Apps
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.20" data-path="offline.html">
+            
+                <a href="offline.html">
+            
+                    
+                    21. Auto-reconnect Generic Objects after a network drop
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >10. Loop Through Selections in a Field</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="loop-through-selections-in-a-field">Loop Through Selections in a Field</h1>
+<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> React, { useEffect, useState } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;react&quot;</span>
+<span class="hljs-keyword">import</span> { useConnectEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks&quot;</span>
+<span class="hljs-keyword">import</span> { useOpenDoc } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/Global&quot;</span>
+<span class="hljs-keyword">import</span> { useCreateSessionObject, useGetField } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/Doc&quot;</span>
+<span class="hljs-keyword">import</span> { useGetLayout } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/GenericObject&quot;</span>
+<span class="hljs-keyword">import</span> { useGetCardinal, useLowLevelSelect } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/Field&quot;</span>
+
+<span class="hljs-keyword">const</span> appname = <span class="hljs-string">&quot;aae16724-dfd9-478b-b401-0d8038793adf&quot;</span>
+
+<span class="hljs-comment">// Define the configuration for your session</span>
+<span class="hljs-keyword">const</span> config = {
+  host: <span class="hljs-string">&quot;sense.axisgroup.com&quot;</span>,
+  isSecure: <span class="hljs-literal">true</span>,
+  appname,
+}
+
+<span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-comment">// Connect to the engine</span>
+  <span class="hljs-keyword">const</span> engine = useConnectEngine(config)
+
+  <span class="hljs-comment">// Open an app</span>
+  <span class="hljs-keyword">const</span> app = useOpenDoc(engine, { params: [appname] })
+
+  <span class="hljs-comment">// Create GenericObject with formula</span>
+  <span class="hljs-keyword">const</span> obj = useCreateSessionObject(app, {
+    params: [
+      {
+        qInfo: { qType: <span class="hljs-string">&quot;my-object&quot;</span> },
+        qSelectionObjectDef: {},
+        myValue: {
+          qValueExpression: <span class="hljs-string">&quot;=avg(petal_length)&quot;</span>,
+        },
+      },
+    ],
+  })
+
+  <span class="hljs-comment">// Get the layout of the GenericObject to calculate the value</span>
+  <span class="hljs-keyword">const</span> objLayout = useGetLayout(obj, { params: [], invalidations: <span class="hljs-literal">true</span> })
+
+  <span class="hljs-comment">// Get a field</span>
+  <span class="hljs-keyword">const</span> fld = useGetField(app, { params: [<span class="hljs-string">&quot;species&quot;</span>] })
+
+  <span class="hljs-comment">// Get the cardinal values of the field</span>
+  <span class="hljs-keyword">const</span> getCardinal = useGetCardinal(fld, { params: [] })
+  <span class="hljs-comment">// LowLevelSelect on field</span>
+  <span class="hljs-keyword">const</span> lowLevelSelect = useLowLevelSelect(fld)
+
+  <span class="hljs-comment">// Set up state hook for the number of cardinal values</span>
+  <span class="hljs-keyword">const</span> [cardinalValues, setCardinalValues] = useState(<span class="hljs-literal">null</span>)
+  <span class="hljs-comment">// set up state hook to control when the interval starts and stops running</span>
+  <span class="hljs-keyword">const</span> [isRunning, setIsRunning] = useState(<span class="hljs-literal">false</span>)
+  useEffect(() =&gt; {
+    <span class="hljs-keyword">if</span> (getCardinal.qResponse !== <span class="hljs-literal">null</span>) {
+      <span class="hljs-comment">// set the cardinal values</span>
+      setCardinalValues(getCardinal.qResponse)
+      <span class="hljs-comment">// set interval to start running</span>
+      setIsRunning(<span class="hljs-literal">true</span>)
+    }
+  }, [getCardinal])
+
+  <span class="hljs-comment">// set up state hook to count how many times interval has run</span>
+  <span class="hljs-keyword">const</span> [intervalCount, setIntervalCount] = useState()
+
+  <span class="hljs-comment">// run effect on change of cardinalValues or isRunning</span>
+  useEffect(() =&gt; {
+    <span class="hljs-comment">// initialize interval id as null</span>
+    <span class="hljs-keyword">let</span> intervalId = <span class="hljs-literal">null</span>
+
+    <span class="hljs-comment">// if cardinalValues set and isRunning</span>
+    <span class="hljs-keyword">if</span> (cardinalValues !== <span class="hljs-literal">null</span> &amp;&amp; isRunning) {
+      <span class="hljs-comment">// set interval and update the interval count</span>
+      intervalId = setInterval(() =&gt; {
+        <span class="hljs-comment">// if intervalCount is not set, initialize it to 0, else increment</span>
+        setIntervalCount(prevVal =&gt; (<span class="hljs-built_in">isNaN</span>(prevVal) ? <span class="hljs-number">0</span> : prevVal + <span class="hljs-number">1</span>))
+      }, <span class="hljs-number">1500</span>)
+    } <span class="hljs-keyword">else</span> intervalId = <span class="hljs-literal">null</span>
+
+    <span class="hljs-comment">// clear interval when cleanig up hook</span>
+    <span class="hljs-keyword">return</span> () =&gt; {
+      <span class="hljs-keyword">if</span> (intervalId !== <span class="hljs-literal">null</span>) clearInterval(intervalId)
+    }
+  }, [cardinalValues, isRunning])
+
+  <span class="hljs-comment">// run effect on change of intervalCount</span>
+  useEffect(() =&gt; {
+    <span class="hljs-comment">// Select field value as long as intervalCount is a number</span>
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">isNaN</span>(intervalCount)) lowLevelSelect.call([intervalCount], <span class="hljs-literal">false</span>)
+    <span class="hljs-comment">// stop interval after we&apos;ve reached maximum cardinal values</span>
+    <span class="hljs-keyword">if</span> (intervalCount &gt;= cardinalValues - <span class="hljs-number">1</span>) setIsRunning(<span class="hljs-literal">false</span>)
+  }, [intervalCount, cardinalValues])
+
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      {/* Display selections output */}
+      Selections:
+      {objLayout.qResponse !== null ? (
+        objLayout.qResponse.qSelectionObject.qSelections.map((sel, i) =&gt; (
+          <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{i}</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-name">strong</span>&gt;</span>{sel.qField}:<span class="hljs-tag">&lt;/<span class="hljs-name">strong</span>&gt;</span> {sel.qSelected}
+          <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+        ))
+      ) : (
+        <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>loading...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+      )}
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
+}
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="make-a-selection.html" class="navigation navigation-prev " aria-label="Previous page: 09. Make a Selection in a Field">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="make-lb-selections.html" class="navigation navigation-next " aria-label="Next page: 11. Make Selections in a Listbox">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"10. Loop Through Selections in a Field","level":"1.4.10","depth":2,"next":{"title":"11. Make Selections in a Listbox","level":"1.4.11","depth":2,"path":"recipes/make-lb-selections.md","ref":"recipes/make-lb-selections.md","articles":[]},"previous":{"title":"09. Make a Selection in a Field","level":"1.4.9","depth":2,"path":"recipes/make-a-selection.md","ref":"recipes/make-a-selection.md","articles":[]},"dir":"ltr"},"config":{"plugins":[],"root":"./docs","styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"theme":"default","pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"gitbook":"*"},"file":{"path":"recipes/loop-selections.md","mtime":"2020-01-31T22:50:20.414Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-02-01T03:02:42.937Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
