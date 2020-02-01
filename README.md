@@ -10,20 +10,9 @@
 npm install --save qlik-hooks
 ```
 
-## Usage
+## Documentation
 
-```jsx
-import React, { Component } from 'react'
-
-import { useMyHook } from 'qlik-hooks'
-
-const Example = () => {
-  const example = useMyHook()
-  return (
-    <div>{example}</div>
-  )
-}
-```
+[Qlik Hooks Docs](https://opensrc.axisgroup.com/qlik-hooks/)
 
 ## License
 
