@@ -1,9 +1,9 @@
 # Calculate the response time of the API
-[Code Sandbox](https://codesandbox.io/embed/3kvj773np5)
+
 ```javascript
-import { connectSession } from "rxq";
-import { OpenDoc } from "rxq/Global";
-import { map, switchMap } from "rxjs/operators";
+import React, { useEffect, useState, useRef } from "react"
+import { useConnectEngine } from "qlik-hooks"
+import { useOpenDoc } from "qlik-hooks/dist/Global"
 
 const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 
@@ -11,24 +11,37 @@ const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 const config = {
   host: "sense.axisgroup.com",
   isSecure: true,
-  appname
-};
+}
 
-// Connect the session and share the Global handle
-const session = connectSession(config);
-const global$ = session.global$;
+const Component = () => {
+  // Connect to the engine
+  const engine = useConnectEngine(config)
 
-// Calculate the time it takes to open an app
-const appOpenTime$ = global$.pipe(
-  switchMap(h => {
-    const start = Date.now();
-    return h.ask(OpenDoc, appname).pipe(
-      map(() => Date.now() - start)
-    );
-  })
-);
+  // Create a ref to store the time when app open is requested
+  const appRequestTime = useRef()
+  // OpenDoc API
+  const app = useOpenDoc(engine)
 
-appOpenTime$.subscribe(time => {
-  document.querySelector("#time").innerHTML = time;
-});
+  // When engine is ready ..
+  useEffect(() => {
+    if (engine.handle !== null) {
+      // Set timer
+      appRequestTime.current = Date.now()
+      // Open App request
+      app.call(appname)
+    }
+  }, [engine, appRequestTime])
+
+  // Open Time state
+  const [appOpenTime, setAppOpenTime] = useState(0)
+  useEffect(() => {
+    // When app.handle is set
+    if (app.handle !== null) {
+      // take time
+      setAppOpenTime(Date.now() - appRequestTime.current)
+    }
+  }, [app, appRequestTime])
+
+  return <div>App Open Time: {appOpenTime}ms</div>
+}
 ```

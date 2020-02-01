@@ -1,12 +1,10 @@
 # Make Selections on App Open
-[Code Sandbox](https://codesandbox.io/embed/18nnwv6xol)
+
 ```javascript
-import { connectSession } from "rxq";
-import { OpenDoc } from "rxq/Global";
-import { GetField } from "rxq/Doc";
-import { Select } from "rxq/Field";
-import { forkJoin } from "rxjs";
-import { mapTo, shareReplay, switchMap } from "rxjs/operators";
+import { useConnectEngine } from "qlik-hooks"
+import { useOpenDoc } from "qlik-hooks/Global"
+import { useGetField } from "qlik-hooks/Doc"
+import { useSelect } from "qlik-hooks/Field"
 
 const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 
@@ -14,32 +12,26 @@ const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 const config = {
   host: "sense.axisgroup.com",
   isSecure: true,
-  appname
-};
+  appname,
+}
 
-// Connect the session and share the Global handle
-const session = connectSession(config);
-const global$ = session.global$;
+const Component = () => {
+  // Connect to the engine
+  const engine = useConnectEngine(config)
 
-// Open an app, get the handle, make a few selections, and then multicast it
-const app$ = global$.pipe(
-  switchMap(h => h.ask(OpenDoc, appname)),
-  switchMap(h => {
-    const defaultSelection1$ = h.ask(GetField, "species").pipe(
-      switchMap(fldH => fldH.ask(Select, "setosa"))
-    );
+  // Open an app
+  const app = useOpenDoc(engine, { params: [appname] })
 
-    const defaultSelection2$ = h.ask(GetField, "petal_length").pipe(
-      switchMap(fldH => fldH.ask(Select, ">2"))
-    );
+  // GetField API
+  const speciesField = useGetField(app, { params: ["species"] })
+  const petalLengthField = useGetField(app, { params: ["petal_length"] })
 
-    return forkJoin(defaultSelection1$, defaultSelection2$).pipe(
-      mapTo(h)
-    );
+  // Select API
+  // Qlik Hooks internally wait for the handle to be defined before requesting
+  // the method
+  const speciesSelect = useSelect(speciesField, { params: ["setosa"] })
+  const petalLengthSelect = useSelect(petalLengthField, { params: [">2"] })
 
-  }),
-  shareReplay(1)
-);
-
-app$.subscribe(console.log);
+  return null
+}
 ```

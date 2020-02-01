@@ -1,11 +1,11 @@
 # Get a page of data from a HyperCube on invalidation
-[Code Sandbox](https://codesandbox.io/embed/j796z127n3)
+
 ```javascript
-import { connectSession } from "rxq";
-import { OpenDoc } from "rxq/Global";
-import { CreateSessionObject } from "rxq/Doc";
-import { GetLayout, GetHyperCubeData } from "rxq/GenericObject";
-import { shareReplay, startWith, switchMap } from "rxjs/operators";
+import React, { useState, useEffect } from "react"
+import { useConnectEngine } from "qlik-hooks"
+import { useOpenDoc } from "qlik-hooks/Global"
+import { useCreateSessionObject } from "qlik-hooks/Doc"
+import { useGetLayout, useGetHyperCubeData } from "qlik-hooks/GenericObject"
 
 const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 
@@ -13,67 +13,60 @@ const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 const config = {
   host: "sense.axisgroup.com",
   isSecure: true,
-  appname
-};
+  appname,
+}
 
-// Connect the session and share the Global handle
-const session = connectSession(config);
-const global$ = session.global$;
+const Component = () => {
+  // Connect to the engine
+  const engine = useConnectEngine(config)
 
-// Open an app and share the app handle
-const app$ = global$.pipe(
-  switchMap(h => h.ask(OpenDoc, appname)),
-  shareReplay(1)
-);
+  // Open an app
+  const app = useOpenDoc(engine, { params: [appname] })
 
-// Create a Generic Object with a metric
-const obj$ = app$.pipe(
-  switchMap(h => h.ask(CreateSessionObject, {
-    "qInfo": {
-      "qType": "my-object"
-    },
-    "qHyperCubeDef": {
-      "qDimensions": [
-        {
-          "qDef": {
-            "qFieldDefs": ["petal_length"]
-          }
-        }
-      ],
-      "qMeasures": [
-        {
-          "qDef": {
-            "qDef": "=avg(petal_width)"
-          }
-        }
-      ]
+  // Create GenericObject with formula
+  const obj = useCreateSessionObject(app, {
+    params: [
+      {
+        qInfo: { qType: "my-object" },
+        qHyperCubeDef: {
+          qDimensions: [{ qDef: { qFieldDefs: ["petal_length"] } }],
+          qMeasures: [{ qDef: { qDef: "=avg(petal_width)" } }],
+        },
+      },
+    ],
+  })
+
+  // Get the layout on invalidations, then request a data page
+  const objLayout = useGetLayout(obj, { params: [], invalidations: true })
+
+  const hyperCubeData = useGetHyperCubeData(obj)
+
+  // Once layout is available, request hyper cube data
+  useEffect(() => {
+    if (objLayout.qResponse !== null) {
+      hyperCubeData.call("/qHyperCubeDef", [{ qTop: 0, qLeft: 0, qWidth: 2, qHeight: 100 }])
     }
-  })),
-  shareReplay(1)
-);
+  }, [objLayout])
 
-// On invalidation, get layout to validate, then request a data page
-const data$ = obj$.pipe(
-  switchMap(h => h.invalidated$.pipe(startWith(h))),
-  switchMap(h => h.ask(GetLayout), (h, layout) => h),
-  switchMap(h => h.ask(GetHyperCubeData, "/qHyperCubeDef", [
-    {
-      qTop: 0,
-      qLeft: 0,
-      qWidth: 2,
-      qHeight: 100
+  // Set matrix data into data array
+  const [data, setData] = useState([])
+  useEffect(() => {
+    if (hyperCubeData.qResponse !== null) {
+      setData(hyperCubeData.qResponse[0].qMatrix)
     }
-  ]))
-);
+  }, [hyperCubeData])
 
-data$.subscribe(pages => {
-  const data = pages[0].qMatrix;
-  document.querySelector("tbody").innerHTML = data.map(row => {
-    return `<tr>
-      <td>${row[0].qText}</td>
-      <td>${row[1].qText}</td>
-    </tr>`
-  }).join("");
-});
-
+  return (
+    <table>
+      <tbody>
+        {data.map((row, i) => (
+          <tr key={i}>
+            <td>{row[0].qText}</td>
+            <td>{row[1].qText}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
 ```

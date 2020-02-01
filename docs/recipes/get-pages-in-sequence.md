@@ -1,12 +1,11 @@
 # Get HyperCube Pages in Sequence
-[Code Sandbox](https://codesandbox.io/embed/0yzo8ykl2n)
+
 ```javascript
-import { connectSession } from "rxq";
-import { OpenDoc } from "rxq/Global";
-import { CreateSessionObject } from "rxq/Doc";
-import { GetLayout, GetHyperCubeData } from "rxq/GenericObject";
-import { reduce, shareReplay, startWith, switchMap } from "rxjs/operators";
-import { concat } from "rxjs";
+import React, { useState, useEffect } from "react"
+import { useConnectEngine } from "qlik-hooks"
+import { useOpenDoc } from "qlik-hooks/Global"
+import { useCreateSessionObject } from "qlik-hooks/Doc"
+import { useGetLayout, useGetHyperCubeData } from "qlik-hooks/GenericObject"
 
 const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 
@@ -14,81 +13,96 @@ const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 const config = {
   host: "sense.axisgroup.com",
   isSecure: true,
-  appname
-};
+  appname,
+}
 
-// Connect the session and share the Global handle
-const session = connectSession(config);
-const global$ = session.global$;
+const rowsPerPage = 10
 
-// Open an app and share the app handle
-const app$ = global$.pipe(
-  switchMap(h => h.ask(OpenDoc, appname)),
-  shareReplay(1)
-);
+const Component = () => {
+  // Connect to the engine
+  const engine = useConnectEngine(config)
 
-// Create a Generic Object with a hypercube
-const obj$ = app$.pipe(
-  switchMap(h => h.ask(CreateSessionObject, {
-    "qInfo": {
-      "qType": "my-object"
-    },
-    "qHyperCubeDef": {
-      "qDimensions": [
-        {
-          "qDef": {
-            "qFieldDefs": ["petal_length"]
-          }
-        }
-      ],
-      "qMeasures": [
-        {
-          "qDef": {
-            "qDef": "=avg(petal_width)"
-          }
-        }
-      ]
+  // Open an app
+  const app = useOpenDoc(engine, { params: [appname] })
+
+  // Create GenericObject with formula
+  const obj = useCreateSessionObject(app, {
+    params: [
+      {
+        qInfo: { qType: "my-object" },
+        qHyperCubeDef: {
+          qDimensions: [{ qDef: { qFieldDefs: ["petal_length"] } }],
+          qMeasures: [{ qDef: { qDef: "=avg(petal_width)" } }],
+        },
+      },
+    ],
+  })
+
+  // Get the layout on invalidations, then request a data page
+  const objLayout = useGetLayout(obj, { params: [], invalidations: true })
+
+  // Set matrix data into data array
+  const [data, setData] = useState([])
+
+  // Page count state
+  const [pageCount, setPageCount] = useState(0)
+  // When object layout updates..
+  useEffect(() => {
+    if (objLayout.qResponse !== null) {
+      // Get the total rows from the layout HyperCube size
+      const totalRows = objLayout.qResponse.qHyperCube.qSize.qcy
+      // Calculate # of pages
+      const noOfPages = Math.ceil(totalRows / rowsPerPage)
+
+      // empty data array
+      setData([])
+
+      // set page count
+      setPageCount(noOfPages)
     }
-  })),
-  shareReplay(1)
-);
+  }, [objLayout])
 
-// On invalidation, get layout to validate, then request multiple pages in sequence
-const data$ = obj$.pipe(
-  switchMap(h => h.invalidated$.pipe(startWith(h))),
-  switchMap(h => h.ask(GetLayout), (h, layout) => [h, layout]),
-  switchMap(([h, layout]) => {
-    const totalRows = layout.qHyperCube.qSize.qcy;
-    const rowsPerPage = 10;
-    const pageCt = Math.ceil(totalRows / rowsPerPage);
-
-    const pageRequests = new Array(pageCt)
-      .fill(undefined)
-      .map((m, i) => h.ask(GetHyperCubeData, "/qHyperCubeDef", [
+  // Get HypeCube Data api
+  const hyperCubeData = useGetHyperCubeData(obj)
+  // When pageCount updates..
+  useEffect(() => {
+    if (pageCount > 0) {
+      // Get page index
+      const pageIndex = pageCount - 1
+      // Request data
+      hyperCubeData.call("/qHyperCubeDef", [
         {
-          qTop: i * rowsPerPage,
+          qTop: pageIndex * rowsPerPage,
           qLeft: 0,
           qWidth: 2,
-          qHeight: rowsPerPage
-        }
-      ]));
+          qHeight: rowsPerPage,
+        },
+      ])
+    }
+  }, [pageCount])
 
-    return concat(...pageRequests).pipe(
-      reduce((acc, curr) => acc.concat(curr))
-    );
-  })
-);
+  // When hyperCubeData updates..
+  useEffect(() => {
+    if (hyperCubeData.qResponse !== null) {
+      // Reduce pageCount, triggering the next hyperCubeData call
+      setPageCount(pageCount => pageCount - 1)
+      // append incoming dataset to data array
+      setData(data => [...hyperCubeData.qResponse[0].qMatrix, ...data])
+    }
+  }, [hyperCubeData])
 
-// Print the pages to the DOM in a table
-data$.subscribe(pages => {
-  const data = pages.reduce((acc, page) => acc.concat(page.qMatrix),[]);
-  
-  document.querySelector("tbody").innerHTML = data.map(row => {
-    return `<tr>
-      <td>${row[0].qText}</td>
-      <td>${row[1].qText}</td>
-    </tr>`
-  }).join("");
-});
-
+  return (
+    // Render table of data
+    <table>
+      <tbody>
+        {data.map((row, i) => (
+          <tr key={i}>
+            <td>{row[0].qText}</td>
+            <td>{row[1].qText}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
 ```

@@ -1,12 +1,11 @@
 # Apply Patches to an Object
-[Code Sandbox](https://codesandbox.io/embed/2x833lz3on)
+
 ```javascript
-import { connectSession } from "rxq";
-import { OpenDoc } from "rxq/Global";
-import { CreateSessionObject } from "rxq/Doc";
-import { ApplyPatches, GetLayout, SelectListObjectValues } from "rxq/GenericObject";
-import { filter, map, publish, repeat, shareReplay, startWith, switchMap, withLatestFrom } from "rxjs/operators";
-import { fromEvent } from "rxjs";
+import React, { useState, useEffect } from "react"
+import { useConnectEngine } from "qlik-hooks"
+import { useOpenDoc } from "qlik-hooks/Global"
+import { useCreateSessionObject } from "qlik-hooks/Doc"
+import { useGetLayout, useSelectListObjectValues, useApplyPatches } from "qlik-hooks/GenericObject"
 
 const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 
@@ -14,104 +13,106 @@ const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 const config = {
   host: "sense.axisgroup.com",
   isSecure: true,
-  appname
-};
+  appname,
+}
 
-// Connect the session and get the global handle
-const session = connectSession(config);
-const global$ = session.global$
+const Component = () => {
+  // Connect to the engine
+  const engine = useConnectEngine(config)
 
-// Open an app and share the app handle
-const app$ = global$.pipe(
-  switchMap(h => h.ask(OpenDoc, appname)),
-  shareReplay(1)
-);
+  // Open an app
+  const app = useOpenDoc(engine, { params: [appname] })
 
-// Create a Generic Object with a metric
-const obj$ = app$.pipe(
-  switchMap(h => h.ask(CreateSessionObject, {
-    "qInfo": {
-      "qType": "my-object"
-    },
-    "myValue": {
-      "qValueExpression": "=avg(petal_length)"
-    }
-  })),
-  shareReplay(1)
-);
-
-// Get the latest selections whenever the model changes
-const metricLayouts$ = obj$.pipe(
-  switchMap(h => h.invalidated$.pipe(startWith(h))),
-  switchMap(h => h.ask(GetLayout))
-  );
-
-// Print the selections to the DOM
-metricLayouts$.subscribe(layout => {
-  document.querySelector("#metric").innerHTML = `<br>The average petal length is ${layout.myValue}`;
-});
-
-// Create a Generic Object with a list object for the field "species"
-const lb$ = app$.pipe(
-  switchMap(h => h.ask(CreateSessionObject, {
-    "qInfo": {
-      "qType": "my-listbox"
-    },
-    "qListObjectDef": {
-      "qDef": {
-        "qFieldDefs": ["species"]
+  // Create GenericObject with formula
+  const obj = useCreateSessionObject(app, {
+    params: [
+      {
+        qInfo: { qType: "my-object" },
+        myValue: { qValueExpression: "=avg(petal_length)" },
       },
-      "qInitialDataFetch": [
-        {
-          "qTop": 0,
-          "qLeft": 0,
-          "qWidth": 1,
-          "qHeight": 100
-        }
-      ]
-    }
-  })),
-  shareReplay(1)
-);
+    ],
+  })
 
-// Get a stream of list object layouts
-const lbLayouts$ = lb$.pipe(
-  switchMap(h => h.invalidated$.pipe(startWith(h))),
-  switchMap(h => h.ask(GetLayout))
-  );
+  // Get the layout of the GenericObject to calculate the value
+  const objLayout = useGetLayout(obj, { params: [], invalidations: true })
 
-// Render the list object to the page in an unordered list
-lbLayouts$.subscribe(layout => {
-  const data = layout.qListObject.qDataPages[0].qMatrix;
-  document.querySelector("ul").innerHTML = data.map(item => `<li class="${item[0].qState}" data-qno=${item[0].qElemNumber}>
-      ${item[0].qText}
-  </li>`).join("");
-});
+  // Create a GenericObject with a list object for the field "species"
+  const listBox = useCreateSessionObject(app, {
+    params: [
+      {
+        qInfo: { qType: "my-listbox" },
+        qListObjectDef: {
+          qDef: {
+            qFieldDefs: ["species"],
+          },
+          qInitialDataFetch: [
+            {
+              qTop: 0,
+              qLeft: 0,
+              qWidth: 1,
+              qHeight: 100,
+            },
+          ],
+        },
+      },
+    ],
+  })
 
-// Select values when a user clicks on them
-const select$ = fromEvent(document.querySelector("body"), "click").pipe(
-  filter(evt => evt.target.hasAttribute("data-qno")),
-  map(evt => parseInt(evt.target.getAttribute("data-qno"))),
-  withLatestFrom(lb$),
-  switchMap(([qno, h]) => h.ask(SelectListObjectValues, "/qListObjectDef", [qno], true)),
-  publish()
-);
+  // Get the listbox layout
+  const listBoxLayout = useGetLayout(listBox, { params: [], invalidations: true })
 
-select$.connect();
+  // Create selection object that can be called from user input
+  const listBoxSelect = useSelectListObjectValues(listBox)
 
-// Change the dimension with a dropdown
-const patch$ = fromEvent(document.querySelector("select"), "change").pipe(
-  map(evt => evt.target.value),
-  withLatestFrom(lb$),
-  switchMap(([dim, h]) => h.ask(ApplyPatches, [
-    {
-      qPath: "/qListObjectDef/qDef/qFieldDefs/0",
-      qOp: "replace",
-      qValue: JSON.stringify(dim)
-    }
-  ])),
-  publish()
-);
+  // Dropdown state
+  const [selectedField, setSelectedField] = useState("species")
+  const handleChangeDropdown = e => {
+    setSelectedField(e.target.value)
+  }
 
-patch$.connect();
+  // Change the dimension value
+  const applyPatches = useApplyPatches(listBox)
+  useEffect(() => {
+    applyPatches.call([
+      {
+        qPath: "/qListObjectDef/qDef/qFieldDefs/0",
+        qOp: "replace",
+        qValue: JSON.stringify(selectedField),
+      },
+    ])
+  }, [selectedField])
+
+  return (
+    <div>
+      {/* Display calculated value */}
+      <div>The average petal length is {objLayout.qResponse !== null ? objLayout.qResponse.myValue : ""}</div>
+      {/* listbox field selector */}
+      <select selected={selectedField} onChange={handleChangeDropdown}>
+        <option value="species">Species</option>
+        <option value="petal_width">Petal Width</option>
+        <option value="sepal_width">Sepal Width</option>
+      </select>
+      {/* display listbox items */}
+      <div>
+        {listBoxLayout.qResponse !== null ? (
+          <ul>
+            {listBoxLayout.qResponse.qListObject.qDataPages[0].qMatrix.map(listItem => (
+              <li
+                key={listItem[0].qElemNumber}
+                className={listItem[0].qState}
+                data-qno={listItem[0].qElemNumber}
+                // select item when click
+                onClick={() => listBoxSelect.call("/qListObjectDef", [listItem[0].qElemNumber], true)}
+              >
+                {listItem[0].qText}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          "loading..."
+        )}
+      </div>
+    </div>
+  )
+}
 ```

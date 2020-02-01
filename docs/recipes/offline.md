@@ -1,117 +1,109 @@
 # Offline
-[Code Sandbox](https://codesandbox.io/embed/o5kwmv77w9)
+
 ```javascript
-import { connectSession } from "rxq";
-import { GetActiveDoc, OpenDoc } from "rxq/Global";
-import { CreateSessionObject } from "rxq/Doc";
-import { GetLayout, SelectListObjectValues } from "rxq/GenericObject";
-import { fromEvent, merge } from "rxjs";
-import { filter, map, mapTo, publish, shareReplay, startWith, switchMap, take, tap, withLatestFrom } from "rxjs/operators";
+import React, { useEffect, useState, useRef } from "react"
+import { useConnectEngine } from "qlik-hooks"
+import { useOpenDoc } from "qlik-hooks/dist/Global"
+import { useCreateSessionObject } from "qlik-hooks/dist/Doc"
+import { useGetLayout, useSelectListObjectValues } from "qlik-hooks/dist/GenericObject"
 
-const appname = "aae16724-dfd9-478b-b401-0d8038793adf";
-
-// Event for when app goes on and offline
-const online$ = merge(
-  fromEvent(window, "online").pipe(mapTo(true)),
-  fromEvent(window, "offline").pipe(mapTo(false))
-).pipe(
-  startWith(true)
-);
-
-// When going on or offline, show/hide offline banner
-online$.subscribe(status => {
-  if (status) {
-    document.querySelector("#offline").classList.add("hidden");
-  }
-  else {
-    document.querySelector("#offline").classList.remove("hidden");
-  }
-});
-
-// Define a session config
+// Define the configuration for your session
+const appname = "aae16724-dfd9-478b-b401-0d8038793adf"
 const config = {
   host: "sense.axisgroup.com",
   isSecure: true,
-  appname
-};
+  appname,
+}
 
-// When going online, connect a new session
-const global$ = online$.pipe(
-  filter(f => f),
-  switchMap(() => connectSession(config).global$),
-  shareReplay(1)
-);
+const Component = () => {
+  // Network Status state
+  const [networkOnline, setNetworkOnline] = useState(navigator.onLine)
 
-// Open an app
-const app$ = global$.pipe(
-  switchMap(h => h.ask(OpenDoc, appname)),
-  shareReplay(1)
-);
+  // Set lostConnection trigger so re-connect only occurs after we've lost connection
+  const lostConnection = useRef(!navigator.onLine)
 
-// Calculate a value on invalidation
-const layouts$ = app$.pipe(
-  switchMap(h => h.ask(CreateSessionObject, {
-    "qInfo": {
-      "qType": "custom"
-    },
-    "value": {
-      "qValueExpression": "=avg(petal_length)"
-    }
-  })),
-  switchMap(h => h.invalidated$.pipe(startWith(h))),
-  switchMap(h => h.ask(GetLayout))
-);
+  // Set network status on change
+  window.ononline = () => setNetworkOnline(true)
+  window.onoffline = () => {
+    setNetworkOnline(false)
+    lostConnection.current = true
+  }
 
-// Print the value to the DOM
-layouts$.subscribe(layout => {
-  document.querySelector("#metric").innerHTML = layout.value;
-});
+  // connect to engine
+  const engine = useConnectEngine(config)
 
-// Create a Generic Object with a list object for the field species
-const listbox$ = app$.pipe(
-  switchMap(h => h.ask(CreateSessionObject, {
-    "qInfo": {
-      "qType": "my-listbox"
-    },
-    "qListObjectDef": {
-      "qDef": {
-        "qFieldDefs": ["species"]
+  // Reconnect to engine if we've lost connection and then came back online
+  useEffect(() => {
+    if (lostConnection.current && networkOnline) engine.call(config)
+  }, [networkOnline, lostConnection])
+
+  // open doc
+  const app = useOpenDoc(engine, { params: [appname] })
+
+  // create session object
+  const obj = useCreateSessionObject(app, {
+    params: [
+      {
+        qInfo: { qType: "custom" },
+        value: { qValueExpression: "=avg(petal_length)" },
       },
-      "qInitialDataFetch": [
-        {
-          "qTop": 0,
-          "qLeft": 0,
-          "qWidth": 1,
-          "qHeight": 100
-        }
-      ]
-    }
-  })),
-  shareReplay(1)
-);
+    ],
+  })
 
-// Get a stream of listbox layouts
-const listboxLayout$ = listbox$.pipe(
-  switchMap(h => h.invalidated$.pipe(startWith(h))),
-  switchMap(h => h.ask(GetLayout))
-);
+  // get object layout
+  const objLayout = useGetLayout(obj, { params: [], invalidations: true })
 
-// Render the list object to the page in an unordered list
-listboxLayout$.subscribe(layout => {
-  const data = layout.qListObject.qDataPages[0].qMatrix;
-  document.querySelector("ul").innerHTML = data.map(item => `<li class="${item[0].qState}" data-qno=${item[0].qElemNumber}>
-      ${item[0].qText}
-  </li>`).join("");
-});
+  // object value state
+  const [value, setValue] = useState("-")
+  useEffect(() => {
+    if (objLayout.qResponse !== null) setValue(objLayout.qResponse.value)
+    else setValue("-")
+  }, [objLayout])
 
-// Select values when a user clicks on them
-const select$ = fromEvent(document.querySelector("ul"), "click").pipe(
-  filter(evt => evt.target.hasAttribute("data-qno")),
-  map(evt => parseInt(evt.target.getAttribute("data-qno"))),
-  withLatestFrom(listbox$),
-  switchMap(([qno, h]) => h.ask(SelectListObjectValues, "/qListObjectDef", [qno], true)),
-  publish()
-);
+  // species listbox
+  const listbox = useCreateSessionObject(app, {
+    params: [
+      {
+        qInfo: { qType: "my-listbox" },
+        qListObjectDef: {
+          qDef: { qFieldDefs: ["species"] },
+          qInitialDataFetch: [{ qTop: 0, qLeft: 0, qWidth: 1, qHeight: 100 }],
+        },
+      },
+    ],
+  })
 
-select$.connect();
+  // listbox layout
+  const listboxLayout = useGetLayout(listbox, { params: [], invalidations: true })
+
+  // listbox select
+  const listboxSelect = useSelectListObjectValues(listbox)
+
+  return (
+    <div>
+      <div>Network Status: {networkOnline ? "Online" : "Offline"}</div>
+      <div>Value: {value}</div>
+      {/* display listbox items */}
+      <div>
+        {listboxLayout.qResponse !== null ? (
+          <ul>
+            {listboxLayout.qResponse.qListObject.qDataPages[0].qMatrix.map(listItem => (
+              <li
+                key={listItem[0].qElemNumber}
+                className={listItem[0].qState}
+                data-qno={listItem[0].qElemNumber}
+                // select item when click
+                onClick={() => listboxSelect.call("/qListObjectDef", [listItem[0].qElemNumber], true)}
+              >
+                {listItem[0].qText}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          "loading..."
+        )}
+      </div>
+    </div>
+  )
+}
 ```

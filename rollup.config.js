@@ -37,7 +37,7 @@ export default {
     url({ exclude: ["**/*.svg"] }),
     babel({ exclude: "node_modules/**" }),
     resolve(),
-    commonjs(),
+    commonjs({ namedExports: { "node_modules/lodash/lodash.js": ["functions", "isEqual", "omit"] } }),
     json(),
   ],
 }

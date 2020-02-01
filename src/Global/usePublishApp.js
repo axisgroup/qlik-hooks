@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Subject, merge } from "rxjs";
-import { startWith, switchMap, skip, mapTo, filter } from "rxjs/operators";
+import { startWith, mergeMap, skip, mapTo, filter } from "rxjs/operators";
 
 export default ({ handle }, { params, invalidations = false } = {}) => {
   const call$ = useRef(new Subject()).current;
@@ -26,7 +26,7 @@ export default ({ handle }, { params, invalidations = false } = {}) => {
 
       sub$ = merge(externalCall$, invalidation$)
         .pipe(
-          switchMap(args => {
+          mergeMap(args => {
             setQAction({ ...qAction, loading: true, qResponse: null });
             return handle.ask("PublishApp", ...args);
           })

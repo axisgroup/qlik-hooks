@@ -21,15 +21,16 @@
   - [07. Calculate a Value with a GenericObject](/recipes/gen-obj-value.md)
   - [08. Get a stream of Current Selections](/recipes/current-selections.md)
   - [09. Make a Selection in a Field](/recipes/make-a-selection.md)
-  - [10. Make Selections in a Listbox](/recipes/make-lb-selections.md)
-    <!-- - [12. Search in a Listbox](/recipes/search-lb.md) -->
-    <!-- - [13. Apply Patches to an Object](/recipes/apply-patches.md) -->
-    <!-- - [14. Get a page of data in a HyperCube on invalidation](/recipes/get-data-page-on-invalid.md) -->
-    <!-- - [15. Get pages of data in parallel](/recipes/get-pages-in-parallel.md) -->
-    <!-- - [16. Get pages of data sequentially](/recipes/get-pages-in-sequence.md) -->
-    <!-- - [17. Make selections on app open](/recipes/make-selections-on-app-open.md) -->
-    <!-- - [18. Calculate the duration of an API call and response](/recipes/calc-time.md) -->
+  - [10. Loop Through Selections in a Field](/recipes/loop-selections.md)
+  - [11. Make Selections in a Listbox](/recipes/make-lb-selections.md)
+  - [12. Search in a Listbox](/recipes/search-lb.md)
+  - [13. Apply Patches to an Object](/recipes/apply-patches.md)
+  - [14. Get a page of data in a HyperCube on invalidation](/recipes/get-data-page-on-invalid.md)
+  - [15. Get pages of data in parallel](/recipes/get-pages-in-parallel.md)
+  - [16. Get pages of data sequentially](/recipes/get-pages-in-sequence.md)
+  - [17. Make selections on app open](/recipes/make-selections-on-app-open.md)
+  - [18. Calculate the duration of an API call and response](/recipes/calc-time.md)
     <!-- - [19. Batch Invalidations with Suspend](/recipes/batch-invalidations.md) -->
-    <!-- - [20. Toggle Calculations Between Multiple Apps](/recipes/toggle-sessions.md) -->
-    <!-- - [21. Auto-reconnect Generic Objects after a network drop](/recipes/offline.md) -->
-    <!-- - [22. Using shortcut operators to get a layout stream](/recipes/shortcut-operators.md) -->
+  - [20. Toggle Calculations Between Multiple Apps](/recipes/toggle-sessions.md)
+  - [21. Auto-reconnect Generic Objects after a network drop](/recipes/offline.md)
+      <!-- - [22. Using shortcut operators to get a layout stream](/recipes/shortcut-operators.md) -->

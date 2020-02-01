@@ -18,7 +18,7 @@ const Component = () => {
   const engine = useConnectEngine(config)
 
   // Open an app
-  const app = useOpenDoc(engine, { params: ["aae16724-dfd9-478b-b401-0d8038793adf"] })
+  const app = useOpenDoc(engine, { params: [appname] })
 
   // Create GenericObject with formula
   const obj = useCreateSessionObject(app, {
