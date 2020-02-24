@@ -42,11 +42,11 @@ const schema$ = container$.pipe(
 )
 
 const apiObjectCreatorTemplate = MethodName => `import { useState, useEffect, useRef, useCallback } from "react";
-import { Subject } from "rxjs";
+import { ReplaySubject } from "rxjs";
 import { startWith, switchMap, skip } from "rxjs/operators";
 
 export default ({ handle }, { params } = {}) => {
-  const call$ = useRef(new Subject()).current;
+  const call$ = useRef(new ReplaySubject()).current;
   const call = useCallback((...args) => {
     call$.next(args);
   }, []);
@@ -80,8 +80,11 @@ export default ({ handle }, { params } = {}) => {
 const apiActionTemplate = MethodName => `import { useState, useEffect, useRef, useCallback } from "react";
 import { Subject, merge } from "rxjs";
 import { startWith, mergeMap, skip, mapTo, filter } from "rxjs/operators";
+import { useObjectMemo } from "../hooks";
 
 export default ({ handle }, { params, invalidations = false } = {}) => {
+  const params_memo = useObjectMemo(params);
+
   const call$ = useRef(new Subject()).current;
   const call = useCallback((...args) => {
     call$.next(args);
@@ -94,13 +97,13 @@ export default ({ handle }, { params, invalidations = false } = {}) => {
 
     if(handle !== null) {
       const invalidation$ = handle.invalidated$.pipe(
-        filter(() => invalidations && params),
-        mapTo(params)
+        filter(() => invalidations && params_memo),
+        mapTo(params_memo)
       );
 
       const externalCall$ = call$.pipe(
-        startWith(params),
-        skip(params ? 0 : 1)
+        startWith(params_memo),
+        skip(params_memo ? 0 : 1)
       );
 
       sub$ = merge(externalCall$, invalidation$)
@@ -116,7 +119,7 @@ export default ({ handle }, { params, invalidations = false } = {}) => {
     return () => {
       if(sub$) sub$.unsubscribe();
     }
-  }, [handle]);
+  }, [handle, params_memo, invalidations]);
 
   return qAction;
 }`

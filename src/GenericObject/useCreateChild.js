@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Subject } from "rxjs";
+import { ReplaySubject } from "rxjs";
 import { startWith, switchMap, skip } from "rxjs/operators";
 
 export default ({ handle }, { params } = {}) => {
-  const call$ = useRef(new Subject()).current;
+  const call$ = useRef(new ReplaySubject()).current;
   const call = useCallback((...args) => {
     call$.next(args);
   }, []);
