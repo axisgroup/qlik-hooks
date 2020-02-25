@@ -1,6 +1,8 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import { useConnectEngine } from "qlik-hooks"
-import { useEngineVersion, useOpenDoc } from "qlik-hooks/dist/Global"
+import { useEngineVersion, useOpenDoc, useGetAuthenticatedUser } from "qlik-hooks/dist/Global"
+import { useGetObject, useGetVariableByName } from "qlik-hooks/dist/Doc"
+import { useSetStringValue } from "qlik-hooks/dist/GenericVariable"
 import {
   ConnectToEngine,
   EngineVersion,
@@ -24,26 +26,43 @@ import {
   ToggleSessions,
   Offline,
 } from "./recipes"
-import { useGetObject } from "qlik-hooks/dist/Doc"
 
 const config = {
-  host: "sense.axisgroup.com",
+  host: "172.16.84.100",
   isSecure: true,
-  appname: "24703994-1515-4c2c-a785-d769a9226143",
+  appname: "1fcd2925-dc43-4816-b4b5-b8f4a991afdc",
 }
 
-const qId = "qZPdytp"
+const userMap = {
+  jbellizzi: "'1', '2'",
+  user_nokia: "1",
+}
 
 const App = () => {
-  const engine = useConnectEngine(config)
+  const global = useConnectEngine(config)
 
-  const app = useOpenDoc(engine, { params: [config.appname] })
+  const app = useOpenDoc(global, { params: [config.appname] })
 
-  const getObject = useGetObject(app)
-
+  /** Get user and set access level */
+  const [userAccess, setUserAccess] = useState(null)
+  const user = useGetAuthenticatedUser(global, { params: [] })
   useEffect(() => {
-    getObject.call(qId)
-  }, [qId])
+    if (user.qResponse !== null) {
+      setUserAccess(userMap[user.qResponse.split("UserId=")[1]])
+    }
+  }, [user])
+
+  /** Get the clientID variable */
+  const variable = useGetVariableByName(app, { params: ["vClientID"] })
+  // const setVariable = useSetStringValue(variable, { params: ["5"] })
+  /** set up variable set string method */
+  const setVariable = useSetStringValue(variable)
+  useEffect(() => {
+    if (userAccess !== null) {
+      console.log(userAccess)
+      setVariable.call(userAccess)
+    }
+  }, [userAccess])
 
   return null
 }

@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Subject, merge } from "rxjs";
+import { ReplaySubject, merge } from "rxjs";
 import { startWith, mergeMap, skip, mapTo, filter } from "rxjs/operators";
 import { useObjectMemo } from "../hooks";
 
 export default ({ handle }, { params, invalidations = false } = {}) => {
   const params_memo = useObjectMemo(params);
 
-  const call$ = useRef(new Subject()).current;
+  const call$ = useRef(new ReplaySubject()).current;
   const call = useCallback((...args) => {
     call$.next(args);
   }, []);
