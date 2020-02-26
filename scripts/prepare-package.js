@@ -1,4 +1,4 @@
-var pkg = require("../package.json")
+var { private, ...pkg } = require("../package.json")
 var fs = require("fs")
 var path = require("path")
 
