@@ -1,6 +1,6 @@
 # Table of Contents
 
-- [Qlik Hooks v0.3](README.md)
+- [Qlik Hooks v0.4](README.md)
 - [Introduction]()
   - [Why Hooks?](/introduction/why-hooks.md)
   - [Qlik Hooks vs. RxQ vs. Enigma](/introduction/qlik-hooks-vs-rxq-vs-enigma.md)
