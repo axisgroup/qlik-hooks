@@ -4,7 +4,7 @@
   "description": "qlik-hooks",
   "author": "jbellizzi",
   "license": "MIT",
-  "repository": "jbellizzi/qlik-hooks",
+  "repository": "axisgroup/qlik-hooks",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
