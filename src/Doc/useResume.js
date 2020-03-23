@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { ReplaySubject, merge } from "rxjs";
-import { startWith, mergeMap, skip, mapTo, filter } from "rxjs/operators";
+import { startWith, mergeMap, skip, mapTo, filter, retry } from "rxjs/operators";
 import { useObjectMemo } from "../hooks";
 
 export default ({ handle }, { params, invalidations = false } = {}) => {
@@ -31,7 +31,7 @@ export default ({ handle }, { params, invalidations = false } = {}) => {
         .pipe(
           mergeMap(args => {
             setQAction({ ...qAction, loading: true, qResponse: null });
-            return handle.ask("Resume", ...args);
+            return handle.ask("Resume", ...args).pipe(retry(3));
           })
         )
         .subscribe(response => setQAction({ ...qAction, loading: false, qResponse: response }));

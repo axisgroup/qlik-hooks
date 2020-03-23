@@ -43,7 +43,7 @@ const schema$ = container$.pipe(
 
 const apiObjectCreatorTemplate = MethodName => `import { useState, useEffect, useRef, useCallback } from "react";
 import { ReplaySubject } from "rxjs";
-import { startWith, switchMap, skip } from "rxjs/operators";
+import { startWith, switchMap, skip, retry } from "rxjs/operators";
 
 export default ({ handle }, { params } = {}) => {
   const call$ = useRef(new ReplaySubject()).current;
@@ -63,7 +63,7 @@ export default ({ handle }, { params } = {}) => {
           skip(params ? 0 : 1),
           switchMap(args => {
             setQObject({ ...qObject, loading: true, handle: null });
-            return handle.ask("${MethodName}", ...args);
+            return handle.ask("${MethodName}", ...args).pipe(retry(3));
           })
         )
         .subscribe(response => setQObject({ ...qObject, loading: false, handle: response }));
@@ -79,7 +79,7 @@ export default ({ handle }, { params } = {}) => {
 
 const apiActionTemplate = MethodName => `import { useState, useEffect, useRef, useCallback } from "react";
 import { ReplaySubject, merge } from "rxjs";
-import { startWith, mergeMap, skip, mapTo, filter } from "rxjs/operators";
+import { startWith, mergeMap, skip, mapTo, filter, retry } from "rxjs/operators";
 import { useObjectMemo } from "../hooks";
 
 export default ({ handle }, { params, invalidations = false } = {}) => {
@@ -110,7 +110,7 @@ export default ({ handle }, { params, invalidations = false } = {}) => {
         .pipe(
           mergeMap(args => {
             setQAction({ ...qAction, loading: true, qResponse: null });
-            return handle.ask("${MethodName}", ...args);
+            return handle.ask("${MethodName}", ...args).pipe(retry(3));
           })
         )
         .subscribe(response => setQAction({ ...qAction, loading: false, qResponse: response }));
@@ -190,7 +190,7 @@ function createContainer(image, port) {
         },
       },
       (err, container) => {
-        if (err) return observer.erros(err)
+        if (err) return observer.error(err)
 
         container.start((err, data) => {
           if (err) return observer.error(err)

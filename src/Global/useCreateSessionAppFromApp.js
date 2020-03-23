@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { ReplaySubject } from "rxjs";
-import { startWith, switchMap, skip } from "rxjs/operators";
+import { startWith, switchMap, skip, retry } from "rxjs/operators";
 
 export default ({ handle }, { params } = {}) => {
   const call$ = useRef(new ReplaySubject()).current;
@@ -20,7 +20,7 @@ export default ({ handle }, { params } = {}) => {
           skip(params ? 0 : 1),
           switchMap(args => {
             setQObject({ ...qObject, loading: true, handle: null });
-            return handle.ask("CreateSessionAppFromApp", ...args);
+            return handle.ask("CreateSessionAppFromApp", ...args).pipe(retry(3));
           })
         )
         .subscribe(response => setQObject({ ...qObject, loading: false, handle: response }));
