@@ -51,7 +51,7 @@ export default ({ handle }, { params } = {}) => {
     call$.next(args);
   }, []);
 
-  const [qObject, setQObject] = useState({ loading: false, handle: null, call });
+  const [qObject, setQObject] = useState({ loading: false, handle: null, error: null, call });
 
   useEffect(() => {
     let sub$;
@@ -66,7 +66,13 @@ export default ({ handle }, { params } = {}) => {
             return handle.ask("${MethodName}", ...args).pipe(retry(3));
           })
         )
-        .subscribe(response => setQObject({ ...qObject, loading: false, handle: response }));
+        .subscribe(
+          response => setQObject({ ...qObject, loading: false, handle: response }),
+          err => {
+            setQObject(prevState => ({ ...prevState, error: err }));
+            console.error(err);
+          }
+        );
     }
 
     return () => {
@@ -90,7 +96,7 @@ export default ({ handle }, { params, invalidations = false } = {}) => {
     call$.next(args);
   }, []);
 
-  const [qAction, setQAction] = useState({ loading: false, qResponse: null, call });
+  const [qAction, setQAction] = useState({ loading: false, qResponse: null, error: null, call });
 
   useEffect(() => {
     let sub$;
@@ -113,7 +119,13 @@ export default ({ handle }, { params, invalidations = false } = {}) => {
             return handle.ask("${MethodName}", ...args).pipe(retry(3));
           })
         )
-        .subscribe(response => setQAction({ ...qAction, loading: false, qResponse: response }));
+        .subscribe(
+          response => setQAction(prevState => ({ ...prevState, loading: false, qResponse: response })),
+          err => {
+            setQAction(prevState => ({ ...prevState, error: err }));
+            console.error(err);
+          }
+        );
     }
 
     return () => {

@@ -8,6 +8,7 @@ import {
   EngineVersion,
   MultipleGlobalCalls,
   OpenAnApp,
+  ErrorHandling,
   ReadAppProperties,
   SetAppProps,
   GenObjValue,
@@ -28,6 +29,6 @@ import {
 } from "./recipes"
 
 const App = () => {
-  return <ApplyPatches />
+  return <ErrorHandling />
 }
 export default App

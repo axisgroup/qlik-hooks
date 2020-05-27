@@ -8,7 +8,7 @@ export default ({ handle }, { params } = {}) => {
     call$.next(args);
   }, []);
 
-  const [qObject, setQObject] = useState({ loading: false, handle: null, call });
+  const [qObject, setQObject] = useState({ loading: false, handle: null, error: null, call });
 
   useEffect(() => {
     let sub$;
@@ -23,7 +23,13 @@ export default ({ handle }, { params } = {}) => {
             return handle.ask("OpenDoc", ...args).pipe(retry(3));
           })
         )
-        .subscribe(response => setQObject({ ...qObject, loading: false, handle: response }));
+        .subscribe(
+          response => setQObject({ ...qObject, loading: false, handle: response }),
+          err => {
+            setQObject(prevState => ({ ...prevState, error: err }));
+            console.error(err);
+          }
+        );
     }
 
     return () => {

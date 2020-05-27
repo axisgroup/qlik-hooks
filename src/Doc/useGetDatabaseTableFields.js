@@ -11,7 +11,7 @@ export default ({ handle }, { params, invalidations = false } = {}) => {
     call$.next(args);
   }, []);
 
-  const [qAction, setQAction] = useState({ loading: false, qResponse: null, call });
+  const [qAction, setQAction] = useState({ loading: false, qResponse: null, error: null, call });
 
   useEffect(() => {
     let sub$;
@@ -34,7 +34,13 @@ export default ({ handle }, { params, invalidations = false } = {}) => {
             return handle.ask("GetDatabaseTableFields", ...args).pipe(retry(3));
           })
         )
-        .subscribe(response => setQAction({ ...qAction, loading: false, qResponse: response }));
+        .subscribe(
+          response => setQAction(prevState => ({ ...prevState, loading: false, qResponse: response })),
+          err => {
+            setQAction(prevState => ({ ...prevState, error: err }));
+            console.error(err);
+          }
+        );
     }
 
     return () => {
