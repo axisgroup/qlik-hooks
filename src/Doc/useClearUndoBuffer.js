@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { ReplaySubject, merge } from "rxjs";
-import { startWith, mergeMap, skip, mapTo, filter, retry } from "rxjs/operators";
+import { useCallback, useEffect, useRef, useState } from "react"
+import { of, ReplaySubject, merge } from "rxjs";
+import { catchError, startWith, mergeMap, skip, mapTo, filter, retry } from "rxjs/operators";
 import { useObjectMemo } from "../hooks";
 
 export default ({ handle }, { params, invalidations = false } = {}) => {
@@ -30,17 +30,18 @@ export default ({ handle }, { params, invalidations = false } = {}) => {
       sub$ = merge(externalCall$, invalidation$)
         .pipe(
           mergeMap(args => {
-            setQAction({ ...qAction, loading: true, qResponse: null });
-            return handle.ask("ClearUndoBuffer", ...args).pipe(retry(3));
+            setQAction(prevState => ({ ...prevState, loading: true, qResponse: null, error: null }));
+            return handle.ask("ClearUndoBuffer", ...args).pipe(
+              retry(3),
+              catchError(err => {
+                setQAction(prevState => ({ ...prevState, error: err }))
+                console.error(err)
+                return of(null)
+              })
+            );
           })
         )
-        .subscribe(
-          response => setQAction(prevState => ({ ...prevState, loading: false, qResponse: response })),
-          err => {
-            setQAction(prevState => ({ ...prevState, error: err }));
-            console.error(err);
-          }
-        );
+        .subscribe(response => setQAction(prevState => ({ ...prevState, loading: false, qResponse: response })));
     }
 
     return () => {

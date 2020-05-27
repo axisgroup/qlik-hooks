@@ -14,10 +14,27 @@ const Component = () => {
   const engine = useConnectEngine(config)
 
   // Open an app
-  const app = useOpenDoc(engine, { params: ["aae6724-dfd9-478b-b401-0d8038793adf"] })
+  const app = useOpenDoc(engine)
   console.log(app)
 
-  return <div>Component Content</div>
+  return (
+    <div>
+      <button
+        onClick={() => {
+          app.call("aae16724-dfd9-478b-b401-0d8038793adf")
+        }}
+      >
+        Open Doc
+      </button>
+      <button
+        onClick={() => {
+          app.call("aae16724-dfd9-478b-b401-0d8038793ad")
+        }}
+      >
+        Open Non-Existant Doc
+      </button>
+    </div>
+  )
 }
 
 export default Component

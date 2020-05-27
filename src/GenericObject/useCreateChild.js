@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { ReplaySubject } from "rxjs";
-import { startWith, switchMap, skip, retry } from "rxjs/operators";
+import { useCallback, useEffect, useRef, useState } from "react"
+import { of, ReplaySubject } from "rxjs"
+import { catchError, retry, skip, startWith, switchMap } from "rxjs/operators"
 
 export default ({ handle }, { params } = {}) => {
   const call$ = useRef(new ReplaySubject()).current;
@@ -19,17 +19,18 @@ export default ({ handle }, { params } = {}) => {
           startWith(params),
           skip(params ? 0 : 1),
           switchMap(args => {
-            setQObject({ ...qObject, loading: true, handle: null });
-            return handle.ask("CreateChild", ...args).pipe(retry(3));
+            setQObject(prevState => ({ ...prevState, loading: true, handle: null, error: null }));
+            return handle.ask("CreateChild", ...args).pipe(
+              retry(3),
+              catchError(err => {
+                setQObject(prevState => ({ ...prevState, error: err }))
+                console.error(err)
+                return of(null)
+              })
+            );
           })
         )
-        .subscribe(
-          response => setQObject({ ...qObject, loading: false, handle: response }),
-          err => {
-            setQObject(prevState => ({ ...prevState, error: err }));
-            console.error(err);
-          }
-        );
+        .subscribe(response => setQObject(prevState => ({ ...prevState, loading: false, handle: response })));
     }
 
     return () => {
