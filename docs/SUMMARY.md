@@ -9,6 +9,7 @@
 - [Basics]()
   - [Connecting](basics/connecting.md)
   - [Making API Calls](basics/making-api-calls.md)
+  - [Error Handling](basics/error-handling.md)
   - [Initializing API Calls](basics/initializing-api-calls.md)
   - [Invalidations](basics/invalidations.md)
 - [Recipes]()

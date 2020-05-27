@@ -23,7 +23,7 @@
     "predeploy": "cd example && npm install && npm run build",
     "deploy": "gh-pages -d example/build",
     "docs-build": "gitbook build ./docs ./docs/dist/qlik-hooks",
-    "docs-serve": "gitbook serve",
+    "docs-serve": "gitbook serve ./docs",
     "prepare-package": "node scripts/prepare-package"
   },
   "peerDependencies": {

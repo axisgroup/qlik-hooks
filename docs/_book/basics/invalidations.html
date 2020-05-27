@@ -1,0 +1,739 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Invalidations · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    
+    <link rel="prev" href="initializing-api-calls.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Qlik Hooks v0.4
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    Introduction
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="../introduction/why-hooks.html">
+            
+                <a href="../introduction/why-hooks.html">
+            
+                    
+                    Why Hooks?
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="../introduction/qlik-hooks-vs-rxq-vs-enigma.html">
+            
+                <a href="../introduction/qlik-hooks-vs-rxq-vs-enigma.html">
+            
+                    
+                    Qlik Hooks vs. RxQ vs. Enigma
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.3" data-path="../introduction/core-concepts.html">
+            
+                <a href="../introduction/core-concepts.html">
+            
+                    
+                    Core Concepts
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="../introduction/qae-hierarchy.html">
+            
+                <a href="../introduction/qae-hierarchy.html">
+            
+                    
+                    QAE Hierarchy
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    Basics
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="connecting.html">
+            
+                <a href="connecting.html">
+            
+                    
+                    Connecting
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="making-api-calls.html">
+            
+                <a href="making-api-calls.html">
+            
+                    
+                    Making API Calls
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="error-handling.html">
+            
+                <a href="error-handling.html">
+            
+                    
+                    Error Handling
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="initializing-api-calls.html">
+            
+                <a href="initializing-api-calls.html">
+            
+                    
+                    Initializing API Calls
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.3.5" data-path="invalidations.html">
+            
+                <a href="invalidations.html">
+            
+                    
+                    Invalidations
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    Recipes
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../recipes/connect.html">
+            
+                <a href="../recipes/connect.html">
+            
+                    
+                    01. Connect to an Engine
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../recipes/engine-version.html">
+            
+                <a href="../recipes/engine-version.html">
+            
+                    
+                    02. Get the Engine Version
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../recipes/multiple-global-calls.html">
+            
+                <a href="../recipes/multiple-global-calls.html">
+            
+                    
+                    03. Make Multiple Global Calls
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../recipes/open-an-app.html">
+            
+                <a href="../recipes/open-an-app.html">
+            
+                    
+                    04. Open an App
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../recipes/read-app-props.html">
+            
+                <a href="../recipes/read-app-props.html">
+            
+                    
+                    05. Get App Properties
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="../recipes/set-app-props.html">
+            
+                <a href="../recipes/set-app-props.html">
+            
+                    
+                    06. Set App Properties and Listen for Changes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="../recipes/gen-obj-value.html">
+            
+                <a href="../recipes/gen-obj-value.html">
+            
+                    
+                    07. Calculate a Value with a GenericObject
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="../recipes/current-selections.html">
+            
+                <a href="../recipes/current-selections.html">
+            
+                    
+                    08. Get a stream of Current Selections
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.9" data-path="../recipes/make-a-selection.html">
+            
+                <a href="../recipes/make-a-selection.html">
+            
+                    
+                    09. Make a Selection in a Field
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.10" data-path="../recipes/loop-selections.html">
+            
+                <a href="../recipes/loop-selections.html">
+            
+                    
+                    10. Loop Through Selections in a Field
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.11" data-path="../recipes/make-lb-selections.html">
+            
+                <a href="../recipes/make-lb-selections.html">
+            
+                    
+                    11. Make Selections in a Listbox
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.12" data-path="../recipes/search-lb.html">
+            
+                <a href="../recipes/search-lb.html">
+            
+                    
+                    12. Search in a Listbox
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.13" data-path="../recipes/apply-patches.html">
+            
+                <a href="../recipes/apply-patches.html">
+            
+                    
+                    13. Apply Patches to an Object
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.14" data-path="../recipes/get-data-page-on-invalid.html">
+            
+                <a href="../recipes/get-data-page-on-invalid.html">
+            
+                    
+                    14. Get a page of data in a HyperCube on invalidation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.15" data-path="../recipes/get-pages-in-parallel.html">
+            
+                <a href="../recipes/get-pages-in-parallel.html">
+            
+                    
+                    15. Get pages of data in parallel
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.16" data-path="../recipes/get-pages-in-sequence.html">
+            
+                <a href="../recipes/get-pages-in-sequence.html">
+            
+                    
+                    16. Get pages of data sequentially
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.17" data-path="../recipes/make-selections-on-app-open.html">
+            
+                <a href="../recipes/make-selections-on-app-open.html">
+            
+                    
+                    17. Make selections on app open
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.18" data-path="../recipes/calc-time.html">
+            
+                <a href="../recipes/calc-time.html">
+            
+                    
+                    18. Calculate the duration of an API call and response
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.19" data-path="../recipes/toggle-sessions.html">
+            
+                <a href="../recipes/toggle-sessions.html">
+            
+                    
+                    20. Toggle Calculations Between Multiple Apps
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.20" data-path="../recipes/offline.html">
+            
+                <a href="../recipes/offline.html">
+            
+                    
+                    21. Auto-reconnect Generic Objects after a network drop
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Invalidations</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="invalidations">Invalidations</h1>
+<p>There are some API calls we make that return the state of certain objects within a Qlik document. Qlik&apos;s associative engine allows us to update the selection state of the document, and when this happens, we want to receive an updated version of any object states that may have changed.</p>
+<p>Looking back the last example in <a href="initializing-api-calls.html">Initializing API Calls</a>, we were able to fetch the data of our ListObject through the GetLayout method, but if we make a selection, we need to re-fetch the data by calling GetLayout again</p>
+<pre><code class="lang-jsx">listObjectLayout.call()
+</code></pre>
+<p>But there is an easier way. Qlik Hook Action methods (that is, methods that don&apos;t create object handles) have an input option that allows you to automatically re-call the api when an invalidation event occurs.</p>
+<pre><code class="lang-jsx"><span class="hljs-keyword">const</span> listObjectLayout = useGetLayout(listObject, { params: [], invalidations: <span class="hljs-literal">true</span> })
+</code></pre>
+<p>Taking this and applying it to the last exmaple gives us a fully functioning ListObject that updates automatically on selection</p>
+<pre><code class="lang-jsx"><span class="hljs-keyword">import</span> React, { useEffect, useState } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;react&quot;</span>
+<span class="hljs-keyword">import</span> { useConnectEngine } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks&quot;</span>
+<span class="hljs-keyword">import</span> { useOpenDoc } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/dist/Global&quot;</span>
+<span class="hljs-keyword">import</span> { useCreateSessionObject } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/dist/Doc&quot;</span>
+<span class="hljs-keyword">import</span> { useSelectListObjectValues, useGetLayout } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;qlik-hooks/dist/GenericObject&quot;</span>
+
+<span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-keyword">const</span> engine = useConnectEngine({
+    host: <span class="hljs-string">&quot;localhost&quot;</span>,
+    port: <span class="hljs-number">4848</span>,
+  })
+
+  <span class="hljs-keyword">const</span> doc = useOpenDoc(engine, { params: [<span class="hljs-string">&quot;Executive Dashboard.qvf&quot;</span>] })
+
+  <span class="hljs-keyword">const</span> listObject = useCreateSessionObject(doc, {
+    params: [
+      {
+        qInfo: { qType: <span class="hljs-string">&quot;listbox&quot;</span> },
+        qListObjectDef: {
+          qDef: { qFieldDefs: [<span class="hljs-string">&quot;Region&quot;</span>] },
+          qInitialDataFetch: [{ qWidth: <span class="hljs-number">1</span>, qHeight: <span class="hljs-number">100</span> }],
+        },
+      },
+    ],
+  })
+
+  <span class="hljs-keyword">const</span> listObjectLayout = useGetLayout(listObject, { params: [], invalidations: <span class="hljs-literal">true</span> })
+
+  <span class="hljs-keyword">const</span> [list, setList] = useState([])
+  useEffect(() =&gt; {
+    <span class="hljs-keyword">if</span> (listObjectLayout.qResponse !== <span class="hljs-literal">null</span>) {
+      <span class="hljs-keyword">const</span> qMatrix = listObjectLayout.qResponse.qListObject.qDataPages[<span class="hljs-number">0</span>].qMatrix
+
+      setList(
+        qMatrix.map(row =&gt; ({
+          label: row[<span class="hljs-number">0</span>].qText,
+          value: row[<span class="hljs-number">0</span>].qElemNumber,
+          state: row[<span class="hljs-number">0</span>].qState,
+        }))
+      )
+    }
+  }, [listObjectLayout])
+
+  <span class="hljs-keyword">const</span> selectListObjectValues = useSelectListObjectValues(listObject)
+
+  <span class="hljs-keyword">const</span> handleListObjectSelection = value =&gt; {
+    selectListObjectValues.call(<span class="hljs-string">&quot;/qListObjectDef&quot;</span>, [value], <span class="hljs-literal">true</span>)
+  }
+
+  <span class="hljs-keyword">return</span> (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+        {list.map(listItem =&gt; (
+          <span class="hljs-tag">&lt;<span class="hljs-name">li</span>
+            <span class="hljs-attr">key</span>=<span class="hljs-string">{listItem.value}</span>
+            <span class="hljs-attr">value</span>=<span class="hljs-string">{listItem.value}</span>
+            <span class="hljs-attr">style</span>=<span class="hljs-string">{{</span>
+              <span class="hljs-attr">backgroundColor:</span> <span class="hljs-attr">listItem.state</span> =<span class="hljs-string">==</span> &quot;<span class="hljs-attr">S</span>&quot; ? &quot;#<span class="hljs-attr">2294f2</span>&quot; <span class="hljs-attr">:</span> <span class="hljs-attr">listItem.state</span> =<span class="hljs-string">==</span> &quot;<span class="hljs-attr">X</span>&quot; ? &quot;#<span class="hljs-attr">b1c0c7</span>&quot; <span class="hljs-attr">:</span> &quot;#<span class="hljs-attr">fff</span>&quot;,
+            }}
+            <span class="hljs-attr">onClick</span>=<span class="hljs-string">{()</span> =&gt;</span> handleListObjectSelection(listItem.value)}
+          &gt;
+            {listItem.label}
+          <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+        ))}
+      <span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+  )
+}
+</code></pre>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="initializing-api-calls.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Initializing API Calls">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Invalidations","level":"1.3.5","depth":2,"next":{"title":"Recipes","level":"1.4","depth":1,"ref":"","articles":[{"title":"01. Connect to an Engine","level":"1.4.1","depth":2,"path":"recipes/connect.md","ref":"recipes/connect.md","articles":[]},{"title":"02. Get the Engine Version","level":"1.4.2","depth":2,"path":"recipes/engine-version.md","ref":"recipes/engine-version.md","articles":[]},{"title":"03. Make Multiple Global Calls","level":"1.4.3","depth":2,"path":"recipes/multiple-global-calls.md","ref":"recipes/multiple-global-calls.md","articles":[]},{"title":"04. Open an App","level":"1.4.4","depth":2,"path":"recipes/open-an-app.md","ref":"recipes/open-an-app.md","articles":[]},{"title":"05. Get App Properties","level":"1.4.5","depth":2,"path":"recipes/read-app-props.md","ref":"recipes/read-app-props.md","articles":[]},{"title":"06. Set App Properties and Listen for Changes","level":"1.4.6","depth":2,"path":"recipes/set-app-props.md","ref":"recipes/set-app-props.md","articles":[]},{"title":"07. Calculate a Value with a GenericObject","level":"1.4.7","depth":2,"path":"recipes/gen-obj-value.md","ref":"recipes/gen-obj-value.md","articles":[]},{"title":"08. Get a stream of Current Selections","level":"1.4.8","depth":2,"path":"recipes/current-selections.md","ref":"recipes/current-selections.md","articles":[]},{"title":"09. Make a Selection in a Field","level":"1.4.9","depth":2,"path":"recipes/make-a-selection.md","ref":"recipes/make-a-selection.md","articles":[]},{"title":"10. Loop Through Selections in a Field","level":"1.4.10","depth":2,"path":"recipes/loop-selections.md","ref":"recipes/loop-selections.md","articles":[]},{"title":"11. Make Selections in a Listbox","level":"1.4.11","depth":2,"path":"recipes/make-lb-selections.md","ref":"recipes/make-lb-selections.md","articles":[]},{"title":"12. Search in a Listbox","level":"1.4.12","depth":2,"path":"recipes/search-lb.md","ref":"recipes/search-lb.md","articles":[]},{"title":"13. Apply Patches to an Object","level":"1.4.13","depth":2,"path":"recipes/apply-patches.md","ref":"recipes/apply-patches.md","articles":[]},{"title":"14. Get a page of data in a HyperCube on invalidation","level":"1.4.14","depth":2,"path":"recipes/get-data-page-on-invalid.md","ref":"recipes/get-data-page-on-invalid.md","articles":[]},{"title":"15. Get pages of data in parallel","level":"1.4.15","depth":2,"path":"recipes/get-pages-in-parallel.md","ref":"recipes/get-pages-in-parallel.md","articles":[]},{"title":"16. Get pages of data sequentially","level":"1.4.16","depth":2,"path":"recipes/get-pages-in-sequence.md","ref":"recipes/get-pages-in-sequence.md","articles":[]},{"title":"17. Make selections on app open","level":"1.4.17","depth":2,"path":"recipes/make-selections-on-app-open.md","ref":"recipes/make-selections-on-app-open.md","articles":[]},{"title":"18. Calculate the duration of an API call and response","level":"1.4.18","depth":2,"path":"recipes/calc-time.md","ref":"recipes/calc-time.md","articles":[]},{"title":"20. Toggle Calculations Between Multiple Apps","level":"1.4.19","depth":2,"path":"recipes/toggle-sessions.md","ref":"recipes/toggle-sessions.md","articles":[]},{"title":"21. Auto-reconnect Generic Objects after a network drop","level":"1.4.20","depth":2,"path":"recipes/offline.md","ref":"recipes/offline.md","articles":[]}]},"previous":{"title":"Initializing API Calls","level":"1.3.4","depth":2,"path":"basics/initializing-api-calls.md","ref":"basics/initializing-api-calls.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"basics/invalidations.md","mtime":"2020-02-01T03:00:32.984Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-05-27T17:38:40.536Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

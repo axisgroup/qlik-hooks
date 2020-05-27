@@ -1,0 +1,699 @@
+
+<!DOCTYPE HTML>
+<html lang="" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>Core Concepts · GitBook</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="qae-hierarchy.html" />
+    
+    
+    <link rel="prev" href="qlik-hooks-vs-rxq-vs-enigma.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Qlik Hooks v0.4
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" >
+            
+                <span>
+            
+                    
+                    Introduction
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.2.1" data-path="why-hooks.html">
+            
+                <a href="why-hooks.html">
+            
+                    
+                    Why Hooks?
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.2" data-path="qlik-hooks-vs-rxq-vs-enigma.html">
+            
+                <a href="qlik-hooks-vs-rxq-vs-enigma.html">
+            
+                    
+                    Qlik Hooks vs. RxQ vs. Enigma
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.2.3" data-path="core-concepts.html">
+            
+                <a href="core-concepts.html">
+            
+                    
+                    Core Concepts
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2.4" data-path="qae-hierarchy.html">
+            
+                <a href="qae-hierarchy.html">
+            
+                    
+                    QAE Hierarchy
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" >
+            
+                <span>
+            
+                    
+                    Basics
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.3.1" data-path="../basics/connecting.html">
+            
+                <a href="../basics/connecting.html">
+            
+                    
+                    Connecting
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.2" data-path="../basics/making-api-calls.html">
+            
+                <a href="../basics/making-api-calls.html">
+            
+                    
+                    Making API Calls
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.3" data-path="../basics/error-handling.html">
+            
+                <a href="../basics/error-handling.html">
+            
+                    
+                    Error Handling
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.4" data-path="../basics/initializing-api-calls.html">
+            
+                <a href="../basics/initializing-api-calls.html">
+            
+                    
+                    Initializing API Calls
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3.5" data-path="../basics/invalidations.html">
+            
+                <a href="../basics/invalidations.html">
+            
+                    
+                    Invalidations
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" >
+            
+                <span>
+            
+                    
+                    Recipes
+            
+                </span>
+            
+
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="1.4.1" data-path="../recipes/connect.html">
+            
+                <a href="../recipes/connect.html">
+            
+                    
+                    01. Connect to an Engine
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.2" data-path="../recipes/engine-version.html">
+            
+                <a href="../recipes/engine-version.html">
+            
+                    
+                    02. Get the Engine Version
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.3" data-path="../recipes/multiple-global-calls.html">
+            
+                <a href="../recipes/multiple-global-calls.html">
+            
+                    
+                    03. Make Multiple Global Calls
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.4" data-path="../recipes/open-an-app.html">
+            
+                <a href="../recipes/open-an-app.html">
+            
+                    
+                    04. Open an App
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.5" data-path="../recipes/read-app-props.html">
+            
+                <a href="../recipes/read-app-props.html">
+            
+                    
+                    05. Get App Properties
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.6" data-path="../recipes/set-app-props.html">
+            
+                <a href="../recipes/set-app-props.html">
+            
+                    
+                    06. Set App Properties and Listen for Changes
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.7" data-path="../recipes/gen-obj-value.html">
+            
+                <a href="../recipes/gen-obj-value.html">
+            
+                    
+                    07. Calculate a Value with a GenericObject
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.8" data-path="../recipes/current-selections.html">
+            
+                <a href="../recipes/current-selections.html">
+            
+                    
+                    08. Get a stream of Current Selections
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.9" data-path="../recipes/make-a-selection.html">
+            
+                <a href="../recipes/make-a-selection.html">
+            
+                    
+                    09. Make a Selection in a Field
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.10" data-path="../recipes/loop-selections.html">
+            
+                <a href="../recipes/loop-selections.html">
+            
+                    
+                    10. Loop Through Selections in a Field
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.11" data-path="../recipes/make-lb-selections.html">
+            
+                <a href="../recipes/make-lb-selections.html">
+            
+                    
+                    11. Make Selections in a Listbox
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.12" data-path="../recipes/search-lb.html">
+            
+                <a href="../recipes/search-lb.html">
+            
+                    
+                    12. Search in a Listbox
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.13" data-path="../recipes/apply-patches.html">
+            
+                <a href="../recipes/apply-patches.html">
+            
+                    
+                    13. Apply Patches to an Object
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.14" data-path="../recipes/get-data-page-on-invalid.html">
+            
+                <a href="../recipes/get-data-page-on-invalid.html">
+            
+                    
+                    14. Get a page of data in a HyperCube on invalidation
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.15" data-path="../recipes/get-pages-in-parallel.html">
+            
+                <a href="../recipes/get-pages-in-parallel.html">
+            
+                    
+                    15. Get pages of data in parallel
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.16" data-path="../recipes/get-pages-in-sequence.html">
+            
+                <a href="../recipes/get-pages-in-sequence.html">
+            
+                    
+                    16. Get pages of data sequentially
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.17" data-path="../recipes/make-selections-on-app-open.html">
+            
+                <a href="../recipes/make-selections-on-app-open.html">
+            
+                    
+                    17. Make selections on app open
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.18" data-path="../recipes/calc-time.html">
+            
+                <a href="../recipes/calc-time.html">
+            
+                    
+                    18. Calculate the duration of an API call and response
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.19" data-path="../recipes/toggle-sessions.html">
+            
+                <a href="../recipes/toggle-sessions.html">
+            
+                    
+                    20. Toggle Calculations Between Multiple Apps
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4.20" data-path="../recipes/offline.html">
+            
+                <a href="../recipes/offline.html">
+            
+                    
+                    21. Auto-reconnect Generic Objects after a network drop
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            Published with GitBook
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >Core Concepts</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h1 id="core-concepts">Core Concepts</h1>
+<p>In its backend, Qlik Hooks version 0.3.x uses RxQ to connect to the Qlik Associative Engine, and converts the outputs of those Observable streams into React hook states. When we initialize a Qlik Hook, a state object is created for that method call. The corresponding API call is executed against the engine, and the state object gets set to the eventual response received from the Qlik Engine. For a more in-depth review of how communication with the Qlik Engine works, check out the <a href="https://opensrc.axisgroup.com/tutorials/engine/101.%20What%20is%20QIX%20and%20Why%20Should%20You%20Care.html" target="_blank">Engine Tutorial Series</a>.</p>
+<h2 id="qlik-hook-types">Qlik Hook Types</h2>
+<p>In the Qlik Hooks library, there are 2 types of hook methods we can call - <strong>Handle</strong> creators and <strong>Actions</strong>. A Handle creator is an API method that creates a reference handle to another object on the Qlik Engine. Every handle belongs to an API class that has its own set of API methods it can call. (See <a href="qae-hierarchy.html">Qlik Engine API Hierarchy</a> for more details). All other API methods that don&apos;t create and return a handle to a new object are Action hooks.</p>
+<h2 id="using-qlik-hooks-to-make-api-calls">Using Qlik Hooks to Make API Calls</h2>
+<p>In Qlik Hooks, a hook function is provided for each Qlik Engine API method, taking in a required handle object, and an optional second parameter defining the inputs for the method and whether the state should be updated when the handle becomes invalid.</p>
+<p>Let&apos;s look at an example using the <em>EngineVersion</em> method. After we get a Handle object returned to us from the <em>useConnectEngine</em> hook, we can pass the engine handle into the <em>useEngineVersion</em> hook, and we get back an object with data.</p>
+<pre><code class="lang-jsx"><span class="hljs-keyword">const</span> Component = () =&gt; {
+  <span class="hljs-comment">// Connect to the engine</span>
+  <span class="hljs-keyword">const</span> engine = useConnectEngine(config)
+
+  <span class="hljs-comment">// Get the engine version</span>
+  <span class="hljs-keyword">const</span> engineVersion = useEngineVersion(engine, { params: [] })
+  <span class="hljs-built_in">console</span>.log(engineVersion)
+
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>
+}
+</code></pre>
+<p>Here we set up an engineVersion state object that has the response from the Qlik Engine, loading state, and a call function to re-request the api and get an updated response.</p>
+<p>The engineVersion state gets set asynchronously, so the data response won&apos;t be available until a response from the Engine is received. See <a href="../basics/making-api-calls.html">Making API Calls</a> for more a more in-depth look at how to use Qlik Hooks, and check out the recipes section for more examples.</p>
+<h2 id="following-the-rules-of-react-hooks">Following the Rules of React Hooks</h2>
+<p>The Qlik Hooks library is essentially a library of custom React hooks, and must follow the same <a href="https://reactjs.org/docs/hooks-rules.html" target="_blank">rules as all other React Hooks</a>. That means:</p>
+<ul>
+<li>Don&apos;t call Qlik Hooks inside loops</li>
+<li>Don&apos;t call Qlik Hooks inside conditions</li>
+<li>Don&apos;t call Qlik Hooks inside nested functions</li>
+</ul>
+<p>We should instead:</p>
+<ul>
+<li>Call Qlik Hooks from React function components</li>
+<li>Call Qlik Hooks from other custom Hooks</li>
+</ul>
+
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="qlik-hooks-vs-rxq-vs-enigma.html" class="navigation navigation-prev " aria-label="Previous page: Qlik Hooks vs. RxQ vs. Enigma">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="qae-hierarchy.html" class="navigation navigation-next " aria-label="Next page: QAE Hierarchy">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"Core Concepts","level":"1.2.3","depth":2,"next":{"title":"QAE Hierarchy","level":"1.2.4","depth":2,"path":"introduction/qae-hierarchy.md","ref":"introduction/qae-hierarchy.md","articles":[]},"previous":{"title":"Qlik Hooks vs. RxQ vs. Enigma","level":"1.2.2","depth":2,"path":"introduction/qlik-hooks-vs-rxq-vs-enigma.md","ref":"introduction/qlik-hooks-vs-rxq-vs-enigma.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["livereload"],"pluginsConfig":{"livereload":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"introduction/core-concepts.md","mtime":"2020-02-01T02:39:20.915Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2020-05-27T17:38:40.536Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-livereload/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search-engine.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/lunr.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-lunr/search-lunr.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
