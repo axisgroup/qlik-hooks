@@ -121,3 +121,4 @@ export { default as useExpandExpression } from "./useExpandExpression";
 export { default as useDestroySessionVariableById } from "./useDestroySessionVariableById";
 export { default as useDestroySessionVariableByName } from "./useDestroySessionVariableByName";
 export { default as useCreateBookmarkEx } from "./useCreateBookmarkEx";
+export { default as useSaveAs } from "./useSaveAs";

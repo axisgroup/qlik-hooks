@@ -1,6 +1,6 @@
 {
   "name": "qlik-hooks",
-  "version": "0.4.6",
+  "version": "0.5.0",
   "description": "qlik-hooks",
   "author": "jbellizzi",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "node": ">=8",
     "npm": ">=5"
   },
-  "qix-version": "12.556.0",
+  "qix-version": "12.657.0",
   "scripts": {
     "build-qix-methods": "node scripts/build-qix-methods",
     "test": "cross-env CI=1 react-scripts test --env=jsdom",
@@ -23,7 +23,7 @@
     "predeploy": "cd example && npm install && npm run build",
     "deploy": "gh-pages -d example/build",
     "docs-build": "gitbook build ./docs ./docs/dist/qlik-hooks",
-    "docs-serve": "gitbook serve",
+    "docs-serve": "gitbook serve ./docs",
     "prepare-package": "node scripts/prepare-package"
   },
   "peerDependencies": {

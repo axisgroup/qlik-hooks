@@ -41,9 +41,9 @@ const schema$ = container$.pipe(
   )
 )
 
-const apiObjectCreatorTemplate = MethodName => `import { useState, useEffect, useRef, useCallback } from "react";
-import { ReplaySubject } from "rxjs";
-import { startWith, switchMap, skip } from "rxjs/operators";
+const apiObjectCreatorTemplate = MethodName => `import { useCallback, useEffect, useRef, useState } from "react"
+import { of, ReplaySubject } from "rxjs"
+import { catchError, retry, skip, startWith, switchMap } from "rxjs/operators"
 
 export default ({ handle }, { params } = {}) => {
   const call$ = useRef(new ReplaySubject()).current;
@@ -51,7 +51,7 @@ export default ({ handle }, { params } = {}) => {
     call$.next(args);
   }, []);
 
-  const [qObject, setQObject] = useState({ loading: false, handle: null, call });
+  const [qObject, setQObject] = useState({ loading: false, handle: null, error: null, call });
 
   useEffect(() => {
     let sub$;
@@ -62,11 +62,18 @@ export default ({ handle }, { params } = {}) => {
           startWith(params),
           skip(params ? 0 : 1),
           switchMap(args => {
-            setQObject({ ...qObject, loading: true, handle: null });
-            return handle.ask("${MethodName}", ...args);
+            setQObject(prevState => ({ ...prevState, loading: true, handle: null, error: null }));
+            return handle.ask("${MethodName}", ...args).pipe(
+              retry(3),
+              catchError(err => {
+                setQObject(prevState => ({ ...prevState, error: err }))
+                console.error(err)
+                return of(null)
+              })
+            );
           })
         )
-        .subscribe(response => setQObject({ ...qObject, loading: false, handle: response }));
+        .subscribe(response => setQObject(prevState => ({ ...prevState, loading: false, handle: response })));
     }
 
     return () => {
@@ -77,9 +84,9 @@ export default ({ handle }, { params } = {}) => {
   return qObject;
 }`
 
-const apiActionTemplate = MethodName => `import { useState, useEffect, useRef, useCallback } from "react";
-import { ReplaySubject, merge } from "rxjs";
-import { startWith, mergeMap, skip, mapTo, filter } from "rxjs/operators";
+const apiActionTemplate = MethodName => `import { useCallback, useEffect, useRef, useState } from "react"
+import { of, ReplaySubject, merge } from "rxjs";
+import { catchError, startWith, mergeMap, skip, mapTo, filter, retry } from "rxjs/operators";
 import { useObjectMemo } from "../hooks";
 
 export default ({ handle }, { params, invalidations = false } = {}) => {
@@ -90,7 +97,7 @@ export default ({ handle }, { params, invalidations = false } = {}) => {
     call$.next(args);
   }, []);
 
-  const [qAction, setQAction] = useState({ loading: false, qResponse: null, call });
+  const [qAction, setQAction] = useState({ loading: false, qResponse: null, error: null, call });
 
   useEffect(() => {
     let sub$;
@@ -109,11 +116,18 @@ export default ({ handle }, { params, invalidations = false } = {}) => {
       sub$ = merge(externalCall$, invalidation$)
         .pipe(
           mergeMap(args => {
-            setQAction({ ...qAction, loading: true, qResponse: null });
-            return handle.ask("${MethodName}", ...args);
+            setQAction(prevState => ({ ...prevState, loading: true, qResponse: null, error: null }));
+            return handle.ask("${MethodName}", ...args).pipe(
+              retry(3),
+              catchError(err => {
+                setQAction(prevState => ({ ...prevState, error: err }))
+                console.error(err)
+                return of(null)
+              })
+            );
           })
         )
-        .subscribe(response => setQAction({ ...qAction, loading: false, qResponse: response }));
+        .subscribe(response => setQAction(prevState => ({ ...prevState, loading: false, qResponse: response })));
     }
 
     return () => {
@@ -190,7 +204,7 @@ function createContainer(image, port) {
         },
       },
       (err, container) => {
-        if (err) return observer.erros(err)
+        if (err) return observer.error(err)
 
         container.start((err, data) => {
           if (err) return observer.error(err)

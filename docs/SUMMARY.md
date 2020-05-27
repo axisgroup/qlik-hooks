@@ -1,6 +1,6 @@
 # Table of Contents
 
-- [Qlik Hooks v0.4](README.md)
+- [Qlik Hooks v0.5](README.md)
 - [Introduction]()
   - [Why Hooks?](/introduction/why-hooks.md)
   - [Qlik Hooks vs. RxQ vs. Enigma](/introduction/qlik-hooks-vs-rxq-vs-enigma.md)
@@ -9,6 +9,7 @@
 - [Basics]()
   - [Connecting](basics/connecting.md)
   - [Making API Calls](basics/making-api-calls.md)
+  - [Error Handling](basics/error-handling.md)
   - [Initializing API Calls](basics/initializing-api-calls.md)
   - [Invalidations](basics/invalidations.md)
 - [Recipes]()
