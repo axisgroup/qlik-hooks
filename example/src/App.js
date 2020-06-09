@@ -5,6 +5,7 @@ import { useGetObject, useGetVariableByName } from "qlik-hooks/dist/Doc"
 import { useSetStringValue } from "qlik-hooks/dist/GenericVariable"
 import {
   ConnectToEngine,
+  ConnectToEngineError,
   EngineVersion,
   MultipleGlobalCalls,
   OpenAnApp,
@@ -29,6 +30,6 @@ import {
 } from "./recipes"
 
 const App = () => {
-  return <ErrorHandling />
+  return <ConnectToEngineError />
 }
 export default App
